@@ -17,8 +17,8 @@ const logger = new winston.Logger({
 });
 
 if (process.env.LOGENTRIES_ENABLED === 'True') {
-  logger.add(new Logentries(process.env.LOGENTRIES_TOKEN));
-  logger.exceptions.handle(new Logentries(process.env.LOGENTRIES_TOKEN));
+  logger.add(new Logentries({ token: process.env.LOGENTRIES_TOKEN }));
+  logger.exceptions.handle(new Logentries({ token: process.env.LOGENTRIES_TOKEN }));
 }
 
 logger.stream = {
