@@ -1,0 +1,17 @@
+version: '3'
+services:
+  db:
+    image: postgres:9
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: cool-password
+      POSTGRES_USER: cool-user
+      POSTGRES_DB: cool-database
+  server:
+    image: node:carbon
+    command: yarn server-start
+    volumes:
+      - ./server:/usr/src/app/
+      - ./client/dist:/usr/src/app/public
+    depends_on:
+      - db
