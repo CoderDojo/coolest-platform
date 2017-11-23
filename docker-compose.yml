@@ -10,8 +10,11 @@ services:
   server:
     image: node:carbon
     command: yarn server-start
+    working_dir: /usr/src/app
+    ports:
+      - 3000:3000
     volumes:
-      - ./server:/usr/src/app/
-      - ./client/dist:/usr/src/app/public
+      - ./:/usr/src/app/
+      - ./client/dist:/usr/src/app/server/public
     depends_on:
       - db
