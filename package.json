@@ -12,7 +12,8 @@
     "client-dev": "node client/build/dev-server.js",
     "client-start": "node client/build/dev-server.js",
     "client-build": "node client/build/build.js",
-    "client-unit": "cross-env BABEL_ENV=test karma start client/test/unit/karma.conf.js --single-run",
+    "client-unit":
+      "cross-env BABEL_ENV=test karma start client/test/unit/karma.conf.js --single-run",
     "client-test": "npm run client-unit",
     "client-lint": "eslint --ext .js,.vue src client/test/unit/specs"
   },
@@ -23,11 +24,14 @@
     "debug": "~2.6.9",
     "express": "~4.16.2",
     "knex": "^0.14.1",
+    "le_node": "^1.7.1",
     "morgan": "~1.9.0",
     "pg": "^7.4.0",
     "serve-favicon": "~2.4.5",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "winston": "^2.4.0",
+    "winston-transport": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.5",
@@ -99,9 +103,5 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
 }
