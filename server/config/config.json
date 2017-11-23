@@ -1,9 +1,9 @@
 {
   "client": "postgres",
   "connection": {
-  	"host": "db",
-  	"user": "cool-user",
-  	"password": "cool-password",
+    "host": "db",
+    "user": "cool-user",
+    "password": "cool-password",
     "database": "cool-database"
   }
 }
