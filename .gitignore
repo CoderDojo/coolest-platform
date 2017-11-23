@@ -57,3 +57,15 @@ typings/
 # dotenv environment variables file
 .env
 
+# Built files
+client/dist/
+
+# Operating system files
+.DS_Store
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln

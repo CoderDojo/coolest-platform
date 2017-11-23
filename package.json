@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "server-start": "node ./server/bin/www",
     "client-dev": "node client/build/dev-server.js",
     "client-start": "node client/build/dev-server.js",
     "client-build": "node client/build/build.js",
@@ -16,6 +17,12 @@
     "client-lint": "eslint --ext .js,.vue src client/test/unit/specs"
   },
   "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.15.5",
+    "morgan": "~1.9.0",
+    "serve-favicon": "~2.4.5",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
