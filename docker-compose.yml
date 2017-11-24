@@ -7,6 +7,8 @@ services:
       POSTGRES_PASSWORD: cool-password
       POSTGRES_USER: cool-user
       POSTGRES_DB: cool-database
+    volumes:
+      - /var/run/postgresql:/var/run/postgresql
   client:
     image: node:carbon
     command: yarn build

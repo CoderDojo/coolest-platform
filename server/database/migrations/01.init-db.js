@@ -1,5 +1,4 @@
 exports.up = (knex, Promise) =>
-  /* CREATE Project table */
   knex.schema
     .createTableIfNotExists('event', (table) => {
       table.uuid('id').primary();
@@ -12,12 +11,11 @@ exports.up = (knex, Promise) =>
       table.timestamps(true, true);
     })
 
-    /* CREATE Project table */
     .createTableIfNotExists('project', (table) => {
       table.uuid('id').primary();
       table.string('name');
       table.string('category');
-      table.uuid('dojoId');
+      table.uuid('dojo_id');
       table.timestamps(true, true);
 
       /* CREATE FKS */
@@ -34,7 +32,7 @@ exports.up = (knex, Promise) =>
       table.string('last_name');
       table.datetime('dob');
       table.string('gender');
-      table.string('email');
+      table.string('email').unique();
       table.integer('phone');
       table.string('country');
       table.timestamps(true, true);
@@ -71,6 +69,7 @@ exports.up = (knex, Promise) =>
     .createTableIfNotExists('auth', (table) => {
       table.uuid('id').primary();
       table.uuid('token');
+      table.timestamps(true, true);
       table
         .uuid('user_id')
         .index()

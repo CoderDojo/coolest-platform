@@ -8,19 +8,19 @@ const protect = require('@risingstack/protect');
 const logger = require('./util/logger');
 
 const migrate = require('./database/migrate');
-const index = require('./routes/index');
+const routes = require('./routes/index');
 
 const app = express();
 // uncomment after placing your favicon in /public
 migrate().then(() => {
   // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
   app.use(morgan('combined', { stream: logger.stream }));
-  app.use(bodyParser.json({ extended: false }));
   app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
   app.use(cookieParser());
   app.use(express.static(path.join(__dirname, 'public')));
 
-  app.use('/', index);
+  app.use('/', routes);
   app.get('/coffee', (req, res) => {
     res.statusMessage = "I'm a teapot";
     res
