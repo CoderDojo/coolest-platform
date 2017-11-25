@@ -7,14 +7,21 @@ services:
       POSTGRES_PASSWORD: cool-password
       POSTGRES_USER: cool-user
       POSTGRES_DB: cool-database
+  client:
+    image: node:carbon
+    command: yarn build
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app/
   server:
     image: node:carbon
-    command: yarn server-start
+    command: bash -c "cd server && node bin/www"
     working_dir: /usr/src/app
     ports:
       - 3000:3000
     volumes:
       - ./:/usr/src/app/
-      - ./client/dist:/usr/src/app/server/public
+      - ./client/dist:/usr/src/app/public
     depends_on:
       - db
+      - client

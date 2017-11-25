@@ -2,7 +2,7 @@
   "name": "coolest-platform",
   "version": "0.1.0",
   "description": "The Coolest Platform for the coolest of events, Coolest Projects",
-  "main": "index.js",
+  "main": "server/app.js",
   "repository": "git@github.com:CoderDojo/coolest-platform.git",
   "author": "CoderDojo Foundation <webteam@coderdojo.com>",
   "license": "MIT",
@@ -11,13 +11,15 @@
     "server-start": "node ./server/bin/www",
     "client-dev": "node client/build/dev-server.js",
     "client-start": "node client/build/dev-server.js",
-    "client-build": "node client/build/build.js",
+    "build": "node client/build/build.js",
     "client-unit":
       "cross-env BABEL_ENV=test karma start client/test/unit/karma.conf.js --single-run",
     "client-test": "npm run client-unit",
-    "client-lint": "eslint --ext .js,.vue src client/test/unit/specs"
+    "client-lint": "eslint --ext .js,.vue src client/test/unit/specs",
+    "server-lint": "eslint server"
   },
   "dependencies": {
+    "@risingstack/protect": "^1.2.0",
     "body-parser": "~1.18.2",
     "bookshelf": "^0.11.1",
     "cookie-parser": "~1.4.3",
@@ -100,8 +102,9 @@
     "webpack-merge": "^4.1.0"
   },
   "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 3.0.0"
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0",
+    "yarn": ">= 1.0.0"
   },
   "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
 }

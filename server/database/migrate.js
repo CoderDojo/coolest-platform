@@ -5,7 +5,7 @@ module.exports = () =>
   new Promise((resolve, reject) => {
     // Default "migrate" will take js files in the ./migrations folder
     bookshelf.knex.migrate
-      .latest({ directory: './server/database/migrations' })
+      .latest({ directory: './database/migrations' })
       // No seeding atm
       // .then(() => {
       //   return bookshelf.knex.seed.run();
