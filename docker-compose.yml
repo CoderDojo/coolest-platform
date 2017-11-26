@@ -21,7 +21,7 @@ services:
       - 3000:3000
     volumes:
       - ./:/usr/src/app/
-      - ./client/dist:/usr/src/app/public
+      - ./client/dist:/usr/src/app/server/public
     depends_on:
       - db
       - client
