@@ -12,8 +12,7 @@
     "client-dev": "node client/build/dev-server.js",
     "client-start": "node client/build/dev-server.js",
     "build": "node client/build/build.js",
-    "client-unit":
-      "cross-env BABEL_ENV=test karma start client/test/unit/karma.conf.js --single-run",
+    "client-unit": "cross-env BABEL_ENV=test karma start client/test/unit/karma.conf.js --single-run",
     "client-test": "npm run client-unit",
     "client-lint": "eslint --ext .js,.vue src client/test/unit/specs",
     "server-lint": "eslint server"
@@ -106,5 +105,9 @@
     "npm": ">= 3.0.0",
     "yarn": ">= 1.0.0"
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }
