@@ -6,12 +6,15 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const protect = require('@risingstack/protect');
 const logger = require('./util/logger');
+const wrap = require('./util/wrap');
 
+const routes = require('./routes');
 const migrate = require('./database/migrate');
-const index = require('./routes/index');
 
-const app = express();
-// uncomment after placing your favicon in /public
+const app = wrap(express());
+
+routes('/api/1/', app);
+
 migrate().then(() => {
   // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
   app.use(morgan('combined', { stream: logger.stream }));
@@ -20,7 +23,6 @@ migrate().then(() => {
   app.use(cookieParser());
   app.use(express.static(path.join(__dirname, 'public')));
 
-  app.use('/', index);
   app.get('/coffee', (req, res) => {
     res.statusMessage = "I'm a teapot";
     res

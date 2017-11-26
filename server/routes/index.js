@@ -1,10 +1,13 @@
-const express = require('express');
+const requireindex = require('requireindex');
+const path = require('path');
 
-const router = express.Router();
+function addRoute(base, dir, app) {
+  const routes = requireindex(dir);
+  Object.entries(routes).forEach(([route, func]) => {
+    const url = path.join(base, route);
+    app.use(url, func);
+    addRoute(url, path.join(dir, route), app);
+  });
+}
 
-/* GET home page. */
-router.get('/', (req, res, next) => {
-  res.send({ status: 'OK' });
-});
-
-module.exports = router;
+module.exports = (base, app) => addRoute(base, __dirname, app);
