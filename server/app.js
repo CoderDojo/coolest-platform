@@ -8,12 +8,10 @@ const protect = require('@risingstack/protect');
 const logger = require('./util/logger');
 const wrap = require('./util/wrap');
 
-const routes = require('./routes');
 const migrate = require('./database/migrate');
+const ping = require('./routes/sys/ping');
 
 const app = wrap(express());
-
-routes('/api/1/', app);
 
 migrate().then(() => {
   // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -23,6 +21,7 @@ migrate().then(() => {
   app.use(cookieParser());
   app.use(express.static(path.join(__dirname, 'public')));
 
+  app.use('/api/1/sys/', ping);
   app.get('/coffee', (req, res) => {
     res.statusMessage = "I'm a teapot";
     res
