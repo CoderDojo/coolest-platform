@@ -76,6 +76,6 @@ describe('users handlers', () => {
       expect(statusResMock).to.have.been.calledWith(409);
       expect(jsonReqMock).to.have.been.calledOnce;
       expect(jsonReqMock).to.have.been.calledWith({ status: 409, message: 'User already exists' });
-    })
+    });
   });
 });

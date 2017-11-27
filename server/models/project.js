@@ -4,9 +4,7 @@ const Event = require('./events');
 
 const Project = ModelBase.extend({
   tableName: 'project',
-  event: () => {
-    return this.belongsTo(Event);
-  }
+  event: () => this.belongsTo(Event),
 });
 
 module.exports = Project;

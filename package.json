@@ -25,6 +25,7 @@
     "@risingstack/protect": "^1.2.0",
     "body-parser": "~1.18.2",
     "bookshelf": "^0.11.1",
+    "bookshelf-modelbase": "^2.10.4",
     "bookshelf-uuid": "^1.0.0",
     "bootstrap": "4.0.0-beta.2",
     "bootstrap-vue": "^1.2.0",
