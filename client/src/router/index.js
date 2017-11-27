@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Hello from '@/components/Hello';
+import Auth from '@/auth/Auth';
+import ProjectList from '@/project/List';
 
 Vue.use(Router);
 
@@ -8,8 +9,13 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Hello',
-      component: Hello,
+      name: 'Auth',
+      component: Auth,
+    },
+    {
+      path: '/projects',
+      name: 'ProjectList',
+      component: ProjectList,
     },
   ],
 });
