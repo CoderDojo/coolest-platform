@@ -11,7 +11,8 @@ const logger = new winston.Logger({
   ],
   exceptionHandlers: [
     new winston.transports.Console({
-      json: false,
+      json: true,
+      colorize: true,
     }),
   ],
 });
