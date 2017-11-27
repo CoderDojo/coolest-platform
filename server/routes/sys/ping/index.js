@@ -2,9 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 
-/* GET home page. */
-router.get('/', (req, res, next) => {
-  res.send({ status: 'OK' });
+router.get('/', async (req, res) => {
+  res.json({ status: 'OK' });
 });
 
 module.exports = router;
