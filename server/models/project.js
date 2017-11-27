@@ -1,10 +1,15 @@
 const bookshelf = require('../database');
-const ModelBase = require('bookshelf-modelbase')(bookshelf);
-const Event = require('./events');
 
-const Project = ModelBase.extend({
+const Project = bookshelf.Model.extend({
   tableName: 'project',
-  event: () => this.belongsTo(Event),
+  event() {
+    return this.belongsTo('Event');
+  },
+  members() {
+    return this.belongsToMany('User').through('ProjectUsers');
+  },
+  uuid: true,
+  hasTimestamps: true,
 });
 
-module.exports = Project;
+module.exports = bookshelf.model('Project', Project);

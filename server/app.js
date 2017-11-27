@@ -10,7 +10,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const logger = require('./util/logger');
 
-const Auth = require('./models/auth');
+const models = require('./models');
 const migrate = require('./database/migrate');
 const routes = require('./routes/index');
 
@@ -64,7 +64,7 @@ migrate().then(() => {
         maxAge: '8h',
       },
       ({ sub }, done) => {
-        Auth.where({ userId: sub })
+        models.Auth.where({ userId: sub })
           .fetchOne()
           .then((auth) => {
             done(null, auth);

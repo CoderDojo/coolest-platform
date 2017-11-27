@@ -2,6 +2,7 @@ const User = require('../../models/user');
 const Auth = require('../../models/auth');
 
 // curl -H 'Content-Type: application/json' -X POST --data-binary '{"email": "a"}' http://localhost:3000/api/v1/users
+// TODO : use req.body and apply endpoint validation
 const post = (req, res) =>
   new User({ email: req.body.email })
     .save()

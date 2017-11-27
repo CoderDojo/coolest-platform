@@ -33,7 +33,7 @@ exports.up = (knex, Promise) =>
       table.datetime('dob');
       table.string('gender');
       table.string('email').unique();
-      table.integer('phone');
+      table.string('phone');
       table.string('country');
       table.timestamps(true, true);
     })
@@ -54,6 +54,7 @@ exports.up = (knex, Promise) =>
 
     .createTableIfNotExists('project_users', (table) => {
       table.uuid('id').primary();
+      table.string('type');
       table
         .uuid('user_id')
         .index()
