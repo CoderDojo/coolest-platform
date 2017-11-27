@@ -5,8 +5,12 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const protect = require('@risingstack/protect');
+const passport = require('passport');
+const JwtStrategy = require('passport-jwt').Strategy,
+  ExtractJwt = require('passport-jwt').ExtractJwt;
 const logger = require('./util/logger');
 
+const Auth = require('./models/auth');
 const migrate = require('./database/migrate');
 const routes = require('./routes/index');
 
@@ -48,6 +52,19 @@ migrate().then(() => {
     res.status(err.status);
     res.send({ status: err.status });
   });
+
+  passport.use(new JwtStrategy({
+    jwtFromRequest : ExtractJwt.fromExtractors([
+      ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ExtractJwt.fromUrlQueryParameter('token')]),
+    secretOrKey : 'secret',
+    maxAge: '8h',
+  }, (jwtPayload, done) => {
+    Auth.where({ userId: jwtPayload.sub }).fetchOne()
+    .then(( auth ) => {
+      done(null, auth);
+    });
+  }));
 
   // error handler
   app.use((err, req, res) => {

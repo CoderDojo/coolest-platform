@@ -9,11 +9,16 @@ describe('users handlers', () => {
     it('should create an User', async () => {
       const email = 'test@test.com';
       const mockUserSave = sandbox.stub().resolves({ id: 1, email });
+      const mockAuthSave = sandbox.stub().resolves({ id: 'auth', user_id: 1, token: 'imbatman' });
       const mockUserModel = sandbox.stub().returns({
         save: mockUserSave,
       });
+      const mockAuthModel = sandbox.stub().returns({
+        save: mockAuthSave,
+      });
       const handlers = proxy('../../../../routes/handlers/users', {
         '../../models/user': mockUserModel,
+        '../../models/auth': mockAuthModel,
       });
       const reqMock = {
         body: {
@@ -33,8 +38,9 @@ describe('users handlers', () => {
       expect(statusResMock).to.have.been.calledOnce;
       expect(statusResMock).to.have.been.calledWith(200);
       expect(jsonReqMock).to.have.been.calledOnce;
-      expect(jsonReqMock).to.have.been.calledWith({ id: 1, email });
+      expect(jsonReqMock).to.have.been.calledWith({ user: { id: 1, email }, auth: { id: 'auth', user_id: 1, token: 'imbatman' } });
     });
+
     it('should return 409 if the User already exists', async () => {
       class UniqueViolationError extends Error {
         constructor(message) {

@@ -68,7 +68,7 @@ exports.up = (knex, Promise) =>
 
     .createTableIfNotExists('auth', (table) => {
       table.uuid('id').primary();
-      table.uuid('token');
+      table.string('token');
       table.timestamps(true, true);
       table
         .uuid('user_id')
