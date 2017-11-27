@@ -27,7 +27,8 @@
     "server-lint": "eslint server"
   },
   "lint-staged": {
-    "*.js": ["eslint --fix", "git add"]
+    "*.js": ["eslint --fix", "git add"],
+    "*.vue": ["eslint --ext .vue --fix", "git add"]
   },
   "dependencies": {
     "@risingstack/protect": "^1.2.0",
