@@ -2636,9 +2636,9 @@ eslint-config-airbnb@^15.1.0:
   dependencies:
     eslint-config-airbnb-base "^11.3.0"
 
-eslint-config-coderdojo@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/eslint-config-coderdojo/-/eslint-config-coderdojo-1.0.6.tgz#02c8ff514dfa54a4fbb7b43e4248cab17d9d0382"
+eslint-config-coderdojo@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-coderdojo/-/eslint-config-coderdojo-1.1.0.tgz#6125c829e31bcd960ee46e133c2b6fbf057e74ff"
   dependencies:
     eslint-config-airbnb "^15.1.0"
 

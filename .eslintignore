@@ -1,3 +1,4 @@
+client/mock-server/**
 client/build/
 client/config/
 client/dist/

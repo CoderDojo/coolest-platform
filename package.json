@@ -9,21 +9,17 @@
   "private": true,
   "scripts": {
     "build": "node client/build/build.js",
-    "start":
-      "concurrently --kill-others --success first \"yarn server-start\" \"yarn client-start\"",
-    "start-with-mocks":
-      "concurrently --kill-others --success first \"yarn mock-server\" \"yarn client-start\" ",
+    "start": "concurrently --kill-others --success first \"yarn server-start\" \"yarn client-start\"",
+    "start-with-mocks": "concurrently --kill-others --success first \"yarn mock-server\" \"yarn client-start\" ",
     "test": "yarn client-unit && yarn server-unit",
     "lint": "eslint --ext .js,.vue .",
     "precommit": "lint-staged",
     "client-start": "node client/build/dev-server.js",
-    "client-unit":
-      "cross-env BABEL_ENV=test karma start client/test/unit/karma.conf.js --single-run",
+    "client-unit": "cross-env BABEL_ENV=test karma start client/test/unit/karma.conf.js --single-run",
     "client-lint": "eslint --ext .js,.vue src client/test/unit/specs",
     "mock-server": "node ./json-server/server.js",
     "server-start": "cd server && node bin/www",
-    "server-unit":
-      "mocha -G --require ./server/test/helper.js ./server/test/unit/**/*.js --reporter=nyan",
+    "server-unit": "mocha -G --require ./server/test/helper.js ./server/test/**/*.spec.js --reporter=nyan",
     "server-lint": "eslint server --env mocha,chai --global expect,sinon"
   },
   "lint-staged": {
@@ -75,7 +71,7 @@
     "css-loader": "^0.28.7",
     "cssnano": "^3.10.0",
     "eslint": "4.6.0",
-    "eslint-config-coderdojo": "^1.0.6",
+    "eslint-config-coderdojo": "^1.1.0",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-import-resolver-webpack": "^0.8.1",
     "eslint-loader": "^1.9.0",
@@ -132,5 +128,9 @@
     "npm": ">= 3.0.0",
     "yarn": ">= 1.0.0"
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }

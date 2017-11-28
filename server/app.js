@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const favicon = require('serve-favicon');
+// const favicon = require('serve-favicon');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -32,19 +32,15 @@ migrate().then(() => {
       .json({ message: "I'm a teapot", image: 'https://httpstatusdogs.com/img/418.jpg' });
   });
 
-  app.use(
-    protect.express.sqlInjection({
-      body: true,
-      loggerFunction: logger.error,
-    }),
-  );
+  app.use(protect.express.sqlInjection({
+    body: true,
+    loggerFunction: logger.error,
+  }));
 
-  app.use(
-    protect.express.xss({
-      body: true,
-      loggerFunction: logger.error,
-    }),
-  );
+  app.use(protect.express.xss({
+    body: true,
+    loggerFunction: logger.error,
+  }));
   // catch 404 and forward to error handler
   app.use((req, res) => {
     const err = new Error('Not Found');
@@ -53,25 +49,23 @@ migrate().then(() => {
     res.send({ status: err.status });
   });
 
-  passport.use(
-    new JwtStrategy(
-      {
-        jwtFromRequest: ExtractJwt.fromExtractors([
-          ExtractJwt.fromAuthHeaderAsBearerToken(),
-          ExtractJwt.fromUrlQueryParameter('token'),
-        ]),
-        secretOrKey: 'secret',
-        maxAge: '8h',
-      },
-      ({ sub }, done) => {
-        models.Auth.where({ userId: sub })
-          .fetchOne()
-          .then((auth) => {
-            done(null, auth);
-          });
-      },
-    ),
-  );
+  passport.use(new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+        ExtractJwt.fromUrlQueryParameter('token'),
+      ]),
+      secretOrKey: 'secret',
+      maxAge: '8h',
+    },
+    ({ sub }, done) => {
+      models.Auth.where({ userId: sub })
+        .fetchOne()
+        .then((auth) => {
+          done(null, auth);
+        });
+    },
+  ));
 
   // error handler
   app.use((err, req, res) => {

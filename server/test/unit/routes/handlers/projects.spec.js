@@ -18,7 +18,7 @@ describe('projects handlers', () => {
         lastName: 'one',
         dob: '2010-09-01T00:00.000Z',
         country: 'FR',
-        type: 'member'
+        type: 'member',
       };
       const supervisor = {
         firstName: 'supervisor',
@@ -30,7 +30,7 @@ describe('projects handlers', () => {
       };
 
       // STUBs
-      const mockUserSaveMember = sandbox.stub().resolves({ id: 'user1' })
+      const mockUserSaveMember = sandbox.stub().resolves({ id: 'user1' });
       const mockUserSaveSupervisor = sandbox.stub().resolves({ id: 'user2' });
       const mockProjectSave = sandbox.stub().resolves({ id: 'project' });
       const mockAttachProject = sinon.stub().resolves({});
@@ -59,7 +59,7 @@ describe('projects handlers', () => {
           name,
           category,
           dojoId,
-          users: [ member, supervisor ],
+          users: [member, supervisor],
         },
       };
       const jsonReqMock = sandbox.stub().returns({ id: 'project' });
@@ -72,7 +72,12 @@ describe('projects handlers', () => {
 
       // First, save the project
       expect(mockProjectModel).to.have.been.calledTwice;
-      expect(mockProjectModel.getCall(0).args[0]).to.be.eql({ eventId, name, category, dojoId })
+      expect(mockProjectModel.getCall(0).args[0]).to.be.eql({
+        eventId,
+        name,
+        category,
+        dojoId,
+      });
       expect(mockProjectSave).to.have.been.calledOnce;
 
       // Then save the new users
