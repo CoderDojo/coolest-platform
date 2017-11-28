@@ -24,7 +24,7 @@
     "server-start": "cd server && node bin/www",
     "server-unit":
       "mocha -G --require ./server/test/helper.js ./server/test/unit/**/*.js --reporter=nyan",
-    "server-lint": "eslint server"
+    "server-lint": "eslint server --env mocha,chai --global expect,sinon"
   },
   "lint-staged": {
     "*.js": ["eslint --fix", "git add"],
