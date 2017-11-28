@@ -1640,8 +1640,8 @@ commander@2.11.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.11.0.tgz#157152fd1e7a6c8d98a5b715cf376df928004563"
 
 commander@2.12.x, commander@^2.11.0, commander@^2.2.0, commander@^2.9.0, commander@~2.12.1:
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.1.tgz#468635c4168d06145b9323356d1da84d14ac4a7a"
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-2.12.2.tgz#0f5946c427ed9ec0d91a46bb9def53e54650e555"
 
 commander@2.6.0:
   version "2.6.0"
@@ -2636,9 +2636,9 @@ eslint-config-airbnb@^15.1.0:
   dependencies:
     eslint-config-airbnb-base "^11.3.0"
 
-eslint-config-coderdojo@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/eslint-config-coderdojo/-/eslint-config-coderdojo-1.0.6.tgz#02c8ff514dfa54a4fbb7b43e4248cab17d9d0382"
+eslint-config-coderdojo@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-coderdojo/-/eslint-config-coderdojo-1.1.0.tgz#6125c829e31bcd960ee46e133c2b6fbf057e74ff"
   dependencies:
     eslint-config-airbnb "^15.1.0"
 
