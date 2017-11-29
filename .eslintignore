@@ -1,0 +1,7 @@
+client/mock-server/**
+client/build/
+client/config/
+client/dist/
+client/*.js
+client/test/unit/coverage/
+client/test/unit/*.js

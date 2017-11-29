@@ -12,25 +12,18 @@
     "start": "concurrently --kill-others --success first \"yarn server-start\" \"yarn client-start\"",
     "start-with-mocks": "concurrently --kill-others --success first \"yarn mock-server\" \"yarn client-start\" ",
     "test": "yarn client-unit && yarn server-unit",
-    "lint": "yarn client-lint && yarn server-lint",
+    "lint": "eslint --ext .js,.vue .",
     "precommit": "lint-staged",
     "client-start": "node client/build/dev-server.js",
     "client-unit": "cross-env BABEL_ENV=test karma start client/test/unit/karma.conf.js --single-run",
     "client-lint": "eslint --ext .js,.vue src client/test/unit/specs",
     "mock-server": "node ./json-server/server.js",
     "server-start": "cd server && node bin/www",
-    "server-unit": "mocha -G --require ./server/test/helper.js ./server/test/unit/**/*.js --reporter=nyan",
+    "server-unit": "mocha -G --require ./server/test/helper.js ./server/test/**/*.spec.js --reporter=nyan",
     "server-lint": "eslint server --env mocha,chai --global expect,sinon"
   },
   "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.vue": [
-      "eslint --ext .vue --fix",
-      "git add"
-    ]
+    "*.{js|vue}": ["eslint --ext .js,.vue", "git add"]
   },
   "dependencies": {
     "@risingstack/protect": "^1.2.0",
