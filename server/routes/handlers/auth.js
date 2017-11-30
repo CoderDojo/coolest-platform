@@ -6,7 +6,7 @@ class Auth {
   }
   static authenticate(jwt, done) {
     Auth.get(jwt.data)
-      .then(auth => done(null, auth || false))
+      .then((auth) => { done(null, auth || false); return null; })
       .catch(err => done(null, false));
   }
 }

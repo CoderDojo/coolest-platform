@@ -41,7 +41,7 @@ describe('users handlers', () => {
       expect(jsonReqMock).to.have.been.calledWith({ user: { id: 1, email }, auth: { id: 'auth', user_id: 1, token: 'imbatman' } });
     });
 
-    it('should return 409 if the User already exists', async () => {
+    it('should return 409 if the User already exists', (done) => {
       class UniqueViolationError extends Error {
         constructor(message) {
           super(message);
@@ -62,20 +62,43 @@ describe('users handlers', () => {
           email,
         },
       };
-      const jsonReqMock = sandbox.stub().returns({ email });
-      const statusResMock = sandbox.stub().returns({ json: jsonReqMock });
-      const resMock = { status: statusResMock };
-      const nextMock = sandbox.stub();
+      const resMock = {};
 
-      await handlers.post(reqMock, resMock, nextMock);
+      handlers.post(reqMock, resMock, (_err) => {
+        expect(mockUserModel).to.have.been.calledOnce;
+        expect(mockUserModel).to.have.been.calledWith({ email });
+        expect(mockUserSave).to.have.been.calledOnce;
+        expect(_err.message).to.equal('User already exists');
+        expect(_err.status).to.equal(409);
+        done();
+      });
+    });
 
-      expect(mockUserModel).to.have.been.calledOnce;
-      expect(mockUserModel).to.have.been.calledWith({ email });
-      expect(mockUserSave).to.have.been.calledOnce;
-      expect(statusResMock).to.have.been.calledOnce;
-      expect(statusResMock).to.have.been.calledWith(409);
-      expect(jsonReqMock).to.have.been.calledOnce;
-      expect(jsonReqMock).to.have.been.calledWith({ status: 409, message: 'User already exists' });
+    it('should call next on erroneous behavior', (done) => {
+      const err = new Error('Fake err');
+      const expectedErr = new Error('Error while saving a user.');
+      const mockUserSave = sandbox.stub().rejects(err);
+      const mockUserModel = sandbox.stub().returns({
+        save: mockUserSave,
+      });
+      const handlers = proxy('../../../../routes/handlers/users', {
+        '../../models/user': mockUserModel,
+      });
+      const email = 'test@test.com';
+      const reqMock = {
+        body: {
+          email,
+        },
+      };
+      const resMock = {};
+
+      handlers.post(reqMock, resMock, (_err) => {
+        expect(mockUserModel).to.have.been.calledOnce;
+        expect(mockUserModel).to.have.been.calledWith({ email });
+        expect(mockUserSave).to.have.been.calledOnce;
+        expect(_err.message).to.equal(expectedErr.message);
+        done();
+      });
     });
   });
 });

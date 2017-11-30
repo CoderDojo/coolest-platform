@@ -99,5 +99,53 @@ describe('projects handlers', () => {
       expect(jsonReqMock).to.have.been.calledOnce;
       expect(jsonReqMock).to.have.been.calledWith({ id: 'project' });
     });
+
+    it('should call next on erroneous behavior', (done) => {
+      // DATA
+      const eventId = 'eventId';
+      const name = 'MyLittleProject';
+      const category = 'Flash';
+      const dojoId = '';
+      const err = new Error('Fake err');
+      const expectedErr = new Error('Error while saving your project.');
+
+      // STUBs
+      const mockProjectSave = sandbox.stub().rejects(err);
+      const mockUserModel = sandbox.stub().returns({});
+      const mockProjectModel = sandbox.stub().returns({
+        save: mockProjectSave,
+      });
+      const handlers = proxy('../../../../routes/handlers/projects', {
+        '../../models/user': mockUserModel,
+        '../../models/project': mockProjectModel,
+      });
+      const reqMock = {
+        params: { eventId },
+        body: {
+          name,
+          category,
+          dojoId,
+          users: [],
+        },
+      };
+      const resMock = sandbox.stub();
+
+      // ACT
+      handlers.post(reqMock, resMock, (_err) => {
+        // First, save the project
+        expect(mockProjectModel).to.have.been.calledOnce;
+        expect(mockProjectModel).to.have.been.calledWith({
+          eventId,
+          name,
+          category,
+          dojoId,
+        });
+        expect(mockProjectSave).to.have.been.calledOnce;
+
+        // Finally return the err
+        expect(_err.message).to.equal(expectedErr.message);
+        done();
+      });
+    });
   });
 });

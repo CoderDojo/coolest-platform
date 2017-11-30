@@ -30,7 +30,8 @@ const post = (req, res, next) => {
           return new Project({ id: _project.id }).members().attach(associations);
         })
         .then(() => res.status(200).json(_project));
-    });
+    })
+    .catch(() => next(new Error('Error while saving your project.')));
 };
 
 module.exports = {
