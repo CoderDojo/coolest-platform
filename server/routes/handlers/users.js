@@ -6,9 +6,10 @@ const Auth = require('../../models/auth');
 const post = (req, res) => {
   return new User({ email: req.body.email })
     .save()
-    .then(user => new Auth({ userId: user.id })
-      .save()
-      .then(auth => res.status(200).json({ user, auth })))
+    .then(user =>
+      new Auth({ userId: user.id })
+        .save()
+        .then(auth => res.status(200).json({ user, auth })))
     .catch((err) => {
       if (err.code === '23505') {
         // pg's unique_violation

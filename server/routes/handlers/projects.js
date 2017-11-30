@@ -6,6 +6,7 @@ const { pick } = require('lodash');
 // curl -H 'Content-Type: application/json' -X POST --data-binary '{"email": "a"}' http://localhost:3000/api/v1/users
 const post = (req, res, next) => {
   // TODO : apply endpoint validation
+  // TODO : verify eventId exists
   const projectPayload = Object.assign(
     {},
     pick(req.body, ['name', 'category', 'dojoId']),

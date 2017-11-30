@@ -8,15 +8,19 @@ const protect = require('@risingstack/protect');
 const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const logger = require('./util/logger');
+const bookshelf = require('./database/index');
 
-const models = require('./models');
+const logger = require('./util/logger');
+const authConfig = require('./config/auth');
+// eslint-disable-next-line no-unused-vars
+const models = require('./models'); // We load all the models for the registry
 const migrate = require('./database/migrate');
 const routes = require('./routes/index');
+const authHandlers = require('./routes/handlers/auth');
 
 const app = express();
 // uncomment after placing your favicon in /public
-migrate().then(() => {
+migrate(bookshelf).then(() => {
   // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
   app.use(morgan('combined', { stream: logger.stream }));
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -49,23 +53,15 @@ migrate().then(() => {
     res.send({ status: err.status });
   });
 
-  passport.use(new JwtStrategy(
-    {
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        ExtractJwt.fromAuthHeaderAsBearerToken(),
-        ExtractJwt.fromUrlQueryParameter('token'),
-      ]),
-      secretOrKey: 'secret',
-      maxAge: '8h',
-    },
-    ({ sub }, done) => {
-      models.Auth.where({ userId: sub })
-        .fetchOne()
-        .then((auth) => {
-          done(null, auth);
-        });
-    },
-  ));
+  passport.use(new JwtStrategy({
+    jwtFromRequest:
+    ExtractJwt.fromExtractors([
+      ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ExtractJwt.fromUrlQueryParameter('token'),
+    ]),
+    secretOrKey: authConfig.authSecret,
+    maxAge: authConfig.authTimeout,
+  }, authHandlers.authenticate));
 
   // error handler
   app.use((err, req, res) => {

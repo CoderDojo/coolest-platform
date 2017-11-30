@@ -12,11 +12,13 @@ const Auth = bookshelf.Model.extend({
 });
 
 function constructor(...args) {
-  const token = jwt.sign({ data: args[0].userId }, config.authSecret, {
-    expiresIn: config.authTimeout,
-  });
-  args[0].token = token;
   bookshelf.Model.apply(this, args);
+  this.on('saving', (model) => {
+    const token = jwt.sign({ data: model.attributes.userId }, config.authSecret, {
+      expiresIn: config.authTimeout,
+    });
+    model.attributes.token = token;
+  });
 }
 
 module.exports = bookshelf.model('Auth', Auth);

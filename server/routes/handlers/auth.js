@@ -1,10 +1,14 @@
-const Auth = require('../../models/auth');
+const AuthModel = require('../../models/auth');
 
-const get = (req, res) =>
-  Auth.where({ user: req.body.id })
-    .save()
-    .tap(auth => res.status(200).json(auth));
+class Auth {
+  static get(userId) {
+    return AuthModel.forge({ userId }).fetch();
+  }
+  static authenticate(jwt, done) {
+    Auth.get(jwt.data)
+      .then(auth => done(null, auth || false))
+      .catch(err => done(null, false));
+  }
+}
 
-module.exports = {
-  get,
-};
+module.exports = Auth;
