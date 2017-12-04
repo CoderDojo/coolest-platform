@@ -1,5 +1,7 @@
 const uuid = require('uuid');
 const proxy = require('proxyquire');
+const jsonwebtoken = require('jsonwebtoken');
+const config = require('../../../config/auth');
 const mockDB = require('../../database');
 
 let Auth;
@@ -10,6 +12,7 @@ describe('auth model', () => {
     connection = await mockDB;
     Auth = proxy('../../../models/auth', {
       '../database': connection,
+      jsonwebtoken,
     });
   });
   it('should create an auth and create a new jwt', async () => {
@@ -24,5 +27,30 @@ describe('auth model', () => {
   });
   afterEach(() => {
     sandbox.reset();
+  });
+
+  describe('createToken', () => {
+    it('should use jwt', () => {
+      const signSpy = sinon.spy(jsonwebtoken, 'sign');
+      const userId = 'user1';
+      new Auth().createToken(userId);
+      expect(signSpy).to.have.been.calledOnce;
+      expect(signSpy).to.have.been.calledWith({ data: userId });
+    });
+  });
+
+  describe('verifyToken', () => {
+    it('should use jwt', () => {
+      const verifySpy = sinon.spy(jsonwebtoken, 'verify');
+      const auth = new Auth();
+      const token = auth.createToken('user1');
+      auth.verifyToken(token);
+      expect(verifySpy).to.have.been.calledOnce;
+      expect(verifySpy).to.have.been.calledWith(
+        token,
+        config.authSecret,
+        { maxAge: config.authTimeout },
+      );
+    });
   });
 });
