@@ -1,5 +1,5 @@
 const proxy = require('proxyquire');
-const { omit } = require('lodash');
+const { omit, extend } = require('lodash');
 
 describe('projects handlers', () => {
   const sandbox = sinon.sandbox.create();
@@ -42,16 +42,20 @@ describe('projects handlers', () => {
       mockUserModel.withArgs(omit(member, ['type'])).returns({
         save: mockUserSaveMember,
       });
-      mockUserModel.withArgs(omit(supervisor, ['type'])).returns({
+      mockUserModel.withArgs(extend(omit(supervisor, ['type']), { id: 'user2' })).returns({
         save: mockUserSaveSupervisor,
       });
       const mockProjectModel = sandbox.stub().returns({
         save: mockProjectSave,
         members: mockMembersProject,
       });
+      const mockUserHandler = {
+        get: sandbox.stub().resolves({ id: 'user2' }),
+      };
       const handlers = proxy('../../../../routes/handlers/projects', {
         '../../models/user': mockUserModel,
         '../../models/project': mockProjectModel,
+        './users': mockUserHandler,
       });
       const reqMock = {
         params: { eventId },
@@ -80,12 +84,16 @@ describe('projects handlers', () => {
       });
       expect(mockProjectSave).to.have.been.calledOnce;
 
-      // Then save the new users
-      expect(mockUserModel).to.have.been.calledTwice;
+      // Then retrieve existing user(s)
+      expect(mockUserHandler.get).to.have.been.calledOnce;
+      expect(mockUserHandler.get).to.have.been.calledWith({ email: supervisor.email });
+      expect(mockUserModel).to.have.been.calledWith(extend(omit(supervisor, ['type']), { id: 'user2' }));
+
+      // Then save the (potentially new) users
       expect(mockUserModel).to.have.been.calledWith(omit(member, ['type']));
-      expect(mockUserModel).to.have.been.calledWith(omit(supervisor, ['type']));
       expect(mockUserSaveMember).to.have.been.calledOnce;
       expect(mockUserSaveSupervisor).to.have.been.calledOnce;
+      expect(mockUserModel).to.have.been.calledTwice;
 
       // Then save the associations
       expect(mockProjectModel.getCall(1).args[0]).to.be.eql({ id: 'project' });

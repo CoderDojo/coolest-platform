@@ -63,7 +63,6 @@ describe('users handlers', () => {
         },
       };
       const resMock = {};
-
       handlers.post(reqMock, resMock, (_err) => {
         expect(mockUserModel).to.have.been.calledOnce;
         expect(mockUserModel).to.have.been.calledWith({ email });
