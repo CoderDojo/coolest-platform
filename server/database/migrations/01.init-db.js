@@ -7,6 +7,7 @@ exports.up = (knex, Promise) =>
       table.datetime('date');
       table.datetime('registration_start');
       table.datetime('registration_end');
+      table.jsonb('categories');
       table.string('homepage');
       table.string('contact');
       table.timestamps(true, true);
