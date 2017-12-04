@@ -17,6 +17,7 @@ describe('projects handlers', () => {
         firstName: 'member',
         lastName: 'one',
         dob: '2010-09-01T00:00.000Z',
+        specialRequirements: 'must eat a banana every minutes',
         country: 'FR',
         type: 'member',
       };

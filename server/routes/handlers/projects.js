@@ -15,7 +15,7 @@ class Project {
     const promises = [];
 
     req.body.users.forEach((user) => {
-      const userPayload = pick(user, ['firstName', 'lastName', 'dob', 'gender', 'email', 'phone', 'country']);
+      const userPayload = pick(user, ['firstName', 'lastName', 'specialRequirements', 'dob', 'gender', 'email', 'phone', 'country']);
       const newUser = ((_userPayload) => {
         if (_userPayload.email) {
           return UserHandler.get({ email: _userPayload.email })

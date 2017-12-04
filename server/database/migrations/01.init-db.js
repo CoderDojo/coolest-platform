@@ -34,6 +34,7 @@ exports.up = (knex, Promise) =>
       table.string('last_name');
       table.datetime('dob');
       table.string('gender');
+      table.string('special_requirements');
       table.string('email').unique();
       table.string('phone');
       table.string('country');
