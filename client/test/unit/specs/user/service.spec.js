@@ -15,7 +15,7 @@ describe('User service', () => {
       const email = 'example@example.com';
       sandbox.stub(Vue.http, 'post')
         .withArgs('/api/v1/users', { email })
-        .returns(Promise.resolve('success'));
+        .resolves('success');
 
       // ACT
       const response = await UserService.create(email);

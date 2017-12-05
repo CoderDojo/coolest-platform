@@ -15,7 +15,7 @@ describe('Auth service', () => {
       const email = 'example@example.com';
       sandbox.stub(Vue.http, 'post')
         .withArgs('/api/v1/auth', { email })
-        .returns(Promise.resolve('success'));
+        .resolves('success');
 
       // ACT
       const response = await AuthService.auth(email);

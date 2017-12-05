@@ -8,11 +8,15 @@ const middlewares = jsonServer.defaults();
 server.use(middlewares);
 server.use(require('body-parser').json());
 
+server.use(jsonServer.rewriter({
+  '/api/v1/events/:eventId/projects/:projectId': '/api/v1/projects/:projectId'
+}));
+
 server.post('/api/v1/auth', (req, res) => {
   if (req.body.email === 'existinguser@example.com') {
-    res.status(200).send();
+    res.status(204).send();
   } else {
-    res.status(401).send();
+    res.status(403).send();
   }
 });
 

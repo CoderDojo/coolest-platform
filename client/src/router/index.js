@@ -1,21 +1,64 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Auth from '@/auth/Auth';
+import scrollBehavior from '@/router/scrollBehaviour';
+import Auth from '@/event/Auth';
+import AuthEmail from '@/auth/Email';
 import ProjectList from '@/project/List';
+import ViewProject from '@/project/View';
+import CreateProject from '@/project/Create';
+import CreateProjectCompleted from '@/project/CreateCompleted';
+import EditProject from '@/project/Edit';
 
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
+  scrollBehavior,
   routes: [
     {
       path: '/',
-      name: 'Auth',
-      component: Auth,
+      redirect: '/events/cp2018',
     },
     {
-      path: '/projects',
+      path: '/auth-email',
+      name: 'AuthEmail',
+      component: AuthEmail,
+    },
+    {
+      path: '/events/:eventId',
+      name: 'Auth',
+      component: Auth,
+      props: true,
+    },
+    {
+      path: '/events/:eventId/projects',
       name: 'ProjectList',
       component: ProjectList,
+      props: true,
+    },
+    {
+      path: '/events/:eventId/projects/create',
+      name: 'CreateProject',
+      component: CreateProject,
+      props: true,
+    },
+    {
+      path: '/events/:eventId/projects/create/complete',
+      name: 'CreateProjectCompleted',
+      component: CreateProjectCompleted,
+      props: true,
+    },
+    {
+      path: '/events/:eventId/projects/:projectId',
+      name: 'ViewProject',
+      component: ViewProject,
+      props: true,
+    },
+    {
+      path: '/events/:eventId/projects/:projectId/edit',
+      name: 'EditProject',
+      component: EditProject,
+      props: true,
     },
   ],
 });

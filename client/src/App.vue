@@ -1,14 +1,25 @@
 <template>
-  <div id="app">
-    <b-navbar type="dark" variant="primary">
-      <b-navbar-brand>Coolest Projects</b-navbar-brand>
-    </b-navbar>
-    <router-view></router-view>
+  <div class="center-grid">
+    <div class="center-grid__content">
+      <div class="text-center">
+        <img class="logo" src="./assets/CoolestProjectsLogo.svg" />
+      </div>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app',
-};
+  export default {
+    name: 'app',
+  };
 </script>
+
+<style lang="scss">
+  @import './assets/scss/main.scss';
+
+  .logo {
+    max-width: 180px;
+    margin: 20px;
+  }
+</style>
