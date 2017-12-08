@@ -4,6 +4,7 @@ exports.up = (knex, Promise) =>
       table.uuid('id').primary();
       table.string('name');
       table.string('slug');
+      table.string('location');
       table.datetime('date');
       table.datetime('registration_start');
       table.datetime('registration_end');
