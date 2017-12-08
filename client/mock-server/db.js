@@ -17,6 +17,8 @@ const events = [
   {
     id: 'cp2018',
     name: 'Coolest Projects Dublin 2018',
+    location: 'RDS Dublin',
+    date: '2018-05-26T00:00:00.000Z',
     categories: [
       'Scratch',
       'Websites & Web Games',

@@ -5269,6 +5269,10 @@ moment@2.x.x:
   version "2.19.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.2.tgz#8a7f774c95a64550b4c7ebd496683908f9419dbe"
 
+moment@^2.19.3:
+  version "2.19.3"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.3.tgz#bdb99d270d6d7fda78cc0fbace855e27fe7da69f"
+
 morgan@^1.9.0, morgan@~1.9.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/morgan/-/morgan-1.9.0.tgz#d01fa6c65859b76fcf31b3cb53a3821a311d8051"
@@ -7899,6 +7903,10 @@ vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
 
+vee-validate@^2.0.0-rc.25:
+  version "2.0.0-rc.25"
+  resolved "https://registry.yarnpkg.com/vee-validate/-/vee-validate-2.0.0-rc.25.tgz#bfd80f6c55c560526dcc2be194731adffad63b1d"
+
 vendors@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/vendors/-/vendors-1.0.1.tgz#37ad73c8ee417fb3d580e785312307d274847f22"
@@ -7921,9 +7929,9 @@ void-elements@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
-vue-dob-picker@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/vue-dob-picker/-/vue-dob-picker-1.0.8.tgz#f2acb5cf185f1523e729f3932efe9384ad34b5a4"
+vue-dob-picker@1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/vue-dob-picker/-/vue-dob-picker-1.0.9.tgz#2c6e9736a0b2d08e0accd3458b23bcddc515696d"
 
 vue-hot-reload-api@^2.2.0:
   version "2.2.4"
@@ -7956,6 +7964,10 @@ vue-resource@^1.3.4:
 vue-router@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.1.tgz#d9b05ad9c7420ba0f626d6500d693e60092cc1e9"
+
+vue-search-select@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/vue-search-select/-/vue-search-select-2.4.0.tgz#de5d0c84f5d1818261ad9bf82fd53e5e726199ab"
 
 vue-style-loader@^3.0.0, vue-style-loader@^3.0.3:
   version "3.0.3"

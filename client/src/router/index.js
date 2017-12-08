@@ -43,7 +43,7 @@ export default new Router({
       props: true,
     },
     {
-      path: '/events/:eventId/projects/create/complete',
+      path: '/events/:eventId/projects/:projectId/complete',
       name: 'CreateProjectCompleted',
       component: CreateProjectCompleted,
       props: true,

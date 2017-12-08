@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -49,8 +50,8 @@ h2 {
 input, select, textarea {
   font-size: 16px;
   border-radius: 3px;
-  background-color: #f7f7f7;
-  border: solid 1px #979797;
+  background-color: #fff;
+  border: solid 1px rgba(34, 36, 38, 0.15);
   padding: 10px;
   height: 42px;
   box-sizing: border-box;
@@ -58,6 +59,10 @@ input, select, textarea {
   &::placeholder {
     color: #9b9b9b;
   }
+}
+
+select.placeholder {
+  color: #9b9b9b;
 }
 
 textarea {
@@ -126,4 +131,9 @@ textarea {
 .col-6fr {
   flex: 6;
   margin: 0 15px;
+}
+
+.error-message {
+  color: #d0021b;
+  font-size: 14px;
 }

@@ -4,20 +4,24 @@ import ProjectForm from '!!vue-loader?inject!@/project/Form';
 
 describe('ProjectForm component', () => {
   let vm;
-  const sandbox = sinon.sandbox.create();
-  const ProjectServiceMock = {
-    get: sandbox.stub(),
-    create: sandbox.stub(),
-  };
-  const ProjectFormWithMocks = ProjectForm({
-    '@/project/service': ProjectServiceMock,
-  });
+  let sandbox;
+  let ProjectServiceMock;
+  let ProjectFormWithMocks;
 
   beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    ProjectServiceMock = {
+      get: sandbox.stub(),
+      create: sandbox.stub(),
+    };
+    ProjectFormWithMocks = ProjectForm({
+      '@/project/service': ProjectServiceMock,
+    });
     vm = vueUnitHelper(ProjectFormWithMocks);
   });
 
   afterEach(() => {
+    sandbox.reset();
     sandbox.restore();
   });
 
@@ -166,35 +170,51 @@ describe('ProjectForm component', () => {
     describe('numParticipants', () => {
       it('should add to the participants array when number increases', () => {
         // ARRANGE
-        vm.participants = [{}, {}];
+        vm.participants = [
+          { specialRequirementsProvided: false },
+          { specialRequirementsProvided: false },
+        ];
 
         // ACT
         vm.$watchers.numParticipants(3, 2);
 
         // ASSERT
-        expect(vm.participants).to.deep.equal([{}, {}, {}]);
+        expect(vm.participants).to.deep.equal([
+          { specialRequirementsProvided: false },
+          { specialRequirementsProvided: false },
+          { specialRequirementsProvided: false },
+        ]);
       });
 
       it('should remove from the participants array when number decreases', () => {
         // ARRANGE
-        vm.participants = [{}, {}];
+        vm.participants = [
+          { specialRequirementsProvided: false },
+          { specialRequirementsProvided: false },
+        ];
 
         // ACT
         vm.$watchers.numParticipants(1, 2);
 
         // ASSERT
-        expect(vm.participants).to.deep.equal([{}]);
+        expect(vm.participants).to.deep.equal([{ specialRequirementsProvided: false }]);
       });
 
       it('should do nothing when number stays the same', () => {
         // ARRANGE
-        vm.participants = [{}, {}];
+        vm.participants = [
+          { specialRequirementsProvided: false },
+          { specialRequirementsProvided: false },
+        ];
 
         // ACT
         vm.$watchers.numParticipants(2, 2);
 
         // ASSERT
-        expect(vm.participants).to.deep.equal([{}, {}]);
+        expect(vm.participants).to.deep.equal([
+          { specialRequirementsProvided: false },
+          { specialRequirementsProvided: false },
+        ]);
       });
     });
   });
@@ -223,7 +243,7 @@ describe('ProjectForm component', () => {
     });
 
     describe('onSubmit', () => {
-      it('should create the project with ProjectService then go to a confirmation page', async () => {
+      it('should create the project with ProjectService then go to a confirmation page if form is valid', async () => {
         // ARRANGE
         const project = {
           name: 'bar',
@@ -231,13 +251,18 @@ describe('ProjectForm component', () => {
             type: 'supervisor',
           }],
         };
-        vm.event = {
+        const createdProject = { id: 'baz' };
+        const event = {
           id: 'foo',
         };
+        vm.event = event;
         vm.projectPayload = project;
-        ProjectServiceMock.create.resolves();
+        ProjectServiceMock.create.resolves({ body: createdProject });
         vm.$router = {
           push: sandbox.stub(),
+        };
+        vm.$validator = {
+          validateAll: sandbox.stub().resolves(true),
         };
 
         // ACT
@@ -249,8 +274,30 @@ describe('ProjectForm component', () => {
         expect(vm.$router.push).to.have.been.calledOnce;
         expect(vm.$router.push).to.have.been.calledWith({
           name: 'CreateProjectCompleted',
-          params: { eventId: 'foo' },
+          params: {
+            eventId: 'foo',
+            projectId: 'baz',
+            _event: event,
+            _project: createdProject,
+          },
         });
+      });
+
+      it('should do nothing if form is not valid', async () => {
+        // ARRANGE
+        vm.$router = {
+          push: sandbox.stub(),
+        };
+        vm.$validator = {
+          validateAll: sandbox.stub().resolves(false),
+        };
+
+        // ACT
+        await vm.onSubmit();
+
+        // ASSERT
+        expect(ProjectServiceMock.create).to.not.have.been.called;
+        expect(vm.$router.push).to.not.have.been.called;
       });
     });
   });
