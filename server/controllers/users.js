@@ -1,5 +1,5 @@
-const UserModel = require('../../models/user');
-const AuthModel = require('../../models/auth');
+const UserModel = require('../models/user');
+const AuthModel = require('../models/auth');
 
 // curl -H 'Content-Type: application/json' -X POST --data-binary '{"email": "a"}' http://localhost:3000/api/v1/users
 // TODO : use req.body and apply endpoint validation

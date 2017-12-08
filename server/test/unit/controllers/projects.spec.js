@@ -1,7 +1,7 @@
-const proxy = require('proxyquire');
+const proxy = require('proxyquire').noCallThru();
 const { omit, extend } = require('lodash');
 
-describe('projects handlers', () => {
+describe('projects controllers', () => {
   const sandbox = sinon.sandbox.create();
   describe('post', () => {
     beforeEach(() => {
@@ -31,9 +31,9 @@ describe('projects handlers', () => {
       };
 
       // STUBs
-      const mockUserSaveMember = sandbox.stub().resolves({ id: 'user1' });
-      const mockUserSaveSupervisor = sandbox.stub().resolves({ id: 'user2' });
-      const mockProjectSave = sandbox.stub().resolves({ id: 'project' });
+      const mockUserSaveMember = sandbox.stub().resolves({ id: 'user1', toJSON: () => ({ id: 'user1' }) });
+      const mockUserSaveSupervisor = sandbox.stub().resolves({ id: 'user2', toJSON: () => ({ id: 'user2' }) });
+      const mockProjectSave = sandbox.stub().resolves({ id: 'project', toJSON: () => ({ id: 'project' }) });
       const mockAttachProject = sinon.stub().resolves({});
       const mockMembersProject = sandbox.stub().returns({
         attach: mockAttachProject,
@@ -53,27 +53,20 @@ describe('projects handlers', () => {
       const mockUserHandler = {
         get: sandbox.stub().resolves({ id: 'user2' }),
       };
-      const handlers = proxy('../../../../routes/handlers/projects', {
-        '../../models/user': mockUserModel,
-        '../../models/project': mockProjectModel,
+      const controllers = proxy('../../../controllers/projects', {
+        '../models/user': mockUserModel,
+        '../models/project': mockProjectModel,
         './users': mockUserHandler,
       });
-      const reqMock = {
-        params: { eventId },
-        body: {
-          name,
-          category,
-          dojoId,
-          users: [member, supervisor],
-        },
+      const payload = {
+        name,
+        category,
+        dojoId,
+        users: [member, supervisor],
       };
-      const jsonReqMock = sandbox.stub().returns({ id: 'project' });
-      const statusResMock = sandbox.stub().returns({ json: jsonReqMock });
-      const resMock = { status: statusResMock };
-      const nextMock = sandbox.stub();
 
       // ACT
-      await handlers.post(reqMock, resMock, nextMock);
+      const res = await controllers.post(payload, eventId);
 
       // First, save the project
       expect(mockProjectModel).to.have.been.calledTwice;
@@ -103,20 +96,16 @@ describe('projects handlers', () => {
       expect(mockAttachProject).to.have.been.calledWith([{ user_id: 'user1', type: 'member' }, { user_id: 'user2', type: 'supervisor' }]);
 
       // Finally return the project/JSON
-      expect(statusResMock).to.have.been.calledOnce;
-      expect(statusResMock).to.have.been.calledWith(200);
-      expect(jsonReqMock).to.have.been.calledOnce;
-      expect(jsonReqMock).to.have.been.calledWith({ id: 'project' });
+      expect(res).to.be.eql({ id: 'project', users: [{ id: 'user1', type: 'member' }, { id: 'user2', type: 'supervisor' }] });
     });
 
-    it('should call next on erroneous behavior', (done) => {
+    it('should call propagate err on erroneous behavior', async () => {
       // DATA
       const eventId = 'eventId';
       const name = 'MyLittleProject';
       const category = 'Flash';
       const dojoId = '';
       const err = new Error('Fake err');
-      const expectedErr = new Error('Error while saving your project.');
 
       // STUBs
       const mockProjectSave = sandbox.stub().rejects(err);
@@ -124,23 +113,22 @@ describe('projects handlers', () => {
       const mockProjectModel = sandbox.stub().returns({
         save: mockProjectSave,
       });
-      const handlers = proxy('../../../../routes/handlers/projects', {
-        '../../models/user': mockUserModel,
-        '../../models/project': mockProjectModel,
+      const controllers = proxy('../../../controllers/projects', {
+        '../models/user': mockUserModel,
+        '../models/project': mockProjectModel,
+        './users': {},
       });
-      const reqMock = {
-        params: { eventId },
-        body: {
-          name,
-          category,
-          dojoId,
-          users: [],
-        },
+      const payload = {
+        name,
+        category,
+        dojoId,
+        users: [],
       };
-      const resMock = sandbox.stub();
 
       // ACT
-      handlers.post(reqMock, resMock, (_err) => {
+      try {
+        await controllers.post(payload, eventId);
+      } catch (_err) {
         // First, save the project
         expect(mockProjectModel).to.have.been.calledOnce;
         expect(mockProjectModel).to.have.been.calledWith({
@@ -152,9 +140,8 @@ describe('projects handlers', () => {
         expect(mockProjectSave).to.have.been.calledOnce;
 
         // Finally return the err
-        expect(_err.message).to.equal(expectedErr.message);
-        done();
-      });
+        expect(_err.message).to.equal(_err.message);
+      }
     });
   });
 });

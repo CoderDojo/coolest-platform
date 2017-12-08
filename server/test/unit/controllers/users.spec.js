@@ -1,6 +1,6 @@
-const proxy = require('proxyquire');
+const proxy = require('proxyquire').noCallThru();
 
-describe('users handlers', () => {
+describe('users controllers', () => {
   const sandbox = sinon.sandbox.create();
   describe('post', () => {
     beforeEach(() => {
@@ -16,9 +16,9 @@ describe('users handlers', () => {
       const mockAuthModel = sandbox.stub().returns({
         save: mockAuthSave,
       });
-      const handlers = proxy('../../../../routes/handlers/users', {
-        '../../models/user': mockUserModel,
-        '../../models/auth': mockAuthModel,
+      const controllers = proxy('../../../controllers/users', {
+        '../models/user': mockUserModel,
+        '../models/auth': mockAuthModel,
       });
       const reqMock = {
         body: {
@@ -30,7 +30,7 @@ describe('users handlers', () => {
       const resMock = { status: statusResMock };
       const nextMock = sandbox.stub();
 
-      await handlers.post(reqMock, resMock, nextMock);
+      await controllers.post(reqMock, resMock, nextMock);
 
       expect(mockUserModel).to.have.been.calledOnce;
       expect(mockUserModel).to.have.been.calledWith({ email });
@@ -53,8 +53,9 @@ describe('users handlers', () => {
       const mockUserModel = sandbox.stub().returns({
         save: mockUserSave,
       });
-      const handlers = proxy('../../../../routes/handlers/users', {
-        '../../models/user': mockUserModel,
+      const controllers = proxy('../../../controllers/users', {
+        '../models/user': mockUserModel,
+        '../models/auth': {},
       });
       const email = 'test@test.com';
       const reqMock = {
@@ -63,7 +64,7 @@ describe('users handlers', () => {
         },
       };
       const resMock = {};
-      handlers.post(reqMock, resMock, (_err) => {
+      controllers.post(reqMock, resMock, (_err) => {
         expect(mockUserModel).to.have.been.calledOnce;
         expect(mockUserModel).to.have.been.calledWith({ email });
         expect(mockUserSave).to.have.been.calledOnce;
@@ -80,8 +81,9 @@ describe('users handlers', () => {
       const mockUserModel = sandbox.stub().returns({
         save: mockUserSave,
       });
-      const handlers = proxy('../../../../routes/handlers/users', {
-        '../../models/user': mockUserModel,
+      const controllers = proxy('../../../controllers/users', {
+        '../models/user': mockUserModel,
+        '../models/auth': {},
       });
       const email = 'test@test.com';
       const reqMock = {
@@ -91,7 +93,7 @@ describe('users handlers', () => {
       };
       const resMock = {};
 
-      handlers.post(reqMock, resMock, (_err) => {
+      controllers.post(reqMock, resMock, (_err) => {
         expect(mockUserModel).to.have.been.calledOnce;
         expect(mockUserModel).to.have.been.calledWith({ email });
         expect(mockUserSave).to.have.been.calledOnce;

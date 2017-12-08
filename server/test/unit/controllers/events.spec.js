@@ -1,7 +1,7 @@
-const proxy = require('proxyquire');
+const proxy = require('proxyquire').noCallThru();
 const uuid = require('uuid/v4');
 
-describe('events handlers', () => {
+describe('events controllers', () => {
   const sandbox = sinon.sandbox.create();
   describe('get', () => {
     beforeEach(() => {
@@ -20,11 +20,11 @@ describe('events handlers', () => {
       const mockEventModelFetch = sandbox.stub().resolves(expectedEvent);
       const mockEventModel = sandbox.stub().returns({ fetch: mockEventModelFetch });
       const resMock = { status: statusResMock };
-      const handlers = proxy('../../../../routes/handlers/events', {
-        '../../models/event': mockEventModel,
+      const controllers = proxy('../../../controllers/events', {
+        '../models/event': mockEventModel,
       });
       // ACT
-      const event = await handlers.get(reqMock, resMock);
+      const event = await controllers.get(reqMock, resMock);
 
       // Build the request
       expect(mockEventModel).to.have.been.calledOnce;
@@ -51,11 +51,11 @@ describe('events handlers', () => {
       const mockEventModelFetch = sandbox.stub().rejects(err);
       const mockEventModel = sandbox.stub().returns({ fetch: mockEventModelFetch });
       const resMock = {};
-      const handlers = proxy('../../../../routes/handlers/events', {
-        '../../models/event': mockEventModel,
+      const controllers = proxy('../../../controllers/events', {
+        '../models/event': mockEventModel,
       });
       // ACT
-      handlers.get(reqMock, resMock, (_err) => {
+      controllers.get(reqMock, resMock, (_err) => {
         // Build the request
         expect(mockEventModel).to.have.been.calledOnce;
         expect(mockEventModel).to.have.been.calledWith({ slug });

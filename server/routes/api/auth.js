@@ -1,4 +1,4 @@
-const authHandler = require('../handlers/auth');
+const authHandler = require('../../controllers/auth');
 
 module.exports = (router, prefix) => {
   const base = `${prefix}/auth`;

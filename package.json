@@ -10,6 +10,7 @@
   "scripts": {
     "build": "node client/build/build.js",
     "start": "concurrently --kill-others --success first \"yarn server-start\" \"yarn client-start\"",
+    "start-dev": "concurrently --kill-others --success first \"yarn server-start -- --seed --trace-sync-io\" \"yarn client-start\"",
     "start-with-mocks": "concurrently --kill-others --success first \"yarn mock-server\" \"yarn client-start\" ",
     "test": "yarn client-unit && yarn server-unit",
     "lint": "eslint --ext .js,.vue .",
@@ -19,7 +20,8 @@
     "client-lint": "eslint --ext .js,.vue src client/test/unit/specs",
     "mock-server": "node ./client/mock-server/server.js",
     "server-start": "cd server && node bin/www",
-    "server-unit": "mocha -G --require ./server/test/helper.js ./server/test/**/*.spec.js --reporter=nyan",
+    "server-unit": "mocha -G --require ./server/test/helper.js ./server/test/unit/**/*.spec.js --reporter=nyan",
+    "server-int": "mocha -G --require ./server/test/helper.js ./server/test/integration/**/*.spec.js --reporter=nyan",
     "server-lint": "eslint server --env mocha,chai --global expect,sinon"
   },
   "lint-staged": {
@@ -30,6 +32,7 @@
   },
   "dependencies": {
     "@risingstack/protect": "^1.2.0",
+    "@sendgrid/mail": "^6.1.4",
     "body-parser": "~1.18.2",
     "bookshelf": "^0.11.1",
     "bookshelf-camelcase": "^2.0.1",
@@ -117,6 +120,7 @@
     "sinon": "^4.0.1",
     "sinon-chai": "^2.14.0",
     "sqlite3": "^3.1.13",
+    "supertest": "^3.0.0",
     "sw-precache-webpack-plugin": "^0.11.4",
     "uglify-es": "^3.1.3",
     "url-loader": "^0.6.2",

@@ -7,14 +7,11 @@ module.exports = bookshelf =>
     bookshelf.knex.migrate
       .latest({ directory: path.join(__dirname, '/migrations') })
       .then(() => {
-        if (process.env.NODE_ENV === 'development') {
-          return bookshelf.knex.seed.run({ directory: './database/seeds' });
-        }
         return Promise.resolve();
       })
       .then(() => {
         logger.info('Migrations finished properly');
-        resolve();
+        resolve(bookshelf);
       })
       .catch(reject);
   });

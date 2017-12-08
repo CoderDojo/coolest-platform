@@ -1,4 +1,4 @@
-const usersHandler = require('../handlers/users');
+const usersHandler = require('../../controllers/users');
 
 module.exports = (router, prefix) => {
   const base = `${prefix}/users`;

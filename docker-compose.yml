@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: cool-database
   platform:
     image: node:carbon
-    command: yarn start
+    command: yarn start-dev
     working_dir: /usr/src/app
     environment:
       NODE_ENV: development

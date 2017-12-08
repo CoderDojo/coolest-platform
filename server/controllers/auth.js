@@ -1,4 +1,4 @@
-const AuthModel = require('../../models/auth');
+const AuthModel = require('../models/auth');
 
 class Auth {
   static get(userId) {

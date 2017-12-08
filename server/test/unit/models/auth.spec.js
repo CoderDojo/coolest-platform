@@ -2,22 +2,24 @@ const uuid = require('uuid');
 const proxy = require('proxyquire');
 const jsonwebtoken = require('jsonwebtoken');
 const config = require('../../../config/auth');
-const mockDB = require('../../database');
 
 let Auth;
-let connection;
 describe('auth model', () => {
   const sandbox = sinon.sandbox.create();
   before(async () => {
-    connection = await mockDB;
     Auth = proxy('../../../models/auth', {
-      '../database': connection,
+      '../database': {},
+      './user': {},
       jsonwebtoken,
     });
   });
   it('should create an auth and create a new jwt', async () => {
-    const auth = await new Auth({ userId: uuid() }).save();
-    expect(auth.attributes.token.length).to.equal(189);
+    const attributes = { userId: uuid() };
+    const auth = await new Auth(attributes);
+    const tokenCreator = sinon.spy(auth, 'createToken');
+    auth.emit('saving', { attributes });
+    expect(tokenCreator).to.have.been.calledOnce;
+    expect(attributes.token.length).to.equal(189);
   });
 
   // Ensure this is only called "onSave" elsewhat queries are appended the token

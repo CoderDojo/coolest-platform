@@ -1,4 +1,4 @@
-const eventHandler = require('../handlers/events');
+const eventHandler = require('../../controllers/events');
 
 module.exports = (router, prefix) => {
   const base = `${prefix}/events`;

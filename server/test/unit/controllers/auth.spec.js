@@ -1,8 +1,8 @@
-const proxy = require('proxyquire');
+const proxy = require('proxyquire').noCallThru();
 const jsonwebtoken = require('jsonwebtoken');
-const config = require('../../../../config/auth');
+const config = require('../../../config/auth');
 
-describe('auth handlers', () => {
+describe('auth controllers', () => {
   const sandbox = sinon.sandbox.create();
   describe('authenticate', () => {
     beforeEach(() => {
@@ -14,13 +14,13 @@ describe('auth handlers', () => {
       const authMock = { user_id: 'xxxx', token: 'aaa' };
       // STUBS
       const authModel = {};
-      const handlers = proxy('../../../../routes/handlers/auth.js', {
-        '../../models/auth': authModel,
+      const controllers = proxy('../../../controllers/auth.js', {
+        '../models/auth': authModel,
       });
-      const handlerGetStub = sinon.stub(handlers, 'get');
+      const handlerGetStub = sinon.stub(controllers, 'get');
       handlerGetStub.resolves(authMock);
       // ACT
-      handlers.authenticate(jwt, (err, auth) => {
+      controllers.authenticate(jwt, (err, auth) => {
         // Load the token by userId
         expect(handlerGetStub).to.have.been.calledOnce;
         expect(handlerGetStub).to.have.been.calledWith(jwt.data);
@@ -36,13 +36,13 @@ describe('auth handlers', () => {
       const authMock = null;
       // STUBS
       const authModel = {};
-      const handlers = proxy('../../../../routes/handlers/auth.js', {
-        '../../models/auth': authModel,
+      const controllers = proxy('../../../controllers/auth.js', {
+        '../models/auth': authModel,
       });
-      const handlerGetStub = sinon.stub(handlers, 'get');
+      const handlerGetStub = sinon.stub(controllers, 'get');
       handlerGetStub.resolves(authMock);
       // ACT
-      handlers.authenticate(jwt, (err, auth) => {
+      controllers.authenticate(jwt, (err, auth) => {
         // Load the token by userId
         expect(handlerGetStub).to.have.been.calledOnce;
         expect(handlerGetStub).to.have.been.calledWith(jwt.data);
@@ -58,13 +58,13 @@ describe('auth handlers', () => {
       const authMock = new Error('Cant reach DB');
       // STUBS
       const authModel = {};
-      const handlers = proxy('../../../../routes/handlers/auth.js', {
-        '../../models/auth': authModel,
+      const controllers = proxy('../../../controllers/auth.js', {
+        '../models/auth': authModel,
       });
-      const handlerGetStub = sinon.stub(handlers, 'get');
+      const handlerGetStub = sinon.stub(controllers, 'get');
       handlerGetStub.resolves(authMock);
       // ACT
-      handlers.authenticate(jwt, (err, auth) => {
+      controllers.authenticate(jwt, (err, auth) => {
         // Load the token by userId
         expect(handlerGetStub).to.have.been.calledOnce;
         expect(handlerGetStub).to.have.been.calledWith(jwt.data);
@@ -85,24 +85,25 @@ describe('auth handlers', () => {
       const jwt = { data: 'xxxx' };
       const token = jsonwebtoken.sign(jwt, config.authSecret);
       // STUBS
+      const authModel = class {
+        static where() {}
+        // eslint-disable-next-line class-methods-use-this
+        verifyToken() {}
+      };
       const fetchStub = sinon.stub().resolves(token);
-      const whereStub = sinon.stub().returns({
+      const whereStub = sinon.stub(authModel, 'where').returns({
         fetch: fetchStub,
       });
-      const verifyTokenStub = sinon.stub().returns(jwt);
-      const authModel = sinon.stub().returns({
-        where: whereStub,
-        verifyToken: verifyTokenStub,
-      });
-      const handlers = proxy('../../../../routes/handlers/auth.js', {
-        '../../models/auth': authModel,
+      const verifyTokenStub = sinon.stub(authModel.prototype, 'verifyToken').returns(jwt);
+
+      const controllers = proxy('../../../controllers/auth.js', {
+        '../models/auth': authModel,
       });
       // ACT
-      const res = await handlers.verify(token);
+      const res = await controllers.verify(token);
 
       // Load the token by userId
       expect(whereStub).to.have.been.calledWith({ token });
-      expect(authModel).to.have.been.calledTwice;
       expect(verifyTokenStub).to.have.been.calledOnce;
       expect(verifyTokenStub).to.have.been.calledWith(token);
       // Return a truthy value if found
@@ -112,26 +113,25 @@ describe('auth handlers', () => {
       const jwt = { data: 'xxxx' };
       const token = jsonwebtoken.sign(jwt, config.authSecret, { expiresIn: '1s' });
       // STUBS
+      const authModel = class {
+        static where() {}
+        // eslint-disable-next-line class-methods-use-this
+        verifyToken() {}
+      };
       const fetchStub = sinon.stub().resolves(token);
-      const whereStub = sinon.stub().returns({
+      const whereStub = sinon.stub(authModel, 'where').returns({
         fetch: fetchStub,
       });
-
-      const verifyTokenStub = sinon.stub().throws(new Error('jwt expired'));
-      const authModel = sinon.stub().returns({
-        where: whereStub,
-        verifyToken: verifyTokenStub,
-      });
-      const handlers = proxy('../../../../routes/handlers/auth.js', {
-        '../../models/auth': authModel,
+      const verifyTokenStub = sinon.stub(authModel.prototype, 'verifyToken').throws(new Error('jwt expired'));
+      const controllers = proxy('../../../controllers/auth.js', {
+        '../models/auth': authModel,
       });
       // ACT
       setTimeout(async () => {
         try {
-          await handlers.verify(token);
+          await controllers.verify(token);
         } catch (e) {
           // Load the token by userId
-          expect(authModel).to.have.been.calledTwice;
           expect(whereStub).to.have.been.calledWith({ token });
           expect(verifyTokenStub).to.have.been.calledOnce;
           expect(verifyTokenStub).to.have.been.calledWith(token);
@@ -143,23 +143,23 @@ describe('auth handlers', () => {
     it('should thow if the token doesnt exists', async () => {
       const token = 'aaaaa';
       // STUBS
+      const authModel = class {
+        static where() {}
+      };
       const fetchStub = sinon.stub().resolves(undefined);
-      const whereStub = sinon.stub().returns({
+      const whereStub = sinon.stub(authModel, 'where').returns({
         fetch: fetchStub,
       });
-      const authModel = sinon.stub().returns({
-        where: whereStub,
-      });
-      const handlers = proxy('../../../../routes/handlers/auth.js', {
-        '../../models/auth': authModel,
+
+      const controllers = proxy('../../../controllers/auth.js', {
+        '../models/auth': authModel,
       });
       // ACT
 
       try {
-        await handlers.verify(token);
+        await controllers.verify(token);
       } catch (e) {
         // Load the token by userId
-        expect(authModel).to.have.been.calledOnce;
         expect(whereStub).to.have.been.calledWith({ token });
         expect(e.message).to.equal('Invalid token');
       }
