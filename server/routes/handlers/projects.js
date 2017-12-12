@@ -5,7 +5,7 @@ module.exports = {
   post: [
     passport.authenticate('jwt', { session: false }),
     (req, res, next) => {
-      return projectController.post(req.body, req.params.eventId)
+      return projectController.post(req.user.user, req.body, req.params.eventId)
         .then((project) => {
           res.locals.project = project;
           return next();
@@ -16,7 +16,7 @@ module.exports = {
         });
     },
     (req, res, next) => {
-      return req.app.locals.mailing.sendWelcomeEmail(res.locals.project)
+      return req.app.locals.mailing.sendWelcomeEmail(req.user.user, res.locals.project)
         .then(() => next())
         .catch(next);
     },

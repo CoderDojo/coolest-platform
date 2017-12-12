@@ -4,6 +4,12 @@ const { omit, extend } = require('lodash');
 describe('projects controllers', () => {
   const sandbox = sinon.sandbox.create();
   describe('post', () => {
+    let creatorMock;
+    before(() => {
+      creatorMock = {
+        id: 'userX',
+      };
+    });
     beforeEach(() => {
       sandbox.reset();
     });
@@ -66,7 +72,7 @@ describe('projects controllers', () => {
       };
 
       // ACT
-      const res = await controllers.post(payload, eventId);
+      const res = await controllers.post(creatorMock, payload, eventId);
 
       // First, save the project
       expect(mockProjectModel).to.have.been.calledTwice;
@@ -93,10 +99,15 @@ describe('projects controllers', () => {
       expect(mockProjectModel.getCall(1).args[0]).to.be.eql({ id: 'project' });
       expect(mockMembersProject).to.have.been.calledOnce;
       expect(mockAttachProject).to.have.been.calledOnce;
-      expect(mockAttachProject).to.have.been.calledWith([{ user_id: 'user1', type: 'member' }, { user_id: 'user2', type: 'supervisor' }]);
+      expect(mockAttachProject).to.have.been.calledWith([
+        { user_id: 'user1', type: 'member' },
+        { user_id: 'user2', type: 'supervisor' },
+        { user_id: 'userX', type: 'owner' },
+      ]);
 
       // Finally return the project/JSON
       expect(res).to.be.eql({ id: 'project', users: [{ id: 'user1', type: 'member' }, { id: 'user2', type: 'supervisor' }] });
+      expect(res.users.map(user => user.type)).to.not.include('owner');
     });
 
     it('should call propagate err on erroneous behavior', async () => {
@@ -127,7 +138,7 @@ describe('projects controllers', () => {
 
       // ACT
       try {
-        await controllers.post(payload, eventId);
+        await controllers.post(creatorMock, payload, eventId);
       } catch (_err) {
         // First, save the project
         expect(mockProjectModel).to.have.been.calledOnce;

@@ -51,6 +51,7 @@ describe('router: project', () => {
             },
           },
         },
+        user: { userId: 'userX', user: { id: 'userX' } },
         body: mockProject,
         params: { eventId: 'event1' },
       };
@@ -60,9 +61,13 @@ describe('router: project', () => {
       };
       projectController.post = postController.resolves(mockProject);
       await handler(mockReq, mockRes, nextMock);
-      expect(postController).to.have.been.calledWith(mockProject, mockReq.params.eventId);
+      expect(postController).to.have.been.calledWith(
+        mockReq.user.user,
+        mockProject,
+        mockReq.params.eventId,
+      );
       expect(mailingStub).to.have.been.calledOnce;
-      expect(mailingStub).to.have.been.calledWith(mockProject);
+      expect(mailingStub).to.have.been.calledWith(mockReq.user.user, mockProject);
       expect(nextMock).to.have.been.calledTwice;
     });
 
@@ -77,6 +82,7 @@ describe('router: project', () => {
             },
           },
         },
+        user: { userId: 'userX', user: { id: 'userX' } },
         body: mockProject,
         params: { eventId: 'event1' },
       };
@@ -86,7 +92,11 @@ describe('router: project', () => {
       };
       projectController.post = postController.resolves(mockProject);
       await handler(mockReq, mockRes, nextMock);
-      expect(postController).to.have.been.calledWith(mockProject, mockReq.params.eventId);
+      expect(postController).to.have.been.calledWith(
+        mockReq.user.user,
+        mockProject,
+        mockReq.params.eventId,
+      );
       expect(mailingStub).to.have.been.calledOnce;
 
       expect(statusStub).to.have.been.calledOnce;
@@ -110,6 +120,7 @@ describe('router: project', () => {
             },
           },
         },
+        user: { userId: 'userX', user: { id: 'userX' } },
         body: mockProject,
         params: { eventId: 'event1' },
       };
@@ -119,7 +130,11 @@ describe('router: project', () => {
       };
       projectController.post = postController.rejects();
       await handler(mockReq, mockRes, nextMock);
-      expect(postController).to.have.been.calledWith(mockProject, mockReq.params.eventId);
+      expect(postController).to.have.been.calledWith(
+        mockReq.user.user,
+        mockProject,
+        mockReq.params.eventId,
+      );
       expect(mailingStub).to.not.have.been.called;
       expect(errorHandler.getCall(0).args[0].message).to.equal('Error while saving your project.');
       expect(nextMock).to.have.been.calledOnce;
@@ -140,6 +155,7 @@ describe('router: project', () => {
             },
           },
         },
+        user: { userId: 'userX', user: { id: 'userX' } },
         body: mockProject,
         params: { eventId: 'event1' },
       };
@@ -149,7 +165,11 @@ describe('router: project', () => {
       };
       projectController.post = postController.rejects(mockErr);
       await handler(mockReq, mockRes, nextMock);
-      expect(postController).to.have.been.calledWith(mockProject, mockReq.params.eventId);
+      expect(postController).to.have.been.calledWith(
+        mockReq.user.user,
+        mockProject,
+        mockReq.params.eventId,
+      );
       expect(mailingStub).to.not.have.been.called;
       expect(loggerStub).to.have.been.calledOnce;
       expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');

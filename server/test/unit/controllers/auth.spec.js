@@ -11,7 +11,8 @@ describe('auth controllers', () => {
     it('should return the auth the token exists', (done) => {
       // DATA
       const jwt = { data: 'xxxx' };
-      const authMock = { user_id: 'xxxx', token: 'aaa' };
+      const authInstance = { user_id: 'xxxx', token: 'aaa' };
+      const authMock = Object.assign({}, authInstance, { toJSON: () => authInstance });
       // STUBS
       const authModel = {};
       const controllers = proxy('../../../controllers/auth.js', {
@@ -25,7 +26,7 @@ describe('auth controllers', () => {
         expect(handlerGetStub).to.have.been.calledOnce;
         expect(handlerGetStub).to.have.been.calledWith(jwt.data);
         // Return a truthy value if found
-        expect(auth).to.be.eql(authMock);
+        expect(auth).to.be.eql(authInstance);
         expect(err).to.be.null;
         done();
       });

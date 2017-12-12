@@ -1,11 +1,12 @@
 const bookshelf = require('../database');
 const jwt = require('jsonwebtoken');
 const config = require('../config/auth');
-const User = require('./user');
 
 const Auth = bookshelf.Model.extend({
   tableName: 'auth',
-  user: () => this.belongsTo(User),
+  user() {
+    return this.belongsTo('User');
+  },
   constructor,
   uuid: true,
   hasTimestamps: true,

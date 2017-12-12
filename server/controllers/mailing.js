@@ -19,10 +19,10 @@ class Mailing {
     return Promise.resolve();
   }
 
-  sendWelcomeEmail(project) {
-    const to = project.users.find(user => user.type === 'supervisor');
+  sendWelcomeEmail(creator, project) {
+    const to = creator.email;
     return this.send({
-      to: to.email,
+      to,
       from: {
         email: 'enquiries+bot@coderdojo.org',
         name: 'Coolest Projects',

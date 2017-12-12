@@ -4,18 +4,19 @@ const UserModel = require('../models/user');
 const { pick } = require('lodash');
 
 class Project {
-  static post(payload, eventId) {
+  static post(creator, project, eventId) {
     // TODO : apply endpoint validation
     // TODO : transaction
     const projectPayload = Object.assign(
       {},
-      pick(payload, ['name', 'category', 'dojoId']),
+      pick(project, ['name', 'category', 'dojoId']),
       { eventId },
     );
     const newProject = new ProjectModel(projectPayload);
     const promises = [];
     const users = [];
-    payload.users.forEach((user) => {
+    // Save every user from the form
+    project.users.forEach((user) => {
       const userPayload = pick(user, ['firstName', 'lastName', 'specialRequirements', 'dob', 'gender', 'email', 'phone', 'country']);
       const newUser = ((_userPayload) => {
         if (_userPayload.email) {
@@ -38,6 +39,10 @@ class Project {
         });
       promises.push(newUser);
     });
+
+    // Add owner to relationship but not to final payload ([users])
+    promises.push(Promise.resolve({ user_id: creator.id, type: 'owner' }));
+
     return newProject.save()
       .then((_project) => {
         return Promise.all(promises)

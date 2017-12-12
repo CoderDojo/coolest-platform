@@ -6,11 +6,15 @@ describe('mailing controllers', () => {
     let setSubstitutionWrappersStub;
     let sendStub;
     let setApiKeyStub;
+    let creatorMock;
 
     before(() => {
       setSubstitutionWrappersStub = sandbox.stub();
       setApiKeyStub = sandbox.stub();
       sendStub = sandbox.stub();
+      creatorMock = {
+        email: 'doubidou@example.com',
+      };
     });
 
     beforeEach(() => {
@@ -82,7 +86,7 @@ describe('mailing controllers', () => {
         });
         // ACT
         const mailingController = new Mailing(configMock);
-        mailingController.sendWelcomeEmail(mockProject);
+        mailingController.sendWelcomeEmail(creatorMock, mockProject);
 
         // Build the request
         expect(mailingController.mailer.send).to.have.been.calledOnce;
