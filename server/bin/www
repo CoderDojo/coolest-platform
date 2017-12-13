@@ -92,11 +92,10 @@ const init = async (seed) => {
     const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
     debug(`Listening on ${bind}`);
   }
-
-}
+};
 
 if (require.main === module) {
-  let argv = yargs.argv;
+  const argv = yargs.argv;
   init(argv.seed);
 } else {
   module.exports = init;
