@@ -7,7 +7,7 @@ RUN yarn build
 
 FROM node:carbon-alpine
 #RUN apk --no-cache add
-WORKDIR /usr/arc/app
+WORKDIR /usr/src/app
 ENV NODE_ENV=production
 EXPOSE 3000
 COPY yarn.lock package.json ./
