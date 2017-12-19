@@ -3,6 +3,7 @@ const path = require('path');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const httpsRedirect = require('express-https-redirect');
 const protect = require('@risingstack/protect');
 const helmet = require('helmet');
 const passport = require('passport');
@@ -25,6 +26,7 @@ module.exports = () => {
   app.locals.bookshelf = bookshelf;
   return migrate(bookshelf).then(() => {
     app.use(morgan('combined', { stream: logger.stream }));
+    app.use('/', httpsRedirect());
     app.use(helmet());
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());

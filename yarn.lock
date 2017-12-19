@@ -2963,6 +2963,10 @@ expect-ct@0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/expect-ct/-/expect-ct-0.1.0.tgz#52735678de18530890d8d7b95f0ac63640958094"
 
+express-https-redirect@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/express-https-redirect/-/express-https-redirect-1.0.0.tgz#d97bbb382cb428dcd8125710dcfc563a645c48e0"
+
 express-urlrewrite@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/express-urlrewrite/-/express-urlrewrite-1.2.0.tgz#8e667b7761ff1c7ffdb0efa05d64035387c823eb"
