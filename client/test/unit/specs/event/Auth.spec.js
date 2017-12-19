@@ -82,6 +82,9 @@ describe('Auth component', () => {
             },
           },
         });
+        vm.$ga = {
+          event: sandbox.stub(),
+        };
 
         // ACT
         await vm.onSubmit();
@@ -91,6 +94,12 @@ describe('Auth component', () => {
         expect(UserServiceMock.create).to.have.been.calledOnce;
         expect(CookieMock.set).to.have.been.calledOnce;
         expect(CookieMock.set).to.have.been.calledWith('authToken', 'foo');
+        expect(vm.$ga.event).to.have.been.calledOnce;
+        expect(vm.$ga.event).to.have.been.calledWith({
+          eventCategory: 'ProjectRegistration',
+          eventAction: 'NewUserAuth',
+          eventLabel: 'foo',
+        });
         expect(vm.$router.push).to.have.been.calledOnce;
         expect(vm.$router.push).to.have.been.calledWith({ name: 'CreateProject', params: { eventId: 'foo' } });
       });

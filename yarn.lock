@@ -8175,6 +8175,10 @@ void-elements@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
+vue-analytics@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/vue-analytics/-/vue-analytics-5.6.0.tgz#5a0669760bb2c04eef87abef899057c380133864"
+
 vue-dob-picker@1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/vue-dob-picker/-/vue-dob-picker-1.0.9.tgz#2c6e9736a0b2d08e0accd3458b23bcddc515696d"

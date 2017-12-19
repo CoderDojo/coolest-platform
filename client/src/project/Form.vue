@@ -270,6 +270,11 @@
         if (valid) {
           const createdProject =
             (await ProjectService.create(this.event.id, this.projectPayload)).body;
+          this.$ga.event({
+            eventCategory: 'ProjectRegistration',
+            eventAction: 'NewProject',
+            eventLabel: this.eventId,
+          });
           this.$router.push({
             name: 'CreateProjectCompleted',
             params: {

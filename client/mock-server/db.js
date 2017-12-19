@@ -15,7 +15,7 @@ const users = [
 
 const events = [
   {
-    id: 'cp2018',
+    id: 'cp-2018',
     name: 'Coolest Projects Dublin 2018',
     location: 'RDS Dublin',
     date: '2018-05-26T00:00:00.000Z',
@@ -30,7 +30,7 @@ const events = [
 const projects = [
   {
     id: 'sap',
-    eventId: 'cp2018',
+    eventId: 'cp-2018',
     name: 'Super Awesome Project',
     category: 'scratch',
     dojoId: 'foo',
@@ -68,7 +68,7 @@ const projects = [
   },
   {
     id: 'scp',
-    eventId: 'cp2018',
+    eventId: 'cp-2018',
     name: 'Sweet Cool Project',
     category: 'hardware',
     dojoId: 'foo',

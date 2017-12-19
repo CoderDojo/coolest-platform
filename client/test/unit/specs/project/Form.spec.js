@@ -256,6 +256,7 @@ describe('ProjectForm component', () => {
           id: 'foo',
         };
         vm.event = event;
+        vm.eventId = 'foo';
         vm.projectPayload = project;
         ProjectServiceMock.create.resolves({ body: createdProject });
         vm.$router = {
@@ -264,6 +265,9 @@ describe('ProjectForm component', () => {
         vm.$validator = {
           validateAll: sandbox.stub().resolves(true),
         };
+        vm.$ga = {
+          event: sandbox.stub(),
+        };
 
         // ACT
         await vm.onSubmit();
@@ -271,6 +275,12 @@ describe('ProjectForm component', () => {
         // ASSERT
         expect(ProjectServiceMock.create).to.have.been.calledOnce;
         expect(ProjectServiceMock.create).to.have.been.calledWith('foo', project);
+        expect(vm.$ga.event).to.have.been.calledOnce;
+        expect(vm.$ga.event).to.have.been.calledWith({
+          eventCategory: 'ProjectRegistration',
+          eventAction: 'NewProject',
+          eventLabel: 'foo',
+        });
         expect(vm.$router.push).to.have.been.calledOnce;
         expect(vm.$router.push).to.have.been.calledWith({
           name: 'CreateProjectCompleted',

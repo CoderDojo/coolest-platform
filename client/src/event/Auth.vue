@@ -51,6 +51,11 @@
         } catch (e) {
           const user = (await UserService.create(this.email)).body;
           Cookie.set('authToken', user.auth.token);
+          this.$ga.event({
+            eventCategory: 'ProjectRegistration',
+            eventAction: 'NewUserAuth',
+            eventLabel: this.eventId,
+          });
           this.$router.push({ name: 'CreateProject', params: { eventId: this.eventId } });
         }
       },
