@@ -96,7 +96,9 @@ const init = async (seed) => {
 
 if (require.main === module) {
   const argv = yargs.argv;
-  init(argv.seed);
+  init(argv.seed).catch((err) => {
+    logger.error(`Unhandled error: ${err}`);
+  });
 } else {
   module.exports = init;
 }
