@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const httpsRedirect = require('express-https-redirect');
+const fallback = require('express-history-api-fallback');
 const protect = require('@risingstack/protect');
 const helmet = require('helmet');
 const passport = require('passport');
@@ -21,6 +22,8 @@ const migrate = require('./database/migrate');
 const routes = require('./routes/index');
 const authControllers = require('./controllers/auth');
 
+const publicPath = path.join(__dirname, 'public');
+
 module.exports = () => {
   const app = express();
   app.locals.bookshelf = bookshelf;
@@ -31,7 +34,8 @@ module.exports = () => {
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
     app.use(cookieParser());
-    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(publicPath));
+    app.use(fallback('index.html', { root: publicPath }));
 
     // Setup global conf for mailing so we can call this instance from any handler
     app.locals.mailing = new Mailing(mailingConfig);
