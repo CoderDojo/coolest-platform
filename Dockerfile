@@ -6,7 +6,7 @@ COPY client /usr/src/app/client
 RUN yarn build
 
 FROM node:carbon-alpine
-#RUN apk --no-cache add
+RUN apk --no-cache add python build-base
 WORKDIR /usr/src/app
 ENV NODE_ENV=production
 EXPOSE 3000
