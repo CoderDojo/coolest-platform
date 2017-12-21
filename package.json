@@ -6,11 +6,10 @@
   "repository": "git@github.com:CoderDojo/coolest-platform.git",
   "author": "CoderDojo Foundation <webteam@coderdojo.com>",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "build": "node client/build/build.js",
     "start": "concurrently --kill-others --success first \"yarn server-start\" \"yarn client-start\"",
-    "start-dev": "concurrently --kill-others --success first \"yarn server-start -- --seed --trace-sync-io\" \"yarn client-start\"",
+    "start-dev": "concurrently --kill-others --success first \"yarn server-start --seed --trace-sync-io\" \"yarn client-start\"",
     "start-with-mocks": "concurrently --kill-others --success first \"yarn mock-server\" \"yarn client-start\" ",
     "test": "yarn client-unit && yarn server-unit",
     "lint": "eslint --ext .js,.vue .",
@@ -35,6 +34,7 @@
     ]
   },
   "dependencies": {
+    "@newrelic/native-metrics": "^2.1.2",
     "@risingstack/protect": "^1.2.0",
     "@sendgrid/mail": "^6.1.4",
     "body-parser": "~1.18.2",
@@ -55,6 +55,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.19.3",
     "morgan": "~1.9.0",
+    "newrelic": "^2.4.2",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1",
     "pg": "^7.4.0",

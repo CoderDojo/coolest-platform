@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+if (process.env.NEW_RELIC_ENABLED === 'true') require('newrelic'); // eslint-disable-line global-require
+
 const appQ = require('../app')();
 const logger = require('../util/logger');
 const debug = require('debug')('server:server');
@@ -94,6 +96,10 @@ const init = async (seed) => {
   }
 };
 
+/**
+ * Check if being run by cli or require
+ * used for testing
+ */
 if (require.main === module) {
   const argv = yargs.argv;
   init(argv.seed).catch((err) => {
