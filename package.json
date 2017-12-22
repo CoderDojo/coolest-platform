@@ -67,7 +67,6 @@
     "vue-router": "^3.0.1",
     "vue-search-select": "^2.4.0",
     "winston": "^2.4.0",
-    "winston-transport": "^3.0.1",
     "yargs": "^10.0.3"
   },
   "devDependencies": {

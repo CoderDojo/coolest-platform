@@ -44,12 +44,6 @@ module.exports = () => {
     app.locals.logger = logger;
 
     app.use('/', routes);
-    app.get('/coffee', (req, res) => {
-      res.statusMessage = "I'm a teapot";
-      res
-        .status(418)
-        .json({ message: "I'm a teapot", image: 'https://httpstatusdogs.com/img/418.jpg' });
-    });
 
     app.use(protect.express.sqlInjection({
       body: true,
