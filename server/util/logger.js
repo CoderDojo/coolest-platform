@@ -12,7 +12,7 @@ const logger = new winston.Logger({
   ],
 });
 
-if (process.env.LOGENTRIES_ENABLED === 'True') {
+if (process.env.LOGENTRIES_TOKEN) {
   Logentries.provisionWinston(winston);
   logger.add(winston.transports.Logentries, {
     token: process.env.LOGENTRIES_TOKEN,

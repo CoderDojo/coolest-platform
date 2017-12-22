@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-if (process.env.NEW_RELIC_ENABLED === 'true') require('newrelic'); // eslint-disable-line global-require
+if (process.env.NEW_RELIC_LICENSE_KEY) require('newrelic'); // eslint-disable-line global-require
 
-const appQ = require('../app')();
+const appServer = require('..')();
 const logger = require('../util/logger');
 const debug = require('debug')('server:server');
 const http = require('http');
@@ -14,7 +14,7 @@ const init = async (seed) => {
    * Get port from environment and store in Express.
    */
   const port = normalizePort(process.env.PORT || '3000');
-  const app = await appQ;
+  const app = await appServer;
   const server = http.createServer(app);
 
   /**
@@ -37,27 +37,7 @@ const init = async (seed) => {
   server.listen(port);
   app.set('port', port);
 
-  return Promise.resolve(server);
-
-  /**
-   * Normalize a port into a number, string, or false.
-   */
-
-  function normalizePort(val) {
-    const localPort = parseInt(val, 10);
-
-    if (isNaN(localPort)) {
-      // named pipe
-      return val;
-    }
-
-    if (localPort >= 0) {
-      // port number
-      return localPort;
-    }
-
-    return false;
-  }
+  return server;
 
   /**
    * Event listener for HTTP server "error" event.
@@ -95,6 +75,25 @@ const init = async (seed) => {
     debug(`Listening on ${bind}`);
   }
 };
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
 
 /**
  * Check if being run by cli or require

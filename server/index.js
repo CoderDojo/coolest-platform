@@ -8,8 +8,7 @@ const fallback = require('express-history-api-fallback');
 const protect = require('@risingstack/protect');
 const helmet = require('helmet');
 const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
+const { ExtractJwt, Strategy } = require('passport-jwt');
 const bookshelf = require('./database/index');
 
 const logger = require('./util/logger');
@@ -63,7 +62,7 @@ module.exports = () => {
       next(err);
     });
 
-    passport.use(new JwtStrategy(
+    passport.use(new Strategy(
       {
         jwtFromRequest: ExtractJwt.fromExtractors([
           ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -78,6 +77,7 @@ module.exports = () => {
     // error handler for any uncaught error
     app.use((err, req, res, next) => {
       // set locals, only providing error in development
+      logger.error(err);
       const status = err.status || 500;
       res.locals.message = err.message;
       res.locals.error = req.app.get('env') === 'development' ? err : {};
