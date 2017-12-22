@@ -33,16 +33,12 @@ module.exports = () => {
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
     app.use(cookieParser());
-    app.use(express.static(publicPath));
-    app.use(fallback('index.html', { root: publicPath }));
 
     // Setup global conf for mailing so we can call this instance from any handler
     app.locals.mailing = new Mailing(mailingConfig);
 
     // Setup global logger
     app.locals.logger = logger;
-
-    app.use('/', routes);
 
     app.use(protect.express.sqlInjection({
       body: true,
@@ -53,6 +49,10 @@ module.exports = () => {
       body: true,
       loggerFunction: logger.error,
     }));
+
+    app.use(express.static(publicPath));
+    app.use('/', routes);
+    app.use(fallback('index.html', { root: publicPath }));
 
     // catch 404 and forward to error handler
     app.use((req, res, next) => {
