@@ -7,52 +7,52 @@ class Project {
   static post(creator, project, eventId) {
     // TODO : apply endpoint validation
     // TODO : transaction
-    const projectPayload = Object.assign(
-      {},
-      pick(project, ['name', 'category', 'dojoId']),
-      { eventId },
-    );
+    const projectPayload = Object.assign({}, pick(project, ['name', 'category', 'dojoId']), {
+      eventId,
+    });
     const newProject = new ProjectModel(projectPayload);
     const promises = [];
     const users = [];
     // Save every user from the form
     project.users.forEach((user) => {
-      const userPayload = pick(user, ['firstName', 'lastName', 'specialRequirements', 'dob', 'gender', 'email', 'phone', 'country']);
+      const userPayload = pick(user, [
+        'firstName',
+        'lastName',
+        'specialRequirements',
+        'dob',
+        'gender',
+        'email',
+        'phone',
+        'country',
+      ]);
       const newUser = ((_userPayload) => {
         if (_userPayload.email) {
-          return UserHandler.get({ email: _userPayload.email })
-            .then((_retrievedUser) => {
-              if (_retrievedUser !== null) _userPayload.id = _retrievedUser.id;
-              return Promise.resolve(_userPayload);
-            });
+          return UserHandler.get({ email: _userPayload.email }).then((_retrievedUser) => {
+            if (_retrievedUser !== null) _userPayload.id = _retrievedUser.id;
+            return Promise.resolve(_userPayload);
+          });
         }
         return Promise.resolve(_userPayload);
       })(userPayload)
-        .then((_userPayload) => {
-          return new UserModel(_userPayload)
+        .then(_userPayload =>
+          new UserModel(_userPayload)
             .save()
             .then((_user) => {
               users.push(Object.assign(_user.toJSON(), { type: user.type }));
               // We return the association
               return Promise.resolve({ user_id: _user.id, type: user.type });
-            });
-        });
+            }));
       promises.push(newUser);
     });
 
     // Add owner to relationship but not to final payload ([users])
     promises.push(Promise.resolve({ user_id: creator.id, type: 'owner' }));
 
-    return newProject.save()
-      .then((_project) => {
-        return Promise.all(promises)
-          .then((associations) => {
-            return new ProjectModel({ id: _project.id }).members().attach(associations);
-          })
-          .then(() => Object.assign(_project.toJSON(), { users }));
-      });
+    return newProject.save().then(_project =>
+      Promise.all(promises)
+        .then(associations => new ProjectModel({ id: _project.id }).members().attach(associations))
+        .then(() => Object.assign(_project.toJSON(), { users })));
   }
 }
-
 
 module.exports = Project;

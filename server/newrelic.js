@@ -6,7 +6,6 @@
  */
 exports.config = {
   app_name: ['coolest-platform'],
-  agent_enabled: false, // set via NEW_RELIC_LICENSE_KEY being declared for production
   license_key: '', // set via NEW_RELIC_LICENSE_KEY
   logging: {
     /**

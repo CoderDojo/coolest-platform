@@ -41,5 +41,4 @@ class Mailing {
   }
 }
 
-
 module.exports = Mailing;

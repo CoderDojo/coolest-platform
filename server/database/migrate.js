@@ -6,9 +6,7 @@ module.exports = bookshelf =>
     // Default "migrate" will take js files in the ./migrations folder
     bookshelf.knex.migrate
       .latest({ directory: path.join(__dirname, '/migrations') })
-      .then(() => {
-        return Promise.resolve();
-      })
+      .then(() => Promise.resolve())
       .then(() => {
         logger.info('Migrations finished properly');
         resolve(bookshelf);

@@ -4,8 +4,9 @@ const passport = require('passport');
 module.exports = {
   post: [
     passport.authenticate('jwt', { session: false }),
-    (req, res, next) => {
-      return projectController.post(req.user.user, req.body, req.params.eventId)
+    (req, res, next) =>
+      projectController
+        .post(req.user.user, req.body, req.params.eventId)
         .then((project) => {
           res.locals.project = project;
           return next();
@@ -13,13 +14,12 @@ module.exports = {
         .catch((err) => {
           req.app.locals.logger.error(err);
           return next(new Error('Error while saving your project.'));
-        });
-    },
-    (req, res, next) => {
-      return req.app.locals.mailing.sendWelcomeEmail(req.user.user, res.locals.project)
+        }),
+    (req, res, next) =>
+      req.app.locals.mailing
+        .sendWelcomeEmail(req.user.user, res.locals.project)
         .then(() => next())
-        .catch(next);
-    },
+        .catch(next),
     (req, res) => res.status(200).json(res.locals.project),
   ],
 };

@@ -5,10 +5,9 @@ module.exports = (router, prefix) => {
 
   // Verify a token is valid
   router.get(`${base}/:token`, async (req, res, next) => {
-    authHandler.verify(req.params.token)
-      .then((auth) => {
-        return res.json({ valid: auth });
-      })
+    authHandler
+      .verify(req.params.token)
+      .then(auth => res.json({ valid: auth }))
       .catch(e => next(new Error('Invalid authentication')));
   });
 };
