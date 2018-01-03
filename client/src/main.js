@@ -12,6 +12,12 @@ Vue.config.productionTip = false;
 Vue.use(VueResource);
 Vue.use(VeeValidate);
 
+const authToken = localStorage.getItem('authToken');
+
+if (authToken) {
+  Vue.http.headers.common.Authorization = `Bearer ${authToken}`;
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

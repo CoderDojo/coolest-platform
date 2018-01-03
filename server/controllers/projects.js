@@ -7,7 +7,7 @@ class Project {
   static post(creator, project, eventId) {
     // TODO : apply endpoint validation
     // TODO : transaction
-    const projectPayload = Object.assign({}, pick(project, ['name', 'category', 'dojoId']), {
+    const projectPayload = Object.assign({}, pick(project, ['name', 'category', 'dojoId', 'description']), {
       eventId,
     });
     const newProject = new ProjectModel(projectPayload);

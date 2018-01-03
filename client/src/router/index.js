@@ -17,7 +17,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/events/cp2018',
+      redirect: '/events/cp-2018',
     },
     {
       path: '/auth-email',

@@ -19,7 +19,7 @@
         <label>Project Category</label>
         <select v-model="projectDetails.category" v-validate="{ required: true }" data-vv-name="projectCategory" class="full-width-block" :class="{ placeholder: projectDetails.category === undefined }">
           <option :value="undefined" disabled>Please select a category</option>
-          <option v-for="category in event.categories" :value="category">{{ category }}</option>
+          <option v-for="(label, value) in event.categories" :value="value">{{ label }}</option>
         </select>
         <span class="error-message" v-show="errors.has('projectCategory:required')">* A project category is required</span>
       </div>
