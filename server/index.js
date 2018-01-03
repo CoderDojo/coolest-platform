@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const httpsRedirect = require('express-https-redirect');
 const fallback = require('express-history-api-fallback');
-const protect = require('@risingstack/protect');
 const helmet = require('helmet');
 const passport = require('passport');
 const { ExtractJwt, Strategy } = require('passport-jwt');
@@ -39,16 +38,6 @@ module.exports = () => {
 
     // Setup global logger
     app.locals.logger = logger;
-
-    app.use(protect.express.sqlInjection({
-      body: true,
-      loggerFunction: logger.error,
-    }));
-
-    app.use(protect.express.xss({
-      body: true,
-      loggerFunction: logger.error,
-    }));
 
     app.use(express.static(publicPath));
     app.use('/', routes);

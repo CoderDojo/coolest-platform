@@ -13,7 +13,7 @@ body {
   display: grid;
   min-height: 100vh;
   grid-template-columns: auto minmax(auto, 560px) auto;
-  grid-template-rows: auto max-content auto;
+  grid-template-rows: 1fr max-content 1fr;
   grid-template-areas:
     ". . ."
     ". content ."
