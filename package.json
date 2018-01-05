@@ -11,7 +11,7 @@
     "start": "concurrently --kill-others --success first \"yarn server-start\" \"yarn client-start\"",
     "start-dev": "concurrently --kill-others --success first \"yarn server-start --seed --trace-sync-io\" \"yarn client-start\"",
     "start-with-mocks": "concurrently --kill-others --success first \"yarn mock-server\" \"yarn client-start\" ",
-    "test": "yarn client-unit && yarn server-unit",
+    "test": "yarn client-unit && yarn server-unit && yarn server-int",
     "lint": "eslint --ext .js,.vue .",
     "precommit": "lint-staged",
     "client-start": "node client/build/dev-server.js",
