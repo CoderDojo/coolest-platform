@@ -11,6 +11,7 @@ const { ExtractJwt, Strategy } = require('passport-jwt');
 const bookshelf = require('./database/index');
 
 const logger = require('./util/logger');
+const accessLogger = require('./util/access-logger');
 const authConfig = require('./config/auth');
 const mailingConfig = require('./config/mailing');
 const Mailing = require('./controllers/mailing');
@@ -26,7 +27,7 @@ module.exports = () => {
   const app = express();
   app.locals.bookshelf = bookshelf;
   return migrate(bookshelf).then(() => {
-    app.use(morgan('combined', { stream: logger.stream }));
+    app.use(morgan('combined', { stream: accessLogger.stream }));
     app.use('/', httpsRedirect());
     app.use(helmet());
     app.use(bodyParser.urlencoded({ extended: false }));
