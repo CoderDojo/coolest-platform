@@ -28,7 +28,7 @@ module.exports = () => {
   app.locals.bookshelf = bookshelf;
   return migrate(bookshelf).then(() => {
     app.use(morgan('combined', { stream: accessLogger.stream }));
-    app.use('/', httpsRedirect());
+    if (process.env.NODE_ENV === 'production') app.use('/', httpsRedirect());
     app.use(helmet());
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
