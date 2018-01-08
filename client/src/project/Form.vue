@@ -369,6 +369,7 @@
         if (valid) {
           const createdProject =
             (await ProjectService.create(this.event.id, this.projectPayload)).body;
+          this.$emit('submit');
           this.$ga.event({
             eventCategory: 'ProjectRegistration',
             eventAction: 'NewProject',

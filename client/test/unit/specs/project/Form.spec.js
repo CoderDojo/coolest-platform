@@ -268,6 +268,7 @@ describe('ProjectForm component', () => {
         vm.$ga = {
           event: sandbox.stub(),
         };
+        vm.$emit = sandbox.stub();
 
         // ACT
         await vm.onSubmit();
@@ -275,6 +276,8 @@ describe('ProjectForm component', () => {
         // ASSERT
         expect(ProjectServiceMock.create).to.have.been.calledOnce;
         expect(ProjectServiceMock.create).to.have.been.calledWith('foo', project);
+        expect(vm.$emit).to.have.been.calledOnce;
+        expect(vm.$emit).to.have.been.calledWith('submit');
         expect(vm.$ga.event).to.have.been.calledOnce;
         expect(vm.$ga.event).to.have.been.calledWith({
           eventCategory: 'ProjectRegistration',
@@ -301,12 +304,14 @@ describe('ProjectForm component', () => {
         vm.$validator = {
           validateAll: sandbox.stub().resolves(false),
         };
+        vm.$emit = sandbox.stub();
 
         // ACT
         await vm.onSubmit();
 
         // ASSERT
         expect(ProjectServiceMock.create).to.not.have.been.called;
+        expect(vm.$emit).to.not.have.been.called;
         expect(vm.$router.push).to.not.have.been.called;
       });
     });
