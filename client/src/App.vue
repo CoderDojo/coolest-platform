@@ -2,7 +2,7 @@
   <div class="center-grid">
     <div class="center-grid__content">
       <div class="text-center">
-        <img class="logo" src="./assets/CoolestProjectsLogo.svg" />
+        <img class="logo" src="./assets/CoolestProjectsLogo.png" />
       </div>
       <router-view></router-view>
     </div>

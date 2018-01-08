@@ -1,5 +1,5 @@
 {
-  "name": "coolest-platform-client",
+  "name": "Coolest Projects Registration",
   "short_name": "Coolest Projects",
   "icons": [
     {
@@ -16,5 +16,5 @@
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#4DBA87"
+  "theme_color": "#E73359"
 }

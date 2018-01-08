@@ -65,7 +65,7 @@
     "vue-dob-picker": "1.0.9",
     "vue-resource": "^1.3.4",
     "vue-router": "^3.0.1",
-    "vue-search-select": "^2.4.0",
+    "vue-search-select": "DanielBrierton/vue-search-select",
     "winston": "^2.4.0",
     "yargs": "^10.0.3"
   },

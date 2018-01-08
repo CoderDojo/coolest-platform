@@ -8215,9 +8215,9 @@ vue-router@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.1.tgz#d9b05ad9c7420ba0f626d6500d693e60092cc1e9"
 
-vue-search-select@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/vue-search-select/-/vue-search-select-2.4.0.tgz#de5d0c84f5d1818261ad9bf82fd53e5e726199ab"
+vue-search-select@DanielBrierton/vue-search-select:
+  version "2.4.1"
+  resolved "https://codeload.github.com/DanielBrierton/vue-search-select/tar.gz/d7a79435415abb2357885d27040d1a37aecf8126"
 
 vue-style-loader@^3.0.0, vue-style-loader@^3.0.3:
   version "3.0.3"

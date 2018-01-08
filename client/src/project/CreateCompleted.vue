@@ -7,13 +7,18 @@
     </div>
     <div class="row">
       <div class="col">
-        <p>Congratulations, you've succesfully registered {{ project.name }} for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For any more information on the event check out <a href="https://www.coolestprojects.org">www.coolestprojects.org</a>.
+        <p>Congratulations, you've succesfully registered "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For any more information on the event check out <a href="https://www.coolestprojects.org">www.coolestprojects.org</a>.
 The next step, have fun and keep building your project!</p>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <p>We'll email you soon about what the next steps are and how you will be able to edit your project details before the event.</p>
+        <p>We've sent you a confirmation email and we'll be in contact soon with further details.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p>Anyone who is part of a project does not need a ticket. For anyone else they need to get a ticket <a href="https://ti.to/coderdojo-coolest-projects/coolest-projects-international-2018">here</a> when they become available.</p>
       </div>
     </div>
   </div>
