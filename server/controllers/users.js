@@ -5,27 +5,28 @@ const AuthModel = require('../models/auth');
 // TODO : use req.body and apply endpoint validation
 class User {
   // TODO: abstract by removing req/res and passing only the userPayload
-  static post(req, res, next) {
-    return new UserModel({ email: req.body.email })
+  static post(email) {
+    return new UserModel({ email })
       .save()
       .then(user =>
         new AuthModel({ userId: user.id })
           .save()
-          .then(auth => res.status(200).json({ user, auth })))
+          .then(auth => Promise.resolve({ user, auth })))
       .catch((err) => {
-        let expectedErr = new Error('Error while saving a user.');
-        if (err.code === '23505') {
+        let expectedErr = err;
+        if (err.code === '23505' || err.errno === 19) { // TODO : (postgres || sqlite) -> avoid this, really
           // pg's unique_violation
           expectedErr = new Error('User already exists');
           expectedErr.status = 409;
         }
-        next(expectedErr);
+        return Promise.reject(expectedErr);
       });
   }
 
-  static get(identifier) {
+  static get(identifier, withRelated) {
     return new UserModel().where(identifier)
-      .fetch();
+      .fetch({ withRelated })
+      .then(user => Promise.resolve(user.toJSON()));
   }
 }
 
