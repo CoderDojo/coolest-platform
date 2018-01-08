@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import vueUnitHelper from 'vue-unit-helper';
+import moment from 'moment';
 import ProjectForm from '!!vue-loader?inject!@/project/Form';
 
 describe('ProjectForm component', () => {
@@ -313,6 +314,20 @@ describe('ProjectForm component', () => {
         expect(ProjectServiceMock.create).to.not.have.been.called;
         expect(vm.$emit).to.not.have.been.called;
         expect(vm.$router.push).to.not.have.been.called;
+      });
+    });
+
+    describe('getAge', () => {
+      it('should return the age for the given dob', () => {
+        // ARRANGE
+        const dob = moment()
+          .subtract(5, 'd')
+          .subtract(2, 'm')
+          .subtract(14, 'y')
+          .toDate();
+
+        // ASSERT
+        expect(vm.getAge(dob)).to.equal(14);
       });
     });
   });

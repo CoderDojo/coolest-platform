@@ -61,7 +61,6 @@
               v-model="projectDetails.dojoId"
               v-validate="projectDetails.fromDojo === 'true' ? 'required' : ''"
               data-vv-name="dojoId"
-              data-vv-value-path="searchText"
               class="full-width-block"
               :class="{ placeholder: projectDetails.category === undefined }"
               :list="dojos" placeholder="Type your Dojo name to select"
@@ -76,7 +75,7 @@
     <hr />
     <div class="row">
       <div class="col">
-        <label>How many particpants are in this project?</label>
+        <label>How many participants are in this project?</label>
         <div class="row row-no-margin">
           <div class="col-2fr">
             <select v-model="numParticipants" class="full-width-block">
@@ -138,6 +137,7 @@
             :select-placeholder-class="errors.has(`participant-${n}-dob`) ? 'error placeholder' : 'placeholder'"
             :select-class="errors.has(`participant-${n}-dob`) ? 'error' : ''"></vue-dob-picker>
           <span class="error-message" v-show="errors.has(`participant-${n}-dob:required`)">* Participant's date of birth is required</span>
+          <span class="warning-message" v-show="getAge(participants[n - 1].dob) >= 18">It looks like you are entering an age over 18. This section on the form is meant for the youths who helped build the project.</span>
         </div>
       </div>
       <div class="row">
@@ -264,6 +264,7 @@
   import VueDobPicker from 'vue-dob-picker';
   import { ModelListSelect } from 'vue-search-select';
   import { clone, pick } from 'lodash';
+  import moment from 'moment';
   import ProjectService from '@/project/service';
 
   export default {
@@ -386,6 +387,7 @@
           });
         }
       },
+      getAge: dob => moment().diff(dob, 'years'),
     },
     created() {
       this.fetchDojos();

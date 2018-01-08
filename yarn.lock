@@ -8217,7 +8217,7 @@ vue-router@^3.0.1:
 
 vue-search-select@DanielBrierton/vue-search-select:
   version "2.4.1"
-  resolved "https://codeload.github.com/DanielBrierton/vue-search-select/tar.gz/d7a79435415abb2357885d27040d1a37aecf8126"
+  resolved "https://codeload.github.com/DanielBrierton/vue-search-select/tar.gz/4c95b234b12351ad47ab8ef5e48dad1fe23f2c36"
 
 vue-style-loader@^3.0.0, vue-style-loader@^3.0.3:
   version "3.0.3"
