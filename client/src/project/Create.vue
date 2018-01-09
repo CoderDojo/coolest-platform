@@ -1,12 +1,13 @@
 <template>
   <div>
     <h2>Register for {{ event.name }}</h2>
-    <project-form :event="event" @submit="onSubmit"></project-form>
+    <project-form :event="event" @projectFormSubmitted="onSubmit"></project-form>
   </div>
 </template>
 
 <script>
   import EventService from '@/event/service';
+  import ProjectService from '@/project/service';
   import ProjectForm from '@/project/Form';
 
   export default {
@@ -22,6 +23,7 @@
     },
     data() {
       return {
+        project: {},
         event: {},
         submitted: false,
       };
@@ -30,9 +32,25 @@
       async fetchEvent() {
         this.event = (await EventService.get(this.eventId)).body;
       },
-      onSubmit() {
+      async onSubmit(projectPayload) {
         window.removeEventListener('beforeunload', this.onBeforeUnload);
         this.submitted = true;
+        const createdProject =
+          (await ProjectService.create(this.eventId, projectPayload)).body;
+        this.$ga.event({
+          eventCategory: 'ProjectRegistration',
+          eventAction: 'NewProject',
+          eventLabel: this.eventId,
+        });
+        this.$router.push({
+          name: this.event.questions && this.event.questions.length > 0 ? 'ProjectExtraDetails' : 'CreateProjectCompleted',
+          params: {
+            eventId: this.eventId,
+            projectId: createdProject.id,
+            _event: this.event,
+            _project: createdProject,
+          },
+        });
       },
       onBeforeUnload(e) {
         e.returnValue = 'Are you sure you don\'t want to complete your registration application?';

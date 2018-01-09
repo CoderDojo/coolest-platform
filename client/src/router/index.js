@@ -6,6 +6,7 @@ import AuthEmail from '@/auth/Email';
 import ProjectList from '@/project/List';
 import ViewProject from '@/project/View';
 import CreateProject from '@/project/Create';
+import ProjectExtraDetails from '@/project/ExtraDetails';
 import CreateProjectCompleted from '@/project/CreateCompleted';
 import EditProject from '@/project/Edit';
 
@@ -40,6 +41,12 @@ export default new Router({
       path: '/events/:eventId/projects/create',
       name: 'CreateProject',
       component: CreateProject,
+      props: true,
+    },
+    {
+      path: '/events/:eventId/projects/:projectId/extra',
+      name: 'ProjectExtraDetails',
+      component: ProjectExtraDetails,
       props: true,
     },
     {

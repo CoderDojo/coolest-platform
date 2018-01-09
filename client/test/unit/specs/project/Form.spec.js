@@ -1,24 +1,15 @@
 import Vue from 'vue';
 import vueUnitHelper from 'vue-unit-helper';
 import moment from 'moment';
-import ProjectForm from '!!vue-loader?inject!@/project/Form';
+import ProjectForm from '@/project/Form';
 
 describe('ProjectForm component', () => {
   let vm;
   let sandbox;
-  let ProjectServiceMock;
-  let ProjectFormWithMocks;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    ProjectServiceMock = {
-      get: sandbox.stub(),
-      create: sandbox.stub(),
-    };
-    ProjectFormWithMocks = ProjectForm({
-      '@/project/service': ProjectServiceMock,
-    });
-    vm = vueUnitHelper(ProjectFormWithMocks);
+    vm = vueUnitHelper(ProjectForm);
   });
 
   afterEach(() => {
@@ -252,22 +243,9 @@ describe('ProjectForm component', () => {
             type: 'supervisor',
           }],
         };
-        const createdProject = { id: 'baz' };
-        const event = {
-          id: 'foo',
-        };
-        vm.event = event;
-        vm.eventId = 'foo';
         vm.projectPayload = project;
-        ProjectServiceMock.create.resolves({ body: createdProject });
-        vm.$router = {
-          push: sandbox.stub(),
-        };
         vm.$validator = {
           validateAll: sandbox.stub().resolves(true),
-        };
-        vm.$ga = {
-          event: sandbox.stub(),
         };
         vm.$emit = sandbox.stub();
 
@@ -275,33 +253,12 @@ describe('ProjectForm component', () => {
         await vm.onSubmit();
 
         // ASSERT
-        expect(ProjectServiceMock.create).to.have.been.calledOnce;
-        expect(ProjectServiceMock.create).to.have.been.calledWith('foo', project);
         expect(vm.$emit).to.have.been.calledOnce;
-        expect(vm.$emit).to.have.been.calledWith('submit');
-        expect(vm.$ga.event).to.have.been.calledOnce;
-        expect(vm.$ga.event).to.have.been.calledWith({
-          eventCategory: 'ProjectRegistration',
-          eventAction: 'NewProject',
-          eventLabel: 'foo',
-        });
-        expect(vm.$router.push).to.have.been.calledOnce;
-        expect(vm.$router.push).to.have.been.calledWith({
-          name: 'CreateProjectCompleted',
-          params: {
-            eventId: 'foo',
-            projectId: 'baz',
-            _event: event,
-            _project: createdProject,
-          },
-        });
+        expect(vm.$emit).to.have.been.calledWith('projectFormSubmitted', project);
       });
 
       it('should do nothing if form is not valid', async () => {
         // ARRANGE
-        vm.$router = {
-          push: sandbox.stub(),
-        };
         vm.$validator = {
           validateAll: sandbox.stub().resolves(false),
         };
@@ -311,9 +268,7 @@ describe('ProjectForm component', () => {
         await vm.onSubmit();
 
         // ASSERT
-        expect(ProjectServiceMock.create).to.not.have.been.called;
         expect(vm.$emit).to.not.have.been.called;
-        expect(vm.$router.push).to.not.have.been.called;
       });
     });
 

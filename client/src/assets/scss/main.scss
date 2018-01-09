@@ -117,6 +117,10 @@ textarea {
   &-double-margin {
     margin: 60px -15px;
   }
+
+  &-v-center {
+    align-items: center;
+  }
 }
 
 .col, .col-1fr {
