@@ -20,7 +20,7 @@ describe('users controllers', () => {
         '../models/user': mockUserModel,
         '../models/auth': mockAuthModel,
       });
-      const res = await controllers.post(email);
+      const res = await controllers.post({ email });
 
       expect(mockUserModel).to.have.been.calledOnce;
       expect(mockUserModel).to.have.been.calledWith({ email });
@@ -46,7 +46,7 @@ describe('users controllers', () => {
       });
       const email = 'test@test.com';
       try {
-        await controllers.post(email);
+        await controllers.post({ email });
       } catch (_err) {
         expect(mockUserModel).to.have.been.calledOnce;
         expect(mockUserModel).to.have.been.calledWith({ email });
@@ -67,7 +67,7 @@ describe('users controllers', () => {
         '../models/auth': {},
       });
       const email = 'test@test.com';
-      controllers.post(email)
+      controllers.post({ email })
         .catch((_err) => {
           expect(mockUserModel).to.have.been.calledOnce;
           expect(mockUserModel).to.have.been.calledWith({ email });

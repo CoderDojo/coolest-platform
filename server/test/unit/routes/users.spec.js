@@ -54,7 +54,7 @@ describe('router: user', () => {
       userController.post = postController.resolves(mockAnswer);
       await handler(mockReq, mockRes, nextMock);
       expect(postController).to.have.been.calledOnce;
-      expect(postController).to.have.been.calledWith(mockReq.body.email);
+      expect(postController).to.have.been.calledWith({ email: mockReq.body.email });
 
       expect(statusStub).to.have.been.calledOnce;
       expect(statusStub).to.have.been.calledWith(200);
@@ -89,7 +89,7 @@ describe('router: user', () => {
       userController.get = getController.resolves(mockAnswer);
       authController.refresh = refreshController.resolves({ id: '111', token: 'new' });
       await handler(mockReq, mockRes, nextMock);
-      expect(postController).to.have.been.calledWith(mockReq.body.email);
+      expect(postController).to.have.been.calledWith({ email: mockReq.body.email });
       expect(getController).to.have.been.calledOnce;
       expect(getController).to.have.been.calledWith({ email: mockReq.body.email }, ['project', 'auth']);
       expect(refreshController).to.have.been.calledOnce;
@@ -123,7 +123,7 @@ describe('router: user', () => {
       userController.post = postController.rejects(mockErr);
       userController.get = getController.resolves(mockAnswer);
       await handler(mockReq, mockRes, nextMock);
-      expect(postController).to.have.been.calledWith(mockReq.body.email);
+      expect(postController).to.have.been.calledWith({ email: mockReq.body.email });
       expect(getController).to.have.been.calledOnce;
       expect(getController).to.have.been.calledWith({ email: mockReq.body.email }, ['project', 'auth']);
       expect(loggerStub).to.have.been.calledOnce;
@@ -154,7 +154,7 @@ describe('router: user', () => {
 
       userController.post = postController.rejects(mockErr);
       await handler(mockReq, mockRes, nextMock);
-      expect(postController).to.have.been.calledWith(mockReq.body.email);
+      expect(postController).to.have.been.calledWith({ email: mockReq.body.email });
       expect(loggerStub).to.have.been.calledOnce;
       expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
       expect(nextMock).to.have.been.calledThrice;

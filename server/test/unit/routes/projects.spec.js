@@ -21,9 +21,9 @@ describe('router: project', () => {
       jsonStub = sandbox.stub();
       errorHandler = sandbox.stub();
       handler = (req, res, next) => {
-        return handlers[1](req, res, next)
+        return handlers[0](req, res, next)
+          .then(() => handlers[1](req, res, next))
           .then(() => handlers[2](req, res, next))
-          .then(() => handlers[3](req, res, next))
           .catch(err => errorHandler(err));
       };
     });
@@ -174,6 +174,114 @@ describe('router: project', () => {
       expect(loggerStub).to.have.been.calledOnce;
       expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
       expect(nextMock).to.have.been.calledOnce;
+    });
+  });
+  describe('param', () => {
+    let handler;
+    const projectController = class {};
+    let sandbox;
+    before(() => {
+      sandbox = sinon.sandbox.create();
+      handler = (proxy('../../../routes/handlers/projects', {
+        '../../controllers/projects': projectController,
+      })).param;
+    });
+
+
+    it('should associate the project to the locals', async () => {
+      const getController = sandbox.stub();
+      const id = 'faaa';
+      const res = { id, name: 'proj' };
+      projectController.get = getController.resolves(res);
+      const nextMock = sandbox.stub();
+      const mockReq = {
+        app: {
+          locals: {},
+        },
+      };
+      await handler(mockReq, {}, nextMock, id);
+      expect(getController).to.have.been.calledOnce;
+      expect(getController).to.have.been.calledWith({ id }, ['owner']);
+      expect(mockReq.app.locals.project).to.equal(res);
+    });
+  });
+
+  describe('patch', () => {
+    let handler;
+    const projectController = class {};
+    let sandbox;
+    let errorHandler;
+    before(() => {
+      sandbox = sinon.sandbox.create();
+      handlers = (proxy('../../../routes/handlers/projects', {
+        '../../controllers/projects': projectController,
+      })).patch;
+      errorHandler = sandbox.stub();
+      handler = (req, res, next) => {
+        return handlers[0](req, res, next)
+          .then(() => handlers[1](req, res, next))
+          .catch(err => errorHandler(err));
+      };
+    });
+    it('should save with the proper enforced project id', async () => {
+      const updateController = sandbox.stub();
+      const id = 'faaa';
+      const res = { id, name: 'proj' };
+      const originalProject = { id, name: 'oldproj' };
+      const newProject = { id: 'faa2', name: 'proj' };
+      projectController.update = updateController.resolves(res);
+      const nextMock = sandbox.stub();
+      const mockReq = {
+        params: { id },
+        body: newProject,
+        app: {
+          locals: {
+            project: originalProject,
+          },
+        },
+      };
+      const json = sandbox.stub();
+      const mockRes = {
+        locals: {},
+        status: sandbox.stub().returns({ json }),
+      };
+      await handler(mockReq, mockRes, nextMock, id);
+      expect(updateController).to.have.been.calledOnce;
+      expect(updateController).to.have.been.calledWith(originalProject, res);
+      expect(mockRes.locals.project).to.equal(res);
+      expect(mockRes.status).to.have.been.calledOnce;
+      expect(mockRes.status).to.have.been.calledWith(200);
+      expect(json).to.have.been.calledOnce;
+      expect(json).to.have.been.calledWith(res);
+    });
+
+    it('should return an error', async () => {
+      const updateController = sandbox.stub();
+      const id = 'faaa';
+      const originalProject = { id, name: 'oldproj' };
+      const newProject = { name: 'proj' };
+      const err = new Error('Fake err');
+      projectController.update = updateController.rejects(err);
+      const nextMock = sandbox.stub();
+      const error = sandbox.stub();
+      const mockReq = {
+        params: { id },
+        body: newProject,
+        app: {
+          locals: {
+            project: originalProject,
+            logger: { error },
+          },
+        },
+      };
+      const mockRes = {
+        locals: {},
+      };
+      await handler(mockReq, mockRes, nextMock, id);
+      expect(updateController).to.have.been.calledOnce;
+      expect(updateController).to.have.been.calledWith(originalProject, { id, name: 'proj' });
+      expect(nextMock).to.have.been.calledOnce;
+      expect(nextMock.getCall(0).args[0].message).to.equal('Error while saving your project.');
     });
   });
 });
