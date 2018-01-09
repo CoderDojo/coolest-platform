@@ -6,6 +6,7 @@ describe('router: user', () => {
     let sandbox;
     let handler;
     const userController = class {};
+    const authController = class {};
     let loggerStub;
     let statusStub;
     let jsonStub;
@@ -15,6 +16,7 @@ describe('router: user', () => {
       sandbox = sinon.sandbox.create();
       handlers = (proxy('../../../routes/handlers/users', {
         '../../controllers/users': userController,
+        '../../controllers/auth': authController,
       })).post;
       loggerStub = sandbox.stub();
       jsonStub = sandbox.stub();
@@ -64,8 +66,9 @@ describe('router: user', () => {
     it('should allow login for existing user without project', async () => {
       const postController = sandbox.stub();
       const getController = sandbox.stub();
+      const refreshController = sandbox.stub();
       const mockUser = { email: 'text@example.com' };
-      const mockAnswer = Object.assign({}, mockUser, { auth: {} }, { project: [] });
+      const mockAnswer = Object.assign({}, mockUser, { auth: { id: '111' } }, { project: [] });
       const mockReq = {
         body: mockUser,
         app: {
@@ -84,12 +87,15 @@ describe('router: user', () => {
       mockErr.status = 409;
       userController.post = postController.rejects(mockErr);
       userController.get = getController.resolves(mockAnswer);
+      authController.refresh = refreshController.resolves({ id: '111', token: 'new' });
       await handler(mockReq, mockRes, nextMock);
       expect(postController).to.have.been.calledWith(mockReq.body.email);
       expect(getController).to.have.been.calledOnce;
       expect(getController).to.have.been.calledWith({ email: mockReq.body.email }, ['project', 'auth']);
+      expect(refreshController).to.have.been.calledOnce;
+      expect(refreshController).to.have.been.calledWith('111');
       expect(loggerStub).to.not.have.been.called;
-      expect(jsonStub).to.have.been.calledWith({ user: mockUser, auth: {} });
+      expect(jsonStub).to.have.been.calledWith({ user: mockUser, auth: { id: '111', token: 'new' } });
       expect(nextMock).to.have.been.calledTwice;
     });
 

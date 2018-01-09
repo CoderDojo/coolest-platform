@@ -110,6 +110,8 @@ describe('auth controllers', () => {
       // Return a truthy value if found
       expect(res).to.be.true;
     });
+
+
     it('should throw if the token is outdated', (done) => {
       const jwt = { data: 'xxxx' };
       const token = jsonwebtoken.sign(jwt, config.authSecret, { expiresIn: '1s' });
@@ -164,6 +166,41 @@ describe('auth controllers', () => {
         expect(whereStub).to.have.been.calledWith({ token });
         expect(e.message).to.equal('Invalid token');
       }
+    });
+  });
+
+  describe('refresh', () => {
+    it('should save the existing token ', async () => {
+      const id = '111';
+      const where = sinon.stub();
+      const authModel = {
+        where,
+      };
+      const controller = proxy('../../../controllers/auth.js', {
+        '../models/auth': authModel,
+      });
+      const save = sinon.stub();
+      const parse = sinon.stub();
+      const attributes = {
+        id,
+        token: 'aaa',
+      };
+      const auth = {
+        save,
+      };
+      save.resolves({ parse, attributes });
+      parse.resolves(attributes);
+      const fetch = sinon.stub().resolves(auth);
+      where.returns({ fetch });
+
+      await controller.refresh(id);
+      expect(authModel.where).to.have.been.calledOnce;
+      expect(authModel.where).to.have.been.calledWith({ id });
+      expect(fetch).to.have.been.calledOnce;
+      expect(save).to.have.been.calledOnce;
+      // Bug Workaround
+      expect(parse).to.have.been.calledOnce;
+      expect(parse).to.have.been.calledWith(attributes);
     });
   });
 });

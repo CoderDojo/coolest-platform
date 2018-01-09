@@ -28,6 +28,17 @@ class Auth {
         throw new Error('Invalid token');
       });
   }
+
+  static refresh(id) {
+    return AuthModel.where({ id })
+      .fetch()
+      .then((auth) => {
+        return auth.save()
+          // Ugly workaround for https://github.com/bookshelf/bookshelf/issues/1076
+          .then(_auth => _auth.parse(_auth.attributes))
+          .then(_auth => Promise.resolve(_auth));
+      });
+  }
 }
 
 module.exports = Auth;

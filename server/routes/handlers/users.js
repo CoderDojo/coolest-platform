@@ -1,4 +1,5 @@
 const userController = require('../../controllers/users');
+const authController = require('../../controllers/auth');
 
 module.exports = {
   post: [
@@ -15,20 +16,23 @@ module.exports = {
         }),
     (req, res, next) => {
       if (res.locals.err && res.locals.err.status === 409) {
-        userController.get({ email: req.body.email }, ['project', 'auth'])
+        return userController.get({ email: req.body.email }, ['project', 'auth'])
           .then((user) => {
             if (user.project.length <= 0) {
               delete res.locals.err;
-              const auth = user.auth;
-              delete user.project;
-              delete user.auth;
-              res.locals.user = { user, auth };
+              return authController.refresh(user.auth.id)
+                .then((auth) => {
+                  delete user.auth;
+                  delete user.project;
+                  res.locals.user = { user, auth };
+                  return Promise.resolve();
+                })
+                .then(() => next());
             }
             return next();
           });
-      } else {
-        return next();
       }
+      return next();
     },
     (req, res, next) => {
       if (res.locals.err) {
