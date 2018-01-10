@@ -5,11 +5,12 @@
         <label>Project Name</label>
         <input
           v-model="projectDetails.name"
-          v-validate="{ required: true }"
+          v-validate="'required|max:50'"
           data-vv-name="projectName"
           class="full-width-block"
           :class="{ error: errors.has('projectName') }" />
         <span class="error-message" v-show="errors.has('projectName:required')">* A project name is required</span>
+        <span class="error-message" v-show="errors.has('projectName:max')">A project name cannot be longer than 50 characters</span>
       </div>
     </div>
     <div class="row">
@@ -17,12 +18,13 @@
         <label>Project Description</label>
         <textarea
           v-model="projectDetails.description"
-          v-validate="{ required: true }"
+          v-validate="'required|max:1000'"
           data-vv-name="projectDescription"
           class="full-width-block"
           rows="4"
           :class="{ error: errors.has('projectDescription') }"></textarea>
         <span class="error-message" v-show="errors.has('projectDescription:required')">* A project description is required</span>
+        <span class="error-message" v-show="errors.has('projectDescription:max')">A project description cannot be longer than 1000 characters</span>
       </div>
     </div>
     <div class="row">
