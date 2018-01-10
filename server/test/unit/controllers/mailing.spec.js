@@ -104,7 +104,7 @@ describe('mailing controllers', () => {
           substitutions: {
             projectName: 'myLittleProject',
           },
-          category: ['coolest-project-registration'],
+          categories: ['coolest-projects', 'cp-registration'],
           template_id: '6d20e65f-ae16-4b25-a17f-66d0398f474f',
         });
       });
