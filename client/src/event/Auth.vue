@@ -9,7 +9,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <p>This form is to register the project for <em>all project members</em>. Each project should only be registered once, by one person. We will contact whoever registers this project soon after registration telling them how to edit the project details well before the event.</p>
+        <p>Just one person should register for each project. You can add your teammates on the next step.</p>
       </div>
     </div>
     <label class="row row-no-margin">

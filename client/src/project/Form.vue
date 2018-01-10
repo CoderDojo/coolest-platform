@@ -7,6 +7,7 @@
           v-model="projectDetails.name"
           v-validate="'required|max:50'"
           data-vv-name="projectName"
+          placeholder="A few words to describe your project"
           class="full-width-block"
           :class="{ error: errors.has('projectName') }" />
         <span class="error-message" v-show="errors.has('projectName:required')">* A project name is required</span>
@@ -20,6 +21,7 @@
           v-model="projectDetails.description"
           v-validate="'required|max:1000'"
           data-vv-name="projectDescription"
+          placeholder="A few sentences to describe what your project is about and what technology you think you are using to build it."
           class="full-width-block"
           rows="4"
           :class="{ error: errors.has('projectDescription') }"></textarea>
@@ -30,6 +32,7 @@
     <div class="row">
       <div class="col">
         <label>Project Category</label>
+        <p><small><a href="http://coolestprojects.org/registration-2018/project-categories/" target="_blank">You can read the category descriptions here</a></small></p>
         <select
           v-model="projectDetails.category"
           v-validate="{ required: true }"
@@ -179,7 +182,7 @@
     <hr />
     <div class="row">
       <div class="col">
-        <p>We require each project to have 1 nominated adult supervisor. This person just needs to be someone who will attend Coolest Projects with the participants. You'll be able to change this until a few weeks before the event.</p>
+        <p>We require each project to have one nominated adult supervisor. This person must attend Coolest Projects with the participants. You'll be able to change this until a few weeks before the event.</p>
       </div>
     </div>
     <div class="row">

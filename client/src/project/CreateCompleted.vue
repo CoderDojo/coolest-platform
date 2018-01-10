@@ -18,7 +18,7 @@ The next step, have fun and keep building your project!</p>
     </div>
     <div class="row">
       <div class="col">
-        <p>Anyone who is part of a project does not need a ticket. For anyone else they need to get a ticket <a href="https://ti.to/coderdojo-coolest-projects/coolest-projects-international-2018">here</a> when they become available.</p>
+        <p>The project supervisor and participants do not need a ticket. For anyone else who wants to come on the day they need to <a href="https://ti.to/coderdojo-coolest-projects/coolest-projects-international-2018">book a ticket</a> when they become available.</p>
       </div>
     </div>
   </div>
