@@ -9,6 +9,8 @@ describe('integration: users', () => {
   let app;
   let token;
   let eventId;
+  let projectId;
+
   before(async () => {
     app = await proxy(
       '../../../bin/www',
@@ -21,17 +23,20 @@ describe('integration: users', () => {
       getToken('me@example.com')
         .then((_token) => {
           token = _token;
+          return Promise.resolve();
         }),
       getDefaultProject(),
     ]);
   });
 
-  function getToken(email) {
+  async function getToken(email) {
     return request(app)
       .post('/api/v1/users')
       .set('Accept', 'application/json')
       .send({ email })
-      .then(res => Promise.resolve(res.body.auth.token));
+      .then((res) => {
+        return Promise.resolve(res.body.auth.token);
+      });
   }
 
   async function getDefaultProject() {
@@ -73,6 +78,7 @@ describe('integration: users', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .then((res) => {
+          projectId = res.body.id;
           expect(res.body).to.have.all.keys(['name', 'category', 'users', 'id', 'created_at', 'updated_at', 'eventId']);
           expect(res.body.users.length).to.eql(2);
           expect(res.body.users[0]).to.have.all.keys(['created_at', 'updated_at', 'id', 'firstName', 'lastName', 'type', 'dob', 'gender']);
@@ -177,6 +183,35 @@ describe('integration: users', () => {
         });
     });
   });
+  describe('put', () => {
+    it('should allow update of a project', async () => {
+      const payload = {
+        name: 'MyPoneyProject',
+        answers: { social_project: true },
+      };
+      return request(app)
+        .patch(`/api/v1/events/${eventId}/projects/${projectId}?token=${token}`)
+        .send(payload)
+        .expect(200);
+    });
+    it('should fail if user is not the owner', async () => {
+      const payload = {
+        name: 'MyPoneyProject',
+        answers: { social_project: true },
+      };
+      return getToken('anotherone@example.com')
+        .then((_token) => {
+          return request(app)
+            .patch(`/api/v1/events/${eventId}/projects/${projectId}?token=${_token}`)
+            .send(payload)
+            .expect(403)
+            .then((res) => {
+              expect(res.body.msg).to.equal('Forbidden');
+            });
+        });
+    });
+  });
+
   after(() => {
     app.close();
   });

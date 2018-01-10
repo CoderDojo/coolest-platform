@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="event && project">
     <div class="row">
       <div class="col text-center">
         <h1>You're coming to {{ event.name }}!</h1>
@@ -32,7 +32,7 @@ The next step, have fun and keep building your project!</p>
   export default {
     name: 'CreateProjectCompleted',
     props: {
-      eventId: {
+      eventSlug: {
         type: String,
         required: true,
       },
@@ -49,10 +49,8 @@ The next step, have fun and keep building your project!</p>
     },
     data() {
       return {
-        event: {
-          name: 'test',
-        },
-        project: {},
+        event: null,
+        project: null,
       };
     },
     computed: {
@@ -62,17 +60,17 @@ The next step, have fun and keep building your project!</p>
     },
     methods: {
       async fetchEvent() {
-        this.event = (await EventService.get(this.eventId)).body;
+        this.event = (await EventService.get(this.eventSlug)).body;
       },
       async fetchProject() {
-        this.project = (await ProjectService.get(this.eventId, this.projectId)).body;
+        this.project = (await ProjectService.get(this.event.id, this.projectId)).body;
       },
     },
-    created() {
+    async created() {
       if (this._event) {
         this.event = this._event;
       } else {
-        this.fetchEvent();
+        await this.fetchEvent();
       }
       if (this._project) {
         this.project = this._project;

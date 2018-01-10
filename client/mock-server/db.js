@@ -24,6 +24,7 @@ const events = [
       'Websites & Web Games',
       'Evolution',
     ],
+    questions: ['social_project', 'educational_project', 'innovator_stage']
   }
 ];
 

@@ -5,7 +5,7 @@ module.exports = {
   post: [
     (req, res, next) =>
       userController
-        .post(req.body.email)
+        .post({ email: req.body.email })
         .then((user) => {
           res.locals.user = user;
           return next();

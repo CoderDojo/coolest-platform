@@ -60,4 +60,24 @@ describe('Project service', () => {
       expect(response).to.equal('success');
     });
   });
+
+  describe('update()', () => {
+    it('should make a patch request to update the given project', async () => {
+      // ARRANGE
+      const eventId = 'cp2018';
+      const projectId = 'foo';
+      const project = {
+        name: 'Project McProjectface',
+      };
+      sandbox.stub(Vue.http, 'patch')
+        .withArgs(`/api/v1/events/${eventId}/projects/${projectId}`, project)
+        .resolves('success');
+
+      // ACT
+      const response = await ProjectService.update(eventId, projectId, project);
+
+      // ASSERT
+      expect(response).to.equal('success');
+    });
+  });
 });

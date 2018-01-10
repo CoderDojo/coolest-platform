@@ -250,7 +250,7 @@
     </div>
     <div class="row">
       <div class="col text-center">
-        <button type="submit" class="btn btn-primary">Finish Registration</button>
+        <button type="submit" class="btn btn-primary">Register Project</button>
       </div>
     </div>
     <div class="row">
@@ -267,7 +267,6 @@
   import { ModelListSelect } from 'vue-search-select';
   import { clone, pick } from 'lodash';
   import moment from 'moment';
-  import ProjectService from '@/project/service';
 
   export default {
     name: 'ProjectForm',
@@ -370,23 +369,7 @@
       async onSubmit() {
         const valid = await this.$validator.validateAll();
         if (valid) {
-          const createdProject =
-            (await ProjectService.create(this.event.id, this.projectPayload)).body;
-          this.$emit('submit');
-          this.$ga.event({
-            eventCategory: 'ProjectRegistration',
-            eventAction: 'NewProject',
-            eventLabel: this.eventId,
-          });
-          this.$router.push({
-            name: 'CreateProjectCompleted',
-            params: {
-              eventId: this.event.id,
-              projectId: createdProject.id,
-              _event: this.event,
-              _project: createdProject,
-            },
-          });
+          this.$emit('projectFormSubmitted', this.projectPayload);
         }
       },
       getAge: dob => moment().diff(dob, 'years'),

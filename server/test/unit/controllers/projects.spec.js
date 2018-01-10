@@ -155,4 +155,58 @@ describe('projects controllers', () => {
       }
     });
   });
+
+  describe('update', () => {
+    let controllers;
+    const originalProject = {};
+    before(() => {
+      controllers = proxy('../../../controllers/projects', {
+        '../models/user': {},
+        '../models/project': {},
+        './users': {},
+      });
+    });
+    beforeEach(() => {
+      originalProject.save = sandbox.stub();
+    });
+    afterEach(() => {
+      sandbox.reset();
+    });
+
+    it('should update the current project fields based on the new ones', async () => {
+      const project = { id: 'fake', answers: { social_project: true } };
+      originalProject.save.resolves(project);
+      const res = await controllers.update(originalProject, project);
+      expect(originalProject.save).to.have.been.calledWith(project, { method: 'update', patch: true });
+      expect(res.id).to.equal(project.id);
+    });
+  });
+
+  describe('get', () => {
+    let controllers;
+    const originalProject = {};
+    let whereStub;
+    before(() => {
+      whereStub = sandbox.stub();
+      controllers = proxy('../../../controllers/projects', {
+        '../models/user': {},
+        '../models/project': { where: whereStub },
+        './users': {},
+      });
+    });
+    beforeEach(() => {
+      originalProject.save = sandbox.stub();
+    });
+    afterEach(() => {
+      sandbox.reset();
+    });
+
+    it('should retrieve a project and its relations', async () => {
+      const fetch = sinon.stub();
+      whereStub.returns({ fetch });
+      await controllers.get({ id: 'fakeId' }, ['bla']);
+      expect(whereStub).to.have.been.calledWith({ id: 'fakeId' });
+      expect(fetch.getCall(0).args[0]).to.be.eql({ withRelated: ['bla'] });
+    });
+  });
 });

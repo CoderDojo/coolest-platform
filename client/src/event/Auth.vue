@@ -1,5 +1,5 @@
 <template>
-  <form v-if="event.name" @submit.prevent="onSubmit">
+  <form v-if="event" @submit.prevent="onSubmit">
     <h2>Register for {{ event.name }}</h2>
     <div class="row">
       <div class="col">
@@ -43,7 +43,7 @@
   export default {
     name: 'Auth',
     props: {
-      eventId: {
+      eventSlug: {
         required: true,
         type: String,
       },
@@ -51,14 +51,14 @@
     data() {
       return {
         email: null,
-        event: {},
+        event: null,
         error: null,
         approval: false,
       };
     },
     methods: {
       async fetchEvent() {
-        this.event = (await EventService.get(this.eventId)).body;
+        this.event = (await EventService.get(this.eventSlug)).body;
       },
       async onSubmit() {
         try {
@@ -67,9 +67,9 @@
           this.$ga.event({
             eventCategory: 'ProjectRegistration',
             eventAction: 'NewUserAuth',
-            eventLabel: this.eventId,
+            eventLabel: this.eventSlug,
           });
-          this.$router.push({ name: 'CreateProject', params: { eventId: this.eventId } });
+          this.$router.push({ name: 'CreateProject', params: { eventSlug: this.eventSlug } });
         } catch (e) {
           this.error = e;
         }

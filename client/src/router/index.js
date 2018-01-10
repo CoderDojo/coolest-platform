@@ -6,6 +6,7 @@ import AuthEmail from '@/auth/Email';
 import ProjectList from '@/project/List';
 import ViewProject from '@/project/View';
 import CreateProject from '@/project/Create';
+import ProjectExtraDetails from '@/project/ExtraDetails';
 import CreateProjectCompleted from '@/project/CreateCompleted';
 import EditProject from '@/project/Edit';
 
@@ -25,37 +26,43 @@ export default new Router({
       component: AuthEmail,
     },
     {
-      path: '/events/:eventId',
+      path: '/events/:eventSlug',
       name: 'Auth',
       component: Auth,
       props: true,
     },
     {
-      path: '/events/:eventId/projects',
+      path: '/events/:eventSlug/projects',
       name: 'ProjectList',
       component: ProjectList,
       props: true,
     },
     {
-      path: '/events/:eventId/projects/create',
+      path: '/events/:eventSlug/projects/create',
       name: 'CreateProject',
       component: CreateProject,
       props: true,
     },
     {
-      path: '/events/:eventId/projects/:projectId/complete',
+      path: '/events/:eventSlug/projects/:projectId/extra',
+      name: 'ProjectExtraDetails',
+      component: ProjectExtraDetails,
+      props: true,
+    },
+    {
+      path: '/events/:eventSlug/projects/:projectId/complete',
       name: 'CreateProjectCompleted',
       component: CreateProjectCompleted,
       props: true,
     },
     {
-      path: '/events/:eventId/projects/:projectId',
+      path: '/events/:eventSlug/projects/:projectId',
       name: 'ViewProject',
       component: ViewProject,
       props: true,
     },
     {
-      path: '/events/:eventId/projects/:projectId/edit',
+      path: '/events/:eventSlug/projects/:projectId/edit',
       name: 'EditProject',
       component: EditProject,
       props: true,

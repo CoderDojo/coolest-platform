@@ -40,9 +40,9 @@ describe('Auth component', () => {
 
   describe('methods', () => {
     describe('fetchEvent', () => {
-      it('should load the event for the given eventId', async () => {
+      it('should load the event for the given eventSlug', async () => {
         // ARRANGE
-        vm.eventId = 'foo';
+        vm.eventSlug = 'foo';
         EventServiceMock.get.withArgs('foo').resolves({ body: 'bar' });
 
         // ACT
@@ -72,7 +72,7 @@ describe('Auth component', () => {
       it('should create a user and navigate to create-project', async () => {
         // ARRANGE
         vm.email = 'example@example.com';
-        vm.eventId = 'foo';
+        vm.eventSlug = 'foo';
         UserServiceMock.create.withArgs(vm.email).resolves({
           body: {
             auth: {
@@ -98,7 +98,7 @@ describe('Auth component', () => {
           eventLabel: 'foo',
         });
         expect(vm.$router.push).to.have.been.calledOnce;
-        expect(vm.$router.push).to.have.been.calledWith({ name: 'CreateProject', params: { eventId: 'foo' } });
+        expect(vm.$router.push).to.have.been.calledWith({ name: 'CreateProject', params: { eventSlug: 'foo' } });
       });
       it('should set the error if the user already exists', async () => {
         // ARRANGE

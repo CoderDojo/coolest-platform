@@ -5,11 +5,11 @@ const AuthModel = require('../models/auth');
 // TODO : use req.body and apply endpoint validation
 class User {
   // TODO: abstract by removing req/res and passing only the userPayload
-  static post(email) {
-    return new UserModel({ email })
+  static post(payload) {
+    return new UserModel(payload)
       .save()
       .then(user =>
-        new AuthModel({ userId: user.id })
+        new AuthModel({ userId: user.id, role: 'basic' })
           .save()
           .then(auth => Promise.resolve({ user, auth })))
       .catch((err) => {

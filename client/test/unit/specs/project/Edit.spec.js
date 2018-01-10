@@ -29,7 +29,7 @@ describe('EditProject component', () => {
     describe('fetchEvent', () => {
       it('should fetch the event using EventService', async () => {
         // ARRANGE
-        vm.eventId = 'foo';
+        vm.eventSlug = 'foo';
         EventServiceMock.get.withArgs('foo').resolves({ body: 'bar' });
 
         // ACT
@@ -43,7 +43,7 @@ describe('EditProject component', () => {
     describe('fetchProject', () => {
       it('should fetch the project using ProjectService', async () => {
         // ARRANGE
-        vm.eventId = 'foo';
+        vm.event = { id: 'foo' };
         vm.projectId = 'bar';
         ProjectServiceMock.get.withArgs('foo', 'bar').resolves({ body: 'baz' });
 
@@ -57,13 +57,13 @@ describe('EditProject component', () => {
   });
 
   describe('created', () => {
-    it('should fetch the event and project', () => {
+    it('should fetch the event and project', async () => {
       // ARRANGE
       sandbox.stub(vm, 'fetchEvent');
       sandbox.stub(vm, 'fetchProject');
 
       // ACT
-      vm.$lifecycleMethods.created();
+      await vm.$lifecycleMethods.created();
 
       // ASSERT
       expect(vm.fetchEvent).to.have.been.calledOnce;

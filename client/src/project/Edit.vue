@@ -13,7 +13,7 @@
   export default {
     name: 'EditProject',
     props: {
-      eventId: {
+      eventSlug: {
         type: String,
         required: true,
       },
@@ -33,14 +33,14 @@
     },
     methods: {
       async fetchEvent() {
-        this.event = (await EventService.get(this.eventId)).body;
+        this.event = (await EventService.get(this.eventSlug)).body;
       },
       async fetchProject() {
-        this.project = (await ProjectService.get(this.eventId, this.projectId)).body;
+        this.project = (await ProjectService.get(this.event.id, this.projectId)).body;
       },
     },
-    created() {
-      this.fetchEvent();
+    async created() {
+      await this.fetchEvent();
       this.fetchProject();
     },
   };
