@@ -25,7 +25,6 @@ describe('Auth component', () => {
     };
     vm = vueUnitHelper(Auth({
       'js-cookie': CookieMock,
-      '@/auth/service': AuthServiceMock,
       '@/user/service': UserServiceMock,
       '@/event/service': EventServiceMock,
     }));
@@ -55,7 +54,7 @@ describe('Auth component', () => {
     });
 
     describe('onSubmit', () => {
-      it('should navigate to auth-email when auth succeeds', async () => {
+      it.skip('should navigate to auth-email when auth succeeds', async () => {
         // ARRANGE
         vm.email = 'example@example.com';
         AuthServiceMock.auth.withArgs(vm.email).resolves();
@@ -70,11 +69,10 @@ describe('Auth component', () => {
         expect(UserServiceMock.create).to.not.have.been.called;
       });
 
-      it('should create a user and navigate to create-project when auth fails', async () => {
+      it('should create a user and navigate to create-project', async () => {
         // ARRANGE
         vm.email = 'example@example.com';
         vm.eventId = 'foo';
-        AuthServiceMock.auth.withArgs(vm.email).rejects();
         UserServiceMock.create.withArgs(vm.email).resolves({
           body: {
             auth: {
@@ -90,7 +88,6 @@ describe('Auth component', () => {
         await vm.onSubmit();
 
         // ASSERT
-        expect(AuthServiceMock.auth).to.have.been.calledOnce;
         expect(UserServiceMock.create).to.have.been.calledOnce;
         expect(CookieMock.set).to.have.been.calledOnce;
         expect(CookieMock.set).to.have.been.calledWith('authToken', 'foo');
@@ -102,6 +99,25 @@ describe('Auth component', () => {
         });
         expect(vm.$router.push).to.have.been.calledOnce;
         expect(vm.$router.push).to.have.been.calledWith({ name: 'CreateProject', params: { eventId: 'foo' } });
+      });
+      it('should set the error if the user already exists', async () => {
+        // ARRANGE
+        vm.email = 'example@example.com';
+        vm.eventId = 'foo';
+        UserServiceMock.create.withArgs(vm.email).rejects({ status: 409 });
+        vm.$ga = {
+          event: sandbox.stub(),
+        };
+
+        // ACT
+        await vm.onSubmit();
+
+        // ASSERT
+        expect(UserServiceMock.create).to.have.been.calledOnce;
+        expect(CookieMock.set).to.not.have.been.called;
+        expect(vm.$ga.event).to.not.have.been.called;
+        expect(vm.$router.push).to.not.have.been.called;
+        expect(vm.error).to.eql({ status: 409 });
       });
     });
   });

@@ -12,6 +12,13 @@
         <p>This form is to register the project for <em>all project members</em>. Each project should only be registered once, by one person. We will contact whoever registers this project soon after registration telling them how to edit the project details well before the event.</p>
       </div>
     </div>
+    <div v-if="error && error.status === 409" class="row warning-message">
+      <div class="col">
+        <p>
+          Looks like you've already created a project. Don't worry if you need to change some project information. We'll email you in the next few weeks showing you how you can edit your project details.
+        </p>
+      </div>
+    </div>
     <div class="row row-double-margin">
       <div class="col text-center">
         <button type="submit" class="btn btn-primary">Next Step – Project Details</button>
@@ -22,7 +29,6 @@
 
 <script>
   import Cookie from 'js-cookie';
-  import AuthService from '@/auth/service';
   import UserService from '@/user/service';
   import EventService from '@/event/service';
 
@@ -38,6 +44,7 @@
       return {
         email: null,
         event: {},
+        error: null,
       };
     },
     methods: {
@@ -46,9 +53,6 @@
       },
       async onSubmit() {
         try {
-          await AuthService.auth(this.email);
-          this.$router.push({ name: 'AuthEmail' });
-        } catch (e) {
           const user = (await UserService.create(this.email)).body;
           Cookie.set('authToken', user.auth.token);
           this.$ga.event({
@@ -57,6 +61,8 @@
             eventLabel: this.eventId,
           });
           this.$router.push({ name: 'CreateProject', params: { eventId: this.eventId } });
+        } catch (e) {
+          this.error = e;
         }
       },
     },
