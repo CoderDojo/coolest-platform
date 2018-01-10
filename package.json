@@ -50,6 +50,7 @@
     "js-cookie": "^2.2.0",
     "json-server": "^0.12.1",
     "jsonwebtoken": "^8.1.0",
+    "karma-nyan-reporter": "^0.2.5",
     "knex": "^0.14.1",
     "le_node": "^1.7.1",
     "lodash": "^4.17.4",

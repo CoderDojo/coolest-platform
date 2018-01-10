@@ -19,7 +19,7 @@ module.exports = function (config) {
       }
     },
     frameworks: ['mocha', 'sinon-chai'],
-    reporters: ['spec', 'coverage'],
+    reporters: ['nyan', 'coverage'],
     files: ['./index.js'],
     preprocessors: {
       './index.js': ['webpack', 'sourcemap']

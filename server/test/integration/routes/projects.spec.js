@@ -10,11 +10,6 @@ describe('integration: users', () => {
   let token;
   let eventId;
   let projectId;
-  // Delay 2nd test (update) case so that the project is created
-  let projectCreationResolve;
-  const projectCreation = new Promise((resolve, reject) => {
-    projectCreationResolve = resolve;
-  });
 
   before(async () => {
     app = await proxy(
@@ -87,7 +82,6 @@ describe('integration: users', () => {
           expect(res.body).to.have.all.keys(['name', 'category', 'users', 'id', 'created_at', 'updated_at', 'eventId']);
           expect(res.body.users.length).to.eql(2);
           expect(res.body.users[0]).to.have.all.keys(['created_at', 'updated_at', 'id', 'firstName', 'lastName', 'type', 'dob', 'gender']);
-          projectCreationResolve();
         });
     });
 
@@ -190,9 +184,6 @@ describe('integration: users', () => {
     });
   });
   describe('put', () => {
-    before(() => {
-      return projectCreation;
-    });
     it('should allow update of a project', async () => {
       const payload = {
         name: 'MyPoneyProject',
