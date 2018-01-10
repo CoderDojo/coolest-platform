@@ -4,8 +4,8 @@
     <ul>
       <li v-for="project in projects">
         {{ project.name }}
-        <router-link :to="{ name: 'ViewProject', params: { eventId: eventId, projectId: project.id } }">[View]</router-link>
-        <router-link :to="{ name: 'EditProject', params: { eventId: eventId, projectId: project.id } }">[Edit]</router-link>
+        <router-link :to="{ name: 'ViewProject', params: { eventSlug: eventSlug, projectId: project.id } }">[View]</router-link>
+        <router-link :to="{ name: 'EditProject', params: { eventSlug: eventSlug, projectId: project.id } }">[Edit]</router-link>
       </li>
     </ul>
   </div>
@@ -17,7 +17,7 @@
   export default {
     name: 'ProjectList',
     props: {
-      eventId: {
+      eventSlug: {
         required: true,
         type: String,
       },
@@ -29,7 +29,7 @@
     },
     methods: {
       async fetchProjects() {
-        this.projects = (await ProjectService.list(this.eventId)).body;
+        this.projects = (await ProjectService.list(this.eventSlug)).body;
       },
     },
     created() {

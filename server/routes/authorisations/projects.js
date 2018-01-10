@@ -16,7 +16,7 @@ module.exports.define = (apiPrefix) => {
     roles: ['basic'],
     allows: [{
       resources: `${apiPrefix}/:id`,
-      permissions: ['patch'],
+      permissions: ['get', 'patch'],
     }],
   },
   ]);

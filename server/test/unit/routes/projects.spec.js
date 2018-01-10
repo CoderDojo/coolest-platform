@@ -206,6 +206,41 @@ describe('router: project', () => {
     });
   });
 
+  describe('get', () => {
+    let handler;
+    const projectController = class {};
+    let sandbox;
+
+    before(() => {
+      sandbox = sinon.sandbox.create();
+      handlers = (proxy('../../../routes/handlers/projects', {
+        '../../controllers/projects': projectController,
+      })).get;
+      handler = (req, res, next) => {
+        return handlers[0](req, res, next);
+      };
+    });
+
+    it('should return the project for given event id and project id', async () => {
+      const mockReq = {
+        app: {
+          locals: { project: 'foo' },
+        },
+      };
+      const json = sandbox.stub();
+      const mockRes = {
+        status: sandbox.stub().returns({ json }),
+      };
+
+      await handler(mockReq, mockRes);
+
+      expect(mockRes.status).to.have.been.calledOnce;
+      expect(mockRes.status).to.have.been.calledWith(200);
+      expect(json).to.have.been.calledOnce;
+      expect(json).to.have.been.calledWith('foo');
+    });
+  });
+
   describe('patch', () => {
     let handler;
     const projectController = class {};

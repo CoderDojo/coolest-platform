@@ -30,7 +30,7 @@ describe('Create Project component', () => {
     describe('fetchEvent', () => {
       it('should fetch the event using EventService', async () => {
         // ARRANGE
-        vm.eventId = 'foo';
+        vm.eventSlug = 'foo';
         EventServiceMock.get.withArgs('foo').resolves({ body: 'bar' });
 
         // ACT
@@ -53,7 +53,7 @@ describe('Create Project component', () => {
         };
         const createdProject = { id: 'baz' };
         vm.event = event;
-        vm.eventId = 'foo';
+        vm.eventSlug = 'foo';
         vm.projectPayload = project;
         ProjectServiceMock.create.resolves({ body: createdProject });
         sandbox.stub(window, 'removeEventListener');
@@ -84,7 +84,7 @@ describe('Create Project component', () => {
         expect(vm.$router.push).to.have.been.calledWith({
           name: 'CreateProjectCompleted',
           params: {
-            eventId: 'foo',
+            eventSlug: 'foo',
             projectId: 'baz',
             _event: event,
             _project: createdProject,
@@ -106,7 +106,7 @@ describe('Create Project component', () => {
         };
         const createdProject = { id: 'baz' };
         vm.event = event;
-        vm.eventId = 'foo';
+        vm.eventSlug = 'foo';
         vm.projectPayload = project;
         ProjectServiceMock.create.resolves({ body: createdProject });
         sandbox.stub(window, 'removeEventListener');
@@ -125,7 +125,7 @@ describe('Create Project component', () => {
         expect(vm.$router.push).to.have.been.calledWith({
           name: 'ProjectExtraDetails',
           params: {
-            eventId: 'foo',
+            eventSlug: 'foo',
             projectId: 'baz',
             _event: event,
             _project: createdProject,

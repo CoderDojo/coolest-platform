@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="event">
     <h2>Register for {{ event.name }}</h2>
     <project-form :event="event" @projectFormSubmitted="onSubmit"></project-form>
   </div>
@@ -13,7 +13,7 @@
   export default {
     name: 'CreateProject',
     props: {
-      eventId: {
+      eventSlug: {
         required: true,
         type: String,
       },
@@ -23,29 +23,28 @@
     },
     data() {
       return {
-        project: {},
-        event: {},
+        event: null,
         submitted: false,
       };
     },
     methods: {
       async fetchEvent() {
-        this.event = (await EventService.get(this.eventId)).body;
+        this.event = (await EventService.get(this.eventSlug)).body;
       },
       async onSubmit(projectPayload) {
         window.removeEventListener('beforeunload', this.onBeforeUnload);
         this.submitted = true;
         const createdProject =
-          (await ProjectService.create(this.eventId, projectPayload)).body;
+          (await ProjectService.create(this.event.id, projectPayload)).body;
         this.$ga.event({
           eventCategory: 'ProjectRegistration',
           eventAction: 'NewProject',
-          eventLabel: this.eventId,
+          eventLabel: this.event.id,
         });
         this.$router.push({
           name: this.event.questions && this.event.questions.length > 0 ? 'ProjectExtraDetails' : 'CreateProjectCompleted',
           params: {
-            eventId: this.eventId,
+            eventSlug: this.eventSlug,
             projectId: createdProject.id,
             _event: this.event,
             _project: createdProject,

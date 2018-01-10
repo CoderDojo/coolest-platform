@@ -1,7 +1,7 @@
 import vueUnitHelper from 'vue-unit-helper';
 import CreateProjectCompleted from '!!vue-loader?inject!@/project/CreateCompleted';
 
-describe('EditProject component', () => {
+describe('Create Project Completed component', () => {
   let sandbox;
   let EventServiceMock;
   let ProjectServiceMock;
@@ -29,7 +29,7 @@ describe('EditProject component', () => {
     describe('fetchEvent', () => {
       it('should fetch the event using EventService', async () => {
         // ARRANGE
-        vm.eventId = 'foo';
+        vm.eventSlug = 'foo';
         EventServiceMock.get.withArgs('foo').resolves({ body: 'bar' });
 
         // ACT
@@ -43,7 +43,7 @@ describe('EditProject component', () => {
     describe('fetchProject', () => {
       it('should fetch the project using ProjectService', async () => {
         // ARRANGE
-        vm.eventId = 'foo';
+        vm.event = { id: 'foo' };
         vm.projectId = 'bar';
         ProjectServiceMock.get.withArgs('foo', 'bar').resolves({ body: 'baz' });
 
@@ -57,7 +57,7 @@ describe('EditProject component', () => {
   });
 
   describe('created', () => {
-    it('should fetch the event and project if not passed as props', () => {
+    it('should fetch the event and project if not passed as props', async () => {
       // ARRANGE
       vm._event = undefined;
       vm._project = undefined;
@@ -65,14 +65,14 @@ describe('EditProject component', () => {
       sandbox.stub(vm, 'fetchProject');
 
       // ACT
-      vm.$lifecycleMethods.created();
+      await vm.$lifecycleMethods.created();
 
       // ASSERT
       expect(vm.fetchEvent).to.have.been.calledOnce;
       expect(vm.fetchProject).to.have.been.calledOnce;
     });
 
-    it('should not fetch the event and project if passed as props', () => {
+    it('should not fetch the event and project if passed as props', async () => {
       // ARRANGE
       const event = { id: 'foo' };
       const project = { id: 'bar' };
@@ -82,7 +82,7 @@ describe('EditProject component', () => {
       sandbox.stub(vm, 'fetchProject');
 
       // ACT
-      vm.$lifecycleMethods.created();
+      await vm.$lifecycleMethods.created();
 
       // ASSERT
       expect(vm.fetchEvent).to.not.have.been.called;

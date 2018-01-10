@@ -21,6 +21,10 @@ module.exports = {
     (req, res) => res.status(200).json(res.locals.project),
   ],
 
+  get: [
+    (req, res) => res.status(200).json(req.app.locals.project),
+  ],
+
   patch: [
     (req, res, next) =>
       projectController

@@ -10,15 +10,15 @@ describe('Event service', () => {
   });
 
   describe('get()', () => {
-    it('should get the details for the given eventId', async () => {
+    it('should get the details for the given eventSlug', async () => {
       // ARRANGE
-      const eventId = 'cp2018';
+      const eventSlug = 'cp2018';
       sandbox.stub(Vue.http, 'get')
-        .withArgs(`/api/v1/events/${eventId}`)
+        .withArgs(`/api/v1/events/${eventSlug}`)
         .resolves('success');
 
       // ACT
-      const response = await EventService.get(eventId);
+      const response = await EventService.get(eventSlug);
 
       // ASSERT
       expect(response).to.equal('success');

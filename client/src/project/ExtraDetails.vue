@@ -1,5 +1,5 @@
 <template>
-  <form novalidate @submit.prevent="onSubmit">
+  <form v-if="event && project" novalidate @submit.prevent="onSubmit">
     <div class="row">
       <div class="col">
         <h2>Extra Details</h2>
@@ -11,7 +11,7 @@
         <p>Do you think your project trys to tackle a social problem?</p>
       </div>
       <div>
-        <select v-model="questions.social_project">
+        <select v-model="answers.social_project">
           <option value="undefined" disabled></option>
           <option :value="true">Yes</option>
           <option :value="false">No</option>
@@ -23,7 +23,7 @@
         <p>Do you think your project topic is around Education?</p>
       </div>
       <div>
-        <select v-model="questions.educational_project">
+        <select v-model="answers.educational_project">
           <option value="undefined" disabled></option>
           <option :value="true">Yes</option>
           <option :value="false">No</option>
@@ -42,7 +42,7 @@
           <p>Would you or your team want to present your project on the Innovator Stage? (This does not guarantee a place as spaces are limited on the day)</p>
         </div>
         <div>
-          <select v-model="questions.innovator_stage">
+          <select v-model="answers.innovator_stage">
             <option value="undefined" disabled></option>
             <option :value="true">Yes</option>
             <option :value="false">No</option>
@@ -65,7 +65,7 @@
   export default {
     name: 'ExtraDetails',
     props: {
-      eventId: {
+      eventSlug: {
         type: String,
         required: true,
       },
@@ -82,34 +82,34 @@
     },
     data() {
       return {
-        project: {},
-        event: {},
-        questions: {},
+        project: null,
+        event: null,
+        answers: {},
       };
     },
     methods: {
       async fetchEvent() {
-        this.event = (await EventService.get(this.eventId)).body;
+        this.event = (await EventService.get(this.eventSlug)).body;
       },
       async fetchProject() {
-        this.project = (await ProjectService.get(this.eventId, this.projectId)).body;
+        this.project = (await ProjectService.get(this.event.id, this.projectId)).body;
       },
       hasQuestion(q) {
         return this.event.questions && this.event.questions.indexOf(q) >= 0;
       },
       async onSubmit() {
-        await ProjectService.update(this.eventId, this.projectId, {
-          questions: this.questions,
+        await ProjectService.update(this.event.id, this.projectId, {
+          answers: this.answers,
         });
         this.$ga.event({
           eventCategory: 'ProjectRegistration',
           eventAction: 'ExtraDetailsProvided',
-          eventLabel: this.eventId,
+          eventLabel: this.event.id,
         });
         this.$router.push({
           name: 'CreateProjectCompleted',
           params: {
-            eventId: this.eventId,
+            eventSlug: this.eventSlug,
             projectId: this.projectId,
             _event: this.event,
             _project: this.project,
@@ -117,11 +117,11 @@
         });
       },
     },
-    created() {
+    async created() {
       if (this._event) {
         this.event = this._event;
       } else {
-        this.fetchEvent();
+        await this.fetchEvent();
       }
       if (this._project) {
         this.project = this._project;

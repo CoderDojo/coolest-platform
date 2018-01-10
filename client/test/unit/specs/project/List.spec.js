@@ -24,7 +24,7 @@ describe('ProjectList component', () => {
     describe('fetchProjects', () => {
       it('should update this.projects with the projects fetched from ProjectService', async () => {
         // ARRANGE
-        vm.eventId = 'cp2018';
+        vm.eventSlug = 'cp2018';
         ProjectServiceMock.list.withArgs('cp2018').returns({ body: 'bar' });
 
         // ACT
