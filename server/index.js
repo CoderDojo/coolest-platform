@@ -67,7 +67,7 @@ module.exports = () => {
     // error handler for any uncaught error
     app.use((err, req, res, next) => {
       // set locals, only providing error in development
-      logger.error(err);
+      logger.error({ msg: err.message, stack: err.stack });
       const status = err.status || 500;
       res.locals.message = err.message;
       res.locals.error = req.app.get('env') === 'development' ? err : {};
