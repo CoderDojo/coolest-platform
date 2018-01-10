@@ -18,20 +18,20 @@ describe('integration: users', () => {
       },
     )({ seed: true });
     return Promise.all([
-      getToken(),
+      getToken('me@example.com')
+        .then((_token) => {
+          token = _token;
+        }),
       getDefaultProject(),
     ]);
   });
 
-  async function getToken() {
-    const payload = { email: 'me@example.com' };
-    await request(app)
+  function getToken(email) {
+    return request(app)
       .post('/api/v1/users')
       .set('Accept', 'application/json')
-      .send(payload)
-      .then((res) => {
-        token = res.body.auth.token;
-      });
+      .send({ email })
+      .then(res => Promise.resolve(res.body.auth.token));
   }
 
   async function getDefaultProject() {
@@ -142,6 +142,39 @@ describe('integration: users', () => {
         .post(`/api/v1/events/${eventId}/projects?token=aaa`)
         .send(payload)
         .expect(401);
+    });
+
+    it('should be allowing an email different for creator/supervisor', async () => {
+      const payload = {
+        name: 'MyPoneyProject',
+        category: 'HTML',
+        users: [
+          {
+            firstName: 'kid1',
+            lastName: 'kido',
+            dob: '2008-12-01T20:00.000Z',
+            gender: 'male',
+            type: 'member',
+          },
+          {
+            firstName: 'orga',
+            lastName: 'le',
+            dob: '1991-12-01T20:00.000Z',
+            gender: 'male',
+            email: 'another@example.com',
+            phone: '3538123123123',
+            country: 'IE',
+            type: 'supervisor',
+          },
+        ],
+      };
+      return getToken('meme@example.com')
+        .then((_token) => {
+          return request(app)
+            .post(`/api/v1/events/${eventId}/projects?token=${_token}`)
+            .send(payload)
+            .expect(200);
+        });
     });
   });
   after(() => {
