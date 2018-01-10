@@ -12,9 +12,17 @@
         <p>This form is to register the project for <em>all project members</em>. Each project should only be registered once, by one person. We will contact whoever registers this project soon after registration telling them how to edit the project details well before the event.</p>
       </div>
     </div>
+    <label class="row row-no-margin">
+      <div class="col text-center">
+        <input type="checkbox" v-model="approval" name="approval"/>
+      </div>
+      <div class="col-6fr">
+        <p for="approval">By selecting this you are agreeing you are 13 or over and are happy to be contacted about this project, Coolest Projects information and related news.</p>
+      </div>
+    </label>
     <div class="row row-double-margin">
       <div class="col text-center">
-        <button type="submit" class="btn btn-primary">Next Step – Project Details</button>
+        <button type="submit" class="btn btn-primary" :disabled="!approval">Next Step – Project Details</button>
       </div>
     </div>
     <div v-if="error && error.status === 409" class="row error-message">
@@ -45,6 +53,7 @@
         email: null,
         event: {},
         error: null,
+        approval: false,
       };
     },
     methods: {
