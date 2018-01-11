@@ -224,8 +224,8 @@ describe('ProjectForm component', () => {
         vm.$watchers.fromDojo();
 
         // ASSERT
-        expect(vm.projectDetails.dojoId).to.equal('');
-        expect(vm.projectDetails.alternativeReference).to.equal('');
+        expect(vm.projectDetails.dojoId).to.equal(undefined);
+        expect(vm.projectDetails.alternativeReference).to.equal(undefined);
       });
     });
   });

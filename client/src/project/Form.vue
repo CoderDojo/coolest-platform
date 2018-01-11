@@ -373,8 +373,8 @@
         }
       },
       fromDojo() {
-        this.projectDetails.dojoId = '';
-        this.projectDetails.alternativeReference = '';
+        delete this.projectDetails.dojoId;
+        delete this.projectDetails.alternativeReference;
       },
     },
     methods: {
