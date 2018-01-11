@@ -4,10 +4,6 @@
 
 <script>
   export default {
-    name: 'app',
+    name: 'Admin',
   };
 </script>
-
-<style lang="scss">
-  @import './assets/scss/main.scss';
-</style>
