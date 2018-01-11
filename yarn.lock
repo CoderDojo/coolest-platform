@@ -8395,9 +8395,9 @@ vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
-vue-unit-helper@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/vue-unit-helper/-/vue-unit-helper-1.0.7.tgz#ed643ad7f223904ab811c11aa20d62549c773e95"
+vue-unit-helper@1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/vue-unit-helper/-/vue-unit-helper-1.0.8.tgz#efb2120bfd0806c2f1b40ab05cdc11f7c2233277"
   dependencies:
     lodash "^4.17.4"
 

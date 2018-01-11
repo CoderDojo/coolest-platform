@@ -60,6 +60,9 @@
       window.addEventListener('beforeunload', this.onBeforeUnload);
       this.fetchEvent();
     },
+    destroyed() {
+      window.removeEventListener('beforeunload', this.onBeforeUnload);
+    },
     beforeRouteLeave(to, from, next) {
       if (this.submitted) {
         next();

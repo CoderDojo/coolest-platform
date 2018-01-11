@@ -162,4 +162,18 @@ describe('Create Project component', () => {
       expect(vm.fetchEvent).to.have.been.calledOnce;
     });
   });
+
+  describe('destroyed', () => {
+    it('should remove beforeunload event listener', () => {
+      // ARRANGE
+      sandbox.stub(window, 'removeEventListener');
+
+      // ACT
+      vm.$lifecycleMethods.destroyed();
+
+      // ASSERT
+      expect(window.removeEventListener).to.have.been.calledOnce;
+      expect(window.removeEventListener).to.have.been.calledWith('beforeunload', vm.onBeforeUnload);
+    });
+  });
 });
