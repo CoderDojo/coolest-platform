@@ -272,9 +272,13 @@
       </div>
     </div>
     <div class="row">
-      <div class="col">
-        <span class="error-message" v-show="errors.any()">* You cannot finish registration until all the fields on this form are filled out correctly.</span>
+      <div class="col" v-if="errors.any()">
+        <span class="error-message">* You cannot finish registration until all the fields on this form are filled out correctly.</span>
       </div>
+      <div class="col" v-if="error">
+        <span class="error-message">Sorry. There was an problem registering your project, please contact <a href="email:info@coolestprojects.org">info@coolestprojects.org</a> so we can help you.</span>
+      </div>
+    </div>
     </div>
   </form>
 </template>
@@ -294,6 +298,9 @@
         type: Object,
       },
       project: {
+        type: Object,
+      },
+      error: {
         type: Object,
       },
     },

@@ -132,6 +132,41 @@ describe('Create Project component', () => {
           },
         });
       });
+
+      it('should set the error if the backend failed', async () => {
+        // ARRANGE
+        const event = { id: 'foo' };
+        const project = {
+          name: 'bar',
+          users: [{
+            type: 'supervisor',
+          }],
+        };
+        vm.event = event;
+        vm.eventSlug = 'foo';
+        vm.projectPayload = project;
+        ProjectServiceMock.create.rejects(new Error('Fake err'));
+        sandbox.stub(window, 'removeEventListener');
+        vm.submitted = false;
+        vm.$router = {
+          push: sandbox.stub(),
+        };
+        vm.$ga = {
+          event: sandbox.stub(),
+        };
+
+        // ACT
+        await vm.onSubmit(project);
+
+        // ASSERT
+        expect(vm.submitted).to.equal(false);
+        expect(window.removeEventListener).to.not.have.been.called;
+        expect(ProjectServiceMock.create).to.have.been.calledOnce;
+        expect(ProjectServiceMock.create).to.have.been.calledWith('foo', project);
+        expect(vm.$ga.event).to.not.have.been.called;
+        expect(vm.$router.push).to.not.have.been.called;
+        expect(vm.error.message).to.equal('Fake err');
+      });
     });
 
     describe('onBeforeUnload', () => {

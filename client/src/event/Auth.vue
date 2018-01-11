@@ -25,11 +25,15 @@
         <button type="submit" class="btn btn-primary" :disabled="!approval">Next Step – Project Details</button>
       </div>
     </div>
-    <div v-if="error && error.status === 409" class="row error-message">
+    <div v-if="error" class="row error-message">
       <div class="col">
-        <p>
+        <p v-if="error.status === 409">
           Looks like you've already created a project. Don't worry if you need to change some project information. We'll email you in the next few weeks showing you how you can edit your project details.
         </p>
+        <p v-else="error.status !== 409">
+          Sorry. There was an problem registering your email, please contact <a href="email:info@coolestprojects.org">info@coolestprojects.org</a> so we can help you.
+        </p>
+      </div>
       </div>
     </div>
   </form>
