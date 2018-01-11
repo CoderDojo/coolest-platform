@@ -31,7 +31,7 @@
           Looks like you've already created a project. Don't worry if you need to change some project information. We'll email you in the next few weeks showing you how you can edit your project details.
         </p>
         <p v-else="error.status !== 409">
-          Sorry. There was an problem registering your email, please contact <a href="email:info@coolestprojects.org">info@coolestprojects.org</a> so we can help you.
+          Sorry. There was an problem registering your email, please contact <a href="email:hello@coolestprojects.org">hello@coolestprojects.org</a> so we can help you.
         </p>
       </div>
       </div>

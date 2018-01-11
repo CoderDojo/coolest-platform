@@ -263,7 +263,7 @@
     <hr />
     <div class="row">
       <div class="col">
-        <p>If you have any questions about coolest projects please check out <a href="http://www.coolestprojects.org">www.coolestprojects.org</a> or contact us at <a href="mailto:info@coolestprojects.org">info@coolestprojects.org</a>.</p>
+        <p>If you have any questions about coolest projects please check out <a href="http://www.coolestprojects.org">www.coolestprojects.org</a> or contact us at <a href="mailto:hello@coolestprojects.org">hello@coolestprojects.org</a>.</p>
       </div>
     </div>
     <div class="row">
@@ -276,7 +276,7 @@
         <span class="error-message">* You cannot finish registration until all the fields on this form are filled out correctly.</span>
       </div>
       <div class="col" v-if="error">
-        <span class="error-message">Sorry. There was an problem registering your project, please contact <a href="email:info@coolestprojects.org">info@coolestprojects.org</a> so we can help you.</span>
+        <span class="error-message">Sorry. There was an problem registering your project, please contact <a href="email:hello@coolestprojects.org">hello@coolestprojects.org</a> so we can help you.</span>
       </div>
     </div>
     </div>
