@@ -27,6 +27,7 @@ describe('ProjectForm component', () => {
           description: 'Some desc',
           category: 'scratch',
           dojoId: 'bar',
+          alternativeReference: 'Code Club',
         };
         vm.participants = [{
           firstName: 'Namey',
@@ -56,6 +57,7 @@ describe('ProjectForm component', () => {
           description: 'Some desc',
           category: 'scratch',
           dojoId: 'bar',
+          alternativeReference: 'Code Club',
           users: [
             {
               firstName: 'Namey',
@@ -207,6 +209,23 @@ describe('ProjectForm component', () => {
           { specialRequirementsProvided: false },
           { specialRequirementsProvided: false },
         ]);
+      });
+    });
+
+    describe('fromDojo', () => {
+      it('should clear dojoId and alternativeReference', () => {
+        // ARRANGE
+        vm.projectDetails = {
+          dojoId: 'foo',
+          alternativeReference: 'bar',
+        };
+
+        // ACT
+        vm.$watchers.fromDojo();
+
+        // ASSERT
+        expect(vm.projectDetails.dojoId).to.equal('');
+        expect(vm.projectDetails.alternativeReference).to.equal('');
       });
     });
   });

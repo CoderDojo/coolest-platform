@@ -51,7 +51,7 @@
         <div class="row row-no-margin">
           <div class="col-2fr">
             <select
-              v-model="projectDetails.fromDojo"
+              v-model="fromDojo"
               v-validate="{ required: true }"
               data-vv-name="fromDojo"
               class="full-width-block"
@@ -61,10 +61,10 @@
             </select>
             <span class="error-message" v-show="errors.has('fromDojo:required')">* You must select whether the project is from a Dojo</span>
           </div>
-          <div v-show="projectDetails.fromDojo === 'true'" class="col-3fr">
+          <div v-show="fromDojo === 'true'" class="col-3fr">
             <model-list-select
               v-model="projectDetails.dojoId"
-              v-validate="projectDetails.fromDojo === 'true' ? 'required' : ''"
+              v-validate="fromDojo === 'true' ? 'required' : ''"
               data-vv-name="dojoId"
               class="full-width-block"
               :class="{ placeholder: projectDetails.category === undefined }"
@@ -75,6 +75,21 @@
           </div>
         </div>
         <span class="error-message" v-show="errors.has('dojoId:required')">* If you attend a Dojo, you must select which Dojo</span>
+      </div>
+    </div>
+    <div v-show="fromDojo === 'false'" class="row">
+      <div class="col">
+        <label>How did you hear about Coolest Projects (which Code Club, which school etc.)?</label>
+        <div class="row row-no-margin">
+          <div class="col">
+            <input type="text"
+              v-model="projectDetails.alternativeReference"
+              v-validate="fromDojo === 'false' ? 'required' : ''"
+              data-vv-name="alternativeReference"
+              class="full-width-block" />
+            <span class="error-message" v-show="errors.has('alternativeReference:required')">* It helps us to know where our attendees came from, please tell us how you came to Coolest Projects.</span>
+          </div>
+        </div>
       </div>
     </div>
     <hr />
@@ -293,18 +308,20 @@
         projectDetails: {},
         participants: [{ specialRequirementsProvided: false }],
         supervisor: {},
+        fromDojo: undefined,
       };
     },
     computed: {
       projectPayload: {
         get() {
-          const project = {
-            id: this.projectDetails.id,
-            name: this.projectDetails.name,
-            description: this.projectDetails.description,
-            category: this.projectDetails.category,
-            dojoId: this.projectDetails.dojoId,
-          };
+          const project = pick(this.projectDetails, [
+            'id',
+            'name',
+            'description',
+            'category',
+            'dojoId',
+            'alternativeReference',
+          ]);
           project.users = this.participants.map((participant) => {
             const _participant = pick(participant, [
               'firstName',
@@ -354,6 +371,10 @@
         } else if (newLength < oldLength) {
           this.participants.splice(newLength, oldLength - newLength);
         }
+      },
+      fromDojo() {
+        this.projectDetails.dojoId = '';
+        this.projectDetails.alternativeReference = '';
       },
     },
     methods: {

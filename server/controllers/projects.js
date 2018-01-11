@@ -7,9 +7,11 @@ class Project {
   static post(creator, project, eventId) {
     // TODO : apply endpoint validation
     // TODO : transaction
-    const projectPayload = Object.assign({}, pick(project, ['name', 'category', 'dojoId', 'description']), {
-      eventId,
-    });
+    const projectPayload = Object.assign(
+      {},
+      pick(project, ['name', 'category', 'dojoId', 'description', 'alternativeReference']),
+      { eventId },
+    );
     const newProject = new ProjectModel(projectPayload);
     const promises = [];
     const users = [];

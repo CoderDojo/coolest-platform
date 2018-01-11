@@ -19,6 +19,7 @@ describe('projects controllers', () => {
       const name = 'MyLittleProject';
       const category = 'Flash';
       const dojoId = '';
+      const alternativeReference = 'Code Club';
       const member = {
         firstName: 'member',
         lastName: 'one',
@@ -68,6 +69,7 @@ describe('projects controllers', () => {
         name,
         category,
         dojoId,
+        alternativeReference,
         users: [member, supervisor],
       };
 
@@ -81,6 +83,7 @@ describe('projects controllers', () => {
         name,
         category,
         dojoId,
+        alternativeReference,
       });
       expect(mockProjectSave).to.have.been.calledOnce;
 
