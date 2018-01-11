@@ -14,6 +14,10 @@ projectsApi(router, apiPrefix);
 eventsApi(router, apiPrefix);
 pingApi(router, apiPrefix);
 
+router.get('/robots.txt', (req, res) => {
+  res.type('text/plain').send('User-agent: *\nDisallow: /');
+});
+
 router.get(`${apiPrefix}/coffee`, (req, res) => {
   res.statusMessage = "I'm a teapot";
   res
