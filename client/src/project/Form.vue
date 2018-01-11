@@ -99,7 +99,7 @@
         <div class="row row-no-margin">
           <div class="col-2fr">
             <select v-model="numParticipants" class="full-width-block">
-              <option v-for="n in 4" :value="n">{{ n }}</option>
+              <option v-for="n in 5" :value="n">{{ n }}</option>
             </select>
           </div>
           <div class="col-3fr"></div>
