@@ -18,8 +18,9 @@ describe('projects controllers', () => {
       const eventId = 'eventId';
       const name = 'MyLittleProject';
       const category = 'Flash';
-      const dojoId = '';
-      const alternativeReference = 'Code Club';
+      const description = 'MyLittleProject is awesome';
+      const org = 'Code Club';
+      const orgRef = 'Cambridge';
       const member = {
         firstName: 'member',
         lastName: 'one',
@@ -68,8 +69,9 @@ describe('projects controllers', () => {
       const payload = {
         name,
         category,
-        dojoId,
-        alternativeReference,
+        description,
+        org,
+        orgRef,
         users: [member, supervisor],
       };
 
@@ -82,8 +84,9 @@ describe('projects controllers', () => {
         eventId,
         name,
         category,
-        dojoId,
-        alternativeReference,
+        description,
+        org,
+        orgRef,
       });
       expect(mockProjectSave).to.have.been.calledOnce;
 
@@ -118,7 +121,8 @@ describe('projects controllers', () => {
       const eventId = 'eventId';
       const name = 'MyLittleProject';
       const category = 'Flash';
-      const dojoId = '';
+      const org = 'coderdojo';
+      const orgRef = '358784b6-79e2-4e43-80a4-792da79f5418';
       const err = new Error('Fake err');
 
       // STUBs
@@ -135,7 +139,8 @@ describe('projects controllers', () => {
       const payload = {
         name,
         category,
-        dojoId,
+        org,
+        orgRef,
         users: [],
       };
 
@@ -149,7 +154,8 @@ describe('projects controllers', () => {
           eventId,
           name,
           category,
-          dojoId,
+          org,
+          orgRef,
         });
         expect(mockProjectSave).to.have.been.calledOnce;
 

@@ -26,8 +26,8 @@ describe('ProjectForm component', () => {
           name: 'MyProject',
           description: 'Some desc',
           category: 'scratch',
-          dojoId: 'bar',
-          alternativeReference: 'Code Club',
+          org: 'codeclub',
+          orgRef: 'That one!',
         };
         vm.participants = [{
           firstName: 'Namey',
@@ -56,8 +56,8 @@ describe('ProjectForm component', () => {
           name: 'MyProject',
           description: 'Some desc',
           category: 'scratch',
-          dojoId: 'bar',
-          alternativeReference: 'Code Club',
+          org: 'codeclub',
+          orgRef: 'That one!',
           users: [
             {
               firstName: 'Namey',
@@ -93,7 +93,8 @@ describe('ProjectForm component', () => {
           name: 'MyProject',
           description: 'Some desc',
           category: 'scratch',
-          dojoId: 'bar',
+          org: 'coderdojo',
+          orgRef: 'foo',
           users: [
             {
               firstName: 'Namey',
@@ -130,7 +131,8 @@ describe('ProjectForm component', () => {
           name: 'MyProject',
           description: 'Some desc',
           category: 'scratch',
-          dojoId: 'bar',
+          org: 'coderdojo',
+          orgRef: 'foo',
         });
         expect(vm.participants).to.deep.equal([
           {
@@ -212,20 +214,20 @@ describe('ProjectForm component', () => {
       });
     });
 
-    describe('fromDojo', () => {
-      it('should clear dojoId and alternativeReference', () => {
+    describe('org', () => {
+      it('should update projectDetails.org and clear orgRef', () => {
         // ARRANGE
         vm.projectDetails = {
-          dojoId: 'foo',
-          alternativeReference: 'bar',
+          org: 'coderdojo',
+          orgRef: 'foo',
         };
 
         // ACT
-        vm.$watchers.fromDojo();
+        vm.$watchers.org('codeclub');
 
         // ASSERT
-        expect(vm.projectDetails.dojoId).to.equal(undefined);
-        expect(vm.projectDetails.alternativeReference).to.equal(undefined);
+        expect(vm.projectDetails.org).to.equal('codeclub');
+        expect(vm.projectDetails.orgRef).to.equal(undefined);
       });
     });
   });

@@ -47,47 +47,52 @@
     </div>
     <div class="row">
       <div class="col">
-        <label>Do you regularly attend a CoderDojo Dojo?</label>
+        <label>Which of the following do you attend?</label>
         <div class="row row-no-margin">
           <div class="col-2fr">
             <select
-              v-model="fromDojo"
+              v-model="org"
               v-validate="{ required: true }"
-              data-vv-name="fromDojo"
+              data-vv-name="org"
               class="full-width-block"
-              :class="{ error: errors.has('fromDojo') }">
-              <option value="true">Yes</option>
-              <option value="false">No</option>
+              :class="{ error: errors.has('org') }">
+              <option :value="undefined" disabled></option>
+              <option value="coderdojo">CoderDojo</option>
+              <option value="codeclub">Code Club</option>
+              <option value="pioneers">Pioneers</option>
+              <option value="raspberryjam">Raspberry Jam</option>
+              <option value="other">Other</option>
             </select>
-            <span class="error-message" v-show="errors.has('fromDojo:required')">* You must select whether the project is from a Dojo</span>
+            <span class="error-message" v-show="errors.has('org:required')">* You must select where this project is from</span>
           </div>
-          <div v-show="fromDojo === 'true'" class="col-3fr">
+          <div v-show="org === 'coderdojo'" class="col-3fr">
             <model-list-select
-              v-model="projectDetails.dojoId"
-              v-validate="fromDojo === 'true' ? 'required' : ''"
-              data-vv-name="dojoId"
+              v-model="projectDetails.orgRef"
+              v-validate="org === 'coderdojo' ? 'required' : ''"
+              data-vv-name="orgRef"
               class="full-width-block"
               :class="{ placeholder: projectDetails.category === undefined }"
               :list="dojos" placeholder="Type your Dojo name to select"
               option-value="id"
               option-text="name"
-              :isError="errors.has('dojoId')"></model-list-select>
+              :isError="errors.has('orgRef')"></model-list-select>
           </div>
         </div>
-        <span class="error-message" v-show="errors.has('dojoId:required')">* If you attend a Dojo, you must select which Dojo</span>
+        <span class="error-message" v-show="errors.has('orgRef:required')">* If you attend a Dojo, you must select which Dojo</span>
       </div>
     </div>
-    <div v-show="fromDojo === 'false'" class="row">
+    <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
-        <label>How did you hear about Coolest Projects (which Code Club, which school etc.)?</label>
+        <label>Please tell us which Code Club or Raspberry Jam you attend or let us know when you participated in Pioneers.</label>
         <div class="row row-no-margin">
           <div class="col">
             <input type="text"
-              v-model="projectDetails.alternativeReference"
-              v-validate="fromDojo === 'false' ? 'required' : ''"
-              data-vv-name="alternativeReference"
-              class="full-width-block" />
-            <span class="error-message" v-show="errors.has('alternativeReference:required')">* It helps us to know where our attendees came from, please tell us how you came to Coolest Projects.</span>
+              v-model="projectDetails.orgRef"
+              v-validate="org && org !== 'coderdojo' ? 'required' : ''"
+              data-vv-name="orgRef"
+              class="full-width-block"
+              :class="{ error: errors.has('orgRef') }" />
+            <span class="error-message" v-show="errors.has('orgRef:required')">* It helps us to know where our attendees came from, please tell us how you came to Coolest Projects.</span>
           </div>
         </div>
       </div>
@@ -316,6 +321,7 @@
         participants: [{ specialRequirementsProvided: false }],
         supervisor: {},
         fromDojo: undefined,
+        org: undefined,
       };
     },
     computed: {
@@ -326,8 +332,8 @@
             'name',
             'description',
             'category',
-            'dojoId',
-            'alternativeReference',
+            'org',
+            'orgRef',
           ]);
           project.users = this.participants.map((participant) => {
             const _participant = pick(participant, [
@@ -355,7 +361,7 @@
         },
         set(project) {
           this.projectDetails = pick(project, [
-            'id', 'name', 'description', 'category', 'dojoId',
+            'id', 'name', 'description', 'category', 'org', 'orgRef',
           ]);
           this.participants = project.users.filter(user => user.type === 'member').map((user) => {
             const _user = clone(user);
@@ -370,6 +376,10 @@
       },
     },
     watch: {
+      org(newOrg) {
+        this.projectDetails.orgRef = undefined;
+        this.projectDetails.org = newOrg;
+      },
       numParticipants(newLength, oldLength) {
         if (newLength > oldLength) {
           for (let i = 0; i < newLength - oldLength; i += 1) {

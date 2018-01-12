@@ -9,7 +9,7 @@ class Project {
     // TODO : transaction
     const projectPayload = Object.assign(
       {},
-      pick(project, ['name', 'category', 'dojoId', 'description', 'alternativeReference']),
+      pick(project, ['name', 'category', 'description', 'org', 'orgRef']),
       { eventId },
     );
     const newProject = new ProjectModel(projectPayload);
