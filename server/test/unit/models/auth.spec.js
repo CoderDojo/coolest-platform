@@ -17,7 +17,7 @@ describe('auth model', () => {
     const attributes = { userId: uuid() };
     const auth = await new Auth(attributes);
     const tokenCreator = sinon.spy(auth, 'createToken');
-    auth.emit('saving', { attributes });
+    auth.trigger('saving', { attributes });
     expect(tokenCreator).to.have.been.calledOnce;
     expect(attributes.token.length).to.equal(189);
   });
