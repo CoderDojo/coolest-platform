@@ -24,7 +24,7 @@ class User {
   }
 
   static get(identifier, withRelated) {
-    return new UserModel().where(identifier)
+    return UserModel.forge(identifier)
       .fetch({ withRelated })
       .then(user => Promise.resolve(user ? user.toJSON() : null));
   }
