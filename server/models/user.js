@@ -17,8 +17,11 @@ const User = bookshelf.Model.extend({
 
 function constructor(...args) {
   this.on('saving', (model) => {
-    if (model.attributes.email) model.set('email', model.attributes.email.toLowerCase());
-    if (model.changed.email) model.set('email', model.changed.email.toLowerCase());
+    if (model.attributes && model.attributes.email) {
+      model.set('email', model.attributes.email.toLowerCase());
+    } else if (model.changed && model.changed.email) {
+      model.set('email', model.changed.email.toLowerCase());
+    }
   });
 
   this.on('fetching', (model, columns, opts) => {
