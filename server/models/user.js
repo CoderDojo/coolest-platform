@@ -4,7 +4,7 @@ const _ = require('lodash');
 const User = bookshelf.Model.extend({
   tableName: 'user',
   project() {
-    return this.hasMany('ProjectUsers'); // 'through' ProjectUsers to get Projets seems to be slightly borked when used with 'withRelated'
+    return this.belongsToMany('Project').through('ProjectUsers');
   },
   auth() {
     return this.hasOne('Auth');

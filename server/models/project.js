@@ -7,7 +7,7 @@ const Project = bookshelf.Model.extend({
     return this.belongsTo('Event');
   },
   members() {
-    return this.hasMany('User').through('ProjectUsers');
+    return this.belongsToMany('User').through('ProjectUsers');
   },
   owner() {
     return this.hasOne('ProjectUsers').query(q => q.where('type', 'owner'));
