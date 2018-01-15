@@ -18,12 +18,12 @@ class Auth {
       .catch(err => done(null, false));
   }
 
-  static verify(token) {
-    return AuthModel.where({ token })
+  static verify(token, role) {
+    return AuthModel.where({ token, role })
       .fetch()
       .then((auth) => {
         if (auth) {
-          return !!new AuthModel().verifyToken(token);
+          return !!AuthModel.verifyToken(token);
         }
         throw new Error('Invalid token');
       });

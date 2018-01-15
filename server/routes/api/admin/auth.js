@@ -1,12 +1,12 @@
-const authHandler = require('../../controllers/auth');
+const authHandler = require('../../../controllers/auth');
 
 module.exports = (router, prefix) => {
   const base = `${prefix}/auth`;
 
-  // Verify a token is valid
+  // Verify an admin token is valid
   router.post(`${base}/token`, async (req, res, next) =>
     authHandler
-      .verify(req.body.token, 'basic')
+      .verify(req.body.token, 'admin')
       .then(auth => res.status(auth ? 200 : 401).send())
       .catch((e) => {
         req.app.locals.logger.error(e);

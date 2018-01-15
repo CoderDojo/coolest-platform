@@ -1,10 +1,14 @@
 const uuid = require('uuid/v4');
+const config = require('../../config/auth');
+const jwt = require('jsonwebtoken');
+
 
 module.exports = (bookshelf) => {
+  const knex = bookshelf.knex;
   const eventDate = new Date();
   eventDate.setHours(23);
 
-  return bookshelf.knex('event')
+  return knex('event')
     .insert({
       id: uuid(),
       date: eventDate,
@@ -13,5 +17,12 @@ module.exports = (bookshelf) => {
       slug: 'cp-2018',
       categories: { scratch: 'Scratch', web: 'Websites & Web Games', evolution: 'Evolution' },
       questions: ['social_project', 'educational_project', 'innovator_stage'],
+    })
+    .then(() => {
+      const userId = uuid();
+      const authId = uuid();
+      const token = jwt.sign({ data: userId }, config.authSecret, { expiresIn: '2h' });
+      return knex.raw(`INSERT INTO user(id, email) VALUES('${userId}', 'hello@coolestprojects.org')`)
+        .then(() => knex.raw(`INSERT INTO auth(id, role, token, user_id) VALUES('${authId}', 'admin', '${token}', '${userId}')`));
     });
 };

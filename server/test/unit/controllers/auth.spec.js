@@ -88,25 +88,23 @@ describe('auth controllers', () => {
       // STUBS
       const authModel = class {
         static where() {}
-        // eslint-disable-next-line class-methods-use-this
-        verifyToken() {}
       };
       const fetchStub = sinon.stub().resolves(token);
       const whereStub = sinon.stub(authModel, 'where').returns({
         fetch: fetchStub,
       });
-      const verifyTokenStub = sinon.stub(authModel.prototype, 'verifyToken').returns(jwt);
+      authModel.verifyToken = sinon.stub().returns(jwt);
 
       const controllers = proxy('../../../controllers/auth.js', {
         '../models/auth': authModel,
       });
       // ACT
-      const res = await controllers.verify(token);
+      const res = await controllers.verify(token, 'basic');
 
       // Load the token by userId
-      expect(whereStub).to.have.been.calledWith({ token });
-      expect(verifyTokenStub).to.have.been.calledOnce;
-      expect(verifyTokenStub).to.have.been.calledWith(token);
+      expect(whereStub).to.have.been.calledWith({ token, role: 'basic' });
+      expect(authModel.verifyToken).to.have.been.calledOnce;
+      expect(authModel.verifyToken).to.have.been.calledWith(token);
       // Return a truthy value if found
       expect(res).to.be.true;
     });
@@ -118,26 +116,24 @@ describe('auth controllers', () => {
       // STUBS
       const authModel = class {
         static where() {}
-        // eslint-disable-next-line class-methods-use-this
-        verifyToken() {}
       };
       const fetchStub = sinon.stub().resolves(token);
       const whereStub = sinon.stub(authModel, 'where').returns({
         fetch: fetchStub,
       });
-      const verifyTokenStub = sinon.stub(authModel.prototype, 'verifyToken').throws(new Error('jwt expired'));
+      authModel.verifyToken = sinon.stub().throws(new Error('jwt expired'));
       const controllers = proxy('../../../controllers/auth.js', {
         '../models/auth': authModel,
       });
       // ACT
       setTimeout(async () => {
         try {
-          await controllers.verify(token);
+          await controllers.verify(token, 'basic');
         } catch (e) {
           // Load the token by userId
-          expect(whereStub).to.have.been.calledWith({ token });
-          expect(verifyTokenStub).to.have.been.calledOnce;
-          expect(verifyTokenStub).to.have.been.calledWith(token);
+          expect(whereStub).to.have.been.calledWith({ token, role: 'basic' });
+          expect(authModel.verifyToken).to.have.been.calledOnce;
+          expect(authModel.verifyToken).to.have.been.calledWith(token);
           expect(e.message).to.equal('jwt expired');
           done();
         }
@@ -160,10 +156,10 @@ describe('auth controllers', () => {
       // ACT
 
       try {
-        await controllers.verify(token);
+        await controllers.verify(token, 'basic');
       } catch (e) {
         // Load the token by userId
-        expect(whereStub).to.have.been.calledWith({ token });
+        expect(whereStub).to.have.been.calledWith({ token, role: 'basic' });
         expect(e.message).to.equal('Invalid token');
       }
     });

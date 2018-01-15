@@ -11,7 +11,6 @@ const Auth = bookshelf.Model.extend({
   uuid: true,
   hasTimestamps: true,
   createToken,
-  verifyToken,
 });
 
 function constructor(...args) {
@@ -29,8 +28,8 @@ function createToken(userId) {
   });
 }
 
-function verifyToken(token) {
+Auth.verifyToken = function (token) {
   return jwt.verify(token, config.authSecret, { maxAge: config.authTimeout });
-}
+};
 
 module.exports = bookshelf.model('Auth', Auth);

@@ -36,6 +36,7 @@ const init = async (seed) => {
    */
   server.listen(port);
   app.set('port', port);
+  server.app = app;
 
   return server;
 

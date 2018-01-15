@@ -63,6 +63,19 @@ describe('integration: users', () => {
         });
     });
 
+    it('should not return an admin user if the admin user has no project', async () => {
+      const payload = { email: 'hello@coolestprojects.org' };
+      await new Promise(resolve => setTimeout(resolve, 1000))
+        .then(() => {
+          return request(app)
+            .post('/api/v1/users')
+            .set('Accept', 'application/json')
+            .send(payload)
+            .expect('Content-Type', /json/)
+            .expect(409);
+        });
+    });
+
     it('should not create a user when the email exists (case insensitive)', async () => {
       const payload = { email: 'Me@example.com' };
       const reqUtils = utils(app);

@@ -91,7 +91,7 @@ describe('router: user', () => {
       await handler(mockReq, mockRes, nextMock);
       expect(postController).to.have.been.calledWith({ email: mockReq.body.email });
       expect(getController).to.have.been.calledOnce;
-      expect(getController).to.have.been.calledWith({ email: mockReq.body.email }, ['project', 'auth']);
+      expect(getController).to.have.been.calledWith({ email: mockReq.body.email }, ['project', sinon.match.object]);
       expect(refreshController).to.have.been.calledOnce;
       expect(refreshController).to.have.been.calledWith('111');
       expect(loggerStub).to.not.have.been.called;
@@ -125,7 +125,7 @@ describe('router: user', () => {
       await handler(mockReq, mockRes, nextMock);
       expect(postController).to.have.been.calledWith({ email: mockReq.body.email });
       expect(getController).to.have.been.calledOnce;
-      expect(getController).to.have.been.calledWith({ email: mockReq.body.email }, ['project', 'auth']);
+      expect(getController).to.have.been.calledWith({ email: mockReq.body.email }, ['project', sinon.match.object]);
       expect(loggerStub).to.have.been.calledOnce;
       expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
       expect(nextMock).to.have.been.calledThrice;

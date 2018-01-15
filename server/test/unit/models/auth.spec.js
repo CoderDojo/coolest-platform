@@ -46,7 +46,7 @@ describe('auth model', () => {
       const verifySpy = sinon.spy(jsonwebtoken, 'verify');
       const auth = new Auth();
       const token = auth.createToken('user1');
-      auth.verifyToken(token);
+      Auth.verifyToken(token);
       expect(verifySpy).to.have.been.calledOnce;
       expect(verifySpy).to.have.been.calledWith(
         token,
