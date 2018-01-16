@@ -54,7 +54,6 @@ class Auth {
               return Promise.reject();
             })
             .then((_auth) => {
-              delete _auth.password;
               return done(null, _auth);
             })
             // TODO: logging here, see :18

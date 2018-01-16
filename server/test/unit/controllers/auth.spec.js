@@ -1,7 +1,6 @@
 const proxy = require('proxyquire').noCallThru();
 const jsonwebtoken = require('jsonwebtoken');
 const config = require('../../../config/auth');
-const { omit } = require('lodash');
 
 describe('auth controllers', () => {
   const sandbox = sinon.sandbox.create();
@@ -246,7 +245,7 @@ describe('auth controllers', () => {
         expect(save).to.have.been.calledOnce;
         expect(toJSON).to.have.been.calledOnce;
 
-        expect(_auth).to.eql(omit(auth, ['password']));
+        expect(_auth).to.eql(auth);
         done();
       });
     });
