@@ -64,6 +64,18 @@ class Project {
   static get(identifier, withRelated) {
     return ProjectModel.where(identifier).fetch({ withRelated });
   }
+
+  static getByEvent(eventId, query) {
+    let queryBuilder = ProjectModel.where({ event_id: eventId });
+    if (query.orderBy) {
+      queryBuilder = queryBuilder.orderBy(query.orderBy, query.ascending === true || false);
+    }
+    return queryBuilder.fetchPage();
+    // return queryBuilder.fetchPage({
+    //   pageSize: query.limit || 25,
+    //   page: query.page || 1,
+    // });
+  }
 }
 
 module.exports = Project;

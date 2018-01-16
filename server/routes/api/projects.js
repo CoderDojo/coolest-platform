@@ -10,6 +10,8 @@ module.exports = (router, prefix) => {
 
   router.get(`${base}/:id`, passport.authenticate('jwt', { session: false }), acls.isAllowed, handlers.get);
 
+  router.get(base, handlers.getAll);
+
   // curl -v -H 'Content-Type: application/json' -X PATCH --data-binary '{ "answers": { "social_project": true } }' http://localhost:8080/api/v1/events/8d9432fd-d6d0-4dde-b47c-07f1d465e5bb/projects/fb0972d8-7c6a-4325-b610-fcfde67d9fa4\?token\=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiYzZjNzE0NGMtNDZjZS00ODY3LTk1YmEtMGUxODNiYzUxYjFjIiwiaWF0IjoxNTE1NDMzNjUxLCJleHAiOjE1MTU0NjI0NTF9.I4swMLfWkbSb5EHoxPdbYop1ffFB6CMbezVFiufdg88
   router.patch(`${base}/:id`, passport.authenticate('jwt', { session: false }), acls.isAllowed, handlers.patch);
   router.param('id', handlers.param);
