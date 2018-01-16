@@ -19,8 +19,8 @@
     "client-lint": "eslint --ext .js,.vue src client/test/unit/specs",
     "mock-server": "node ./client/mock-server/server.js",
     "server-start": "cd server && node bin/www",
-    "server-unit": "mocha -G --require ./server/test/helper.js ./server/test/unit/**/*.spec.js --reporter=nyan --forbid-pending",
-    "server-int": "mocha -G --require ./server/test/helper.js ./server/test/integration/**/*.spec.js --reporter=nyan --forbid-pending",
+    "server-unit": "mocha -G --require ./server/test/helper.js ./server/test/unit --recursive --reporter=nyan --forbid-pending",
+    "server-int": "mocha -G --require ./server/test/helper.js ./server/test/integration --recursive --reporter=nyan --forbid-pending",
     "server-lint": "eslint server --env mocha,chai --global expect,sinon"
   },
   "lint-staged": {
@@ -37,6 +37,7 @@
     "@newrelic/native-metrics": "^2.1.2",
     "@sendgrid/mail": "^6.1.4",
     "acl": "^0.4.11",
+    "bcrypt": "^1.0.3",
     "body-parser": "~1.18.2",
     "bookshelf": "^0.11.1",
     "bookshelf-camelcase": "Wardormeur/bookshelf-camelcase",
@@ -59,6 +60,7 @@
     "newrelic": "^2.4.2",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.1",
+    "passport-local": "^1.0.0",
     "pg": "^7.4.0",
     "uuid": "^3.1.0",
     "vee-validate": "^2.0.0-rc.25",

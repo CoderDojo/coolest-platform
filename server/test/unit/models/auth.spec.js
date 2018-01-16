@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const proxy = require('proxyquire');
 const jsonwebtoken = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const config = require('../../../config/auth');
 
 let Auth;
@@ -11,6 +12,7 @@ describe('auth model', () => {
       '../database': {},
       './user': {},
       jsonwebtoken,
+      bcrypt,
     });
   });
   it('should create an auth and create a new jwt', async () => {
@@ -52,6 +54,35 @@ describe('auth model', () => {
         token,
         config.authSecret,
         { maxAge: config.authTimeout },
+      );
+    });
+  });
+  describe('setPassword', () => {
+    it('should set a bcrypted password', async () => {
+      const genSaltSpy = sinon.spy(bcrypt, 'genSalt');
+      const hashSpy = sinon.spy(bcrypt, 'hash');
+      const auth = new Auth();
+
+      await auth.setPassword('banana');
+      expect(genSaltSpy).to.have.been.calledOnce;
+      expect(hashSpy).to.have.been.calledOnce;
+      expect(hashSpy).to.have.been.calledWith(
+        'banana',
+        sinon.match.string,
+      );
+    });
+  });
+  describe('verifyPassword', () => {
+    it('should use bcrypt', async () => {
+      const verifySpy = sinon.spy(bcrypt, 'compare');
+      const auth = new Auth();
+
+      await auth.setPassword('banana');
+      await auth.verifyPassword('banana');
+      expect(verifySpy).to.have.been.calledOnce;
+      expect(verifySpy).to.have.been.calledWith(
+        'banana',
+        auth.attributes.password,
       );
     });
   });

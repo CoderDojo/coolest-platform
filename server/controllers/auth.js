@@ -1,4 +1,5 @@
 const AuthModel = require('../models/auth');
+const UserModel = require('../models/user');
 const { isEmpty } = require('lodash');
 
 class Auth {
@@ -34,10 +35,35 @@ class Auth {
       .fetch()
       .then((auth) => {
         return auth.save()
-          // Ugly workaround for https://github.com/bookshelf/bookshelf/issues/1076
-          .then(_auth => _auth.parse(_auth.attributes))
-          .then(_auth => Promise.resolve(_auth));
+          .then(_auth => Promise.resolve(_auth.toJSON()));
       });
+  }
+
+  static adminLogin(email, password, done) {
+    // TODO : extract logins system from the controller into the auth handler
+    UserModel.where({ email }).fetch({ withRelated: [{ auth: (qb) => { qb.andWhere('auth.role', 'admin'); } }] })
+      .then((user) => {
+        if (user && user.relations.auth.id) {
+          const auth = user.relations.auth;
+          auth.verifyPassword(password)
+            .then((res) => {
+              if (res) {
+                return auth.save()
+                  .then(_auth => _auth.toJSON());
+              }
+              return Promise.reject();
+            })
+            .then((_auth) => {
+              delete _auth.password;
+              return done(null, _auth);
+            })
+            // TODO: logging here, see :18
+            .catch(e => done(null, false));
+        } else {
+          return done(null, false);
+        }
+      })
+      .catch(e => done(null, false));
   }
 }
 

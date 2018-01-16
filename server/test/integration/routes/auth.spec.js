@@ -28,13 +28,13 @@ describe('integration: users', () => {
   });
 
   describe('post', () => {
-    it('should return 200 on valid basic token', async () => {
+    it('should return 204 on valid basic token', async () => {
       const payload = { token: refToken };
       await request(app)
         .post('/api/v1/auth/token')
         .set('Accept', 'application/json')
         .send(payload)
-        .expect(200);
+        .expect(204);
     });
 
     it('should return 401 on invalid basic token', async () => {

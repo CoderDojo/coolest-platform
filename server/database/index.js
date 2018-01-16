@@ -4,5 +4,5 @@ const bookshelf = require('bookshelf')(knex);
 const bookshelfUuid = require('bookshelf-uuid');
 const bookshelfCamelCase = require('bookshelf-camelcase');
 
-bookshelf.plugin([bookshelfUuid, bookshelfCamelCase, 'registry']);
+bookshelf.plugin([bookshelfUuid, bookshelfCamelCase, 'registry', 'visibility']);
 module.exports = bookshelf;

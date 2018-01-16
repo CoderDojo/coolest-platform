@@ -1,6 +1,7 @@
 const uuid = require('uuid/v4');
 const config = require('../../config/auth');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 
 module.exports = (bookshelf) => {
@@ -21,8 +22,9 @@ module.exports = (bookshelf) => {
     .then(() => {
       const userId = uuid();
       const authId = uuid();
+      const hash = bcrypt.hashSync('banana', 10);
       const token = jwt.sign({ data: userId }, config.authSecret, { expiresIn: '2h' });
       return knex.raw(`INSERT INTO user(id, email) VALUES('${userId}', 'hello@coolestprojects.org')`)
-        .then(() => knex.raw(`INSERT INTO auth(id, role, token, user_id) VALUES('${authId}', 'admin', '${token}', '${userId}')`));
+        .then(() => knex.raw(`INSERT INTO auth(id, role, token, user_id, password) VALUES('${authId}', 'admin', '${token}', '${userId}', '${hash}')`));
     });
 };
