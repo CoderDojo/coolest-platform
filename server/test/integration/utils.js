@@ -1,6 +1,7 @@
 const request = require('supertest');
 
 module.exports = (app) => {
+  const db = app.app.locals.bookshelf.knex;
   function createProject(token, eventId, payload) {
     if (!payload) {
       // eslint-disable-next-line no-param-reassign
@@ -48,7 +49,14 @@ module.exports = (app) => {
       });
   }
 
+  function getAuth(email) {
+    return db.raw('SELECT auth.* FROM auth JOIN user u ON u.id = auth.user_id WHERE u.email = \'hello@coolestprojects.org\'');
+  }
+
   return {
+    auth: {
+      get: getAuth,
+    },
     user: {
       create: createUser,
     },

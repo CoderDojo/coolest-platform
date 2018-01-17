@@ -3,6 +3,7 @@ const _ = require('lodash');
 
 const User = bookshelf.Model.extend({
   tableName: 'user',
+  hidden: ['_pivot_id', '_pivot_project_id', '_pivot_user_id'],
   project() {
     return this.belongsToMany('Project').through('ProjectUsers');
   },

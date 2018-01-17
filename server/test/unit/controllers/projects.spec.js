@@ -218,4 +218,42 @@ describe('projects controllers', () => {
       expect(fetch.getCall(0).args[0]).to.be.eql({ withRelated: ['bla'] });
     });
   });
+  describe('getByEvent', () => {
+    let controllers;
+    const projectModel = {};
+    before(() => {
+      controllers = proxy('../../../controllers/projects', {
+        '../models/user': {},
+        '../models/project': projectModel,
+        './users': {},
+      });
+    });
+    it('should fetch Page with default params', async () => {
+      projectModel.where = sinon.stub().returns(projectModel);
+      projectModel.orderBy = sinon.stub().returns(projectModel);
+      projectModel.fetchPage = sinon.stub().returns(projectModel);
+
+      await controllers.getByEvent('event1', {});
+      expect(projectModel.where).to.have.been.calledOnce;
+      expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
+      expect(projectModel.orderBy).to.have.been.calledWith('created_at', 'desc');
+      expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 25, page: 1, withRelated: ['owner', 'supervisor'] });
+    });
+    it('should accept params to customize the search', async () => {
+      projectModel.where = sinon.stub().returns(projectModel);
+      projectModel.orderBy = sinon.stub().returns(projectModel);
+      projectModel.fetchPage = sinon.stub().returns(projectModel);
+
+      await controllers.getByEvent('event1', {
+        orderBy: 'banana',
+        ascending: 'true',
+        page: 2,
+        limit: 30,
+      });
+      expect(projectModel.where).to.have.been.calledOnce;
+      expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
+      expect(projectModel.orderBy).to.have.been.calledWith('banana', 'asc');
+      expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor'] });
+    });
+  });
 });

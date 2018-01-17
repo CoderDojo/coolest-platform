@@ -66,15 +66,13 @@ class Project {
   }
 
   static getByEvent(eventId, query) {
-    let queryBuilder = ProjectModel.where({ event_id: eventId });
-    if (query.orderBy) {
-      queryBuilder = queryBuilder.orderBy(query.orderBy, query.ascending === true || false);
-    }
-    return queryBuilder.fetchPage();
-    // return queryBuilder.fetchPage({
-    //   pageSize: query.limit || 25,
-    //   page: query.page || 1,
-    // });
+    return ProjectModel.where({ event_id: eventId })
+      .orderBy(query.orderBy || 'created_at', query.ascending === 'true' ? 'asc' : 'desc')
+      .fetchPage({
+        pageSize: query.limit || 25,
+        page: query.page || 1,
+        withRelated: ['owner', 'supervisor'],
+      });
   }
 }
 
