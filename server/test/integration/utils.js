@@ -1,8 +1,9 @@
 const request = require('supertest');
 
-module.exports = (app) => { 
+module.exports = (app) => {
   function createProject(token, eventId, payload) {
     if (!payload) {
+      // eslint-disable-next-line no-param-reassign
       payload = {
         name: 'MyPoneyProject',
         category: 'HTML',
@@ -37,7 +38,20 @@ module.exports = (app) => {
       .get(`/api/v1/events/${slug}`);
   }
 
+  function createUser(email) {
+    return request(app)
+      .post('/api/v1/users')
+      .set('Accept', 'application/json')
+      .send({ email })
+      .then((res) => {
+        return Promise.resolve(res.body.auth.token);
+      });
+  }
+
   return {
+    user: {
+      create: createUser,
+    },
     event: {
       get: getEvent,
     },

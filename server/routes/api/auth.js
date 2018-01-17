@@ -4,10 +4,14 @@ module.exports = (router, prefix) => {
   const base = `${prefix}/auth`;
 
   // Verify a token is valid
-  router.get(`${base}/:token`, async (req, res, next) => {
+  router.post(`${base}/token`, async (req, res, next) =>
     authHandler
-      .verify(req.params.token)
-      .then(auth => res.json({ valid: auth }))
-      .catch(e => next(new Error('Invalid authentication')));
-  });
+      .verify(req.body.token, 'basic')
+      .then(auth => res.status(auth ? 204 : 401).send())
+      .catch((e) => {
+        req.app.locals.logger.error(e);
+        const err = new Error('Invalid authentication');
+        err.status = 401;
+        next(err);
+      }));
 };

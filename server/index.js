@@ -8,6 +8,7 @@ const fallback = require('express-history-api-fallback');
 const helmet = require('helmet');
 const passport = require('passport');
 const { ExtractJwt, Strategy } = require('passport-jwt');
+const LocalStrategy = require('passport-local');
 const bookshelf = require('./database/index');
 
 const logger = require('./util/logger');
@@ -62,6 +63,13 @@ module.exports = () => {
         maxAge: authConfig.authTimeout,
       },
       authControllers.authenticate,
+    ));
+
+    passport.use(new LocalStrategy(
+      {
+        usernameField: 'email',
+      },
+      authControllers.adminLogin,
     ));
 
     // error handler for any uncaught error

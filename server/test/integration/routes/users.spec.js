@@ -34,7 +34,7 @@ describe('integration: users', () => {
         .then((res) => {
           expect(res.body.user).to.have.all.keys(['email', 'created_at', 'updated_at', 'id']);
           // eslint-disable-next-line max-len
-          expect(res.body.auth).to.have.all.keys(['userId', 'created_at', 'updated_at', 'id', 'token', 'role']);
+          expect(res.body.auth).to.have.all.keys(['userId', 'createdAt', 'updatedAt', 'id', 'token', 'role']);
           expect(res.body.user.email).to.equal(payload.email);
           expect(res.body.user.id).to.equal(res.body.auth.userId);
           refToken = res.body.auth.token;
@@ -60,6 +60,19 @@ describe('integration: users', () => {
               expect(res.body.user.id).to.equal(res.body.auth.userId);
               refToken = res.body.auth.token;
             });
+        });
+    });
+
+    it('should not return an admin user if the admin user has no project', async () => {
+      const payload = { email: 'hello@coolestprojects.org' };
+      await new Promise(resolve => setTimeout(resolve, 1000))
+        .then(() => {
+          return request(app)
+            .post('/api/v1/users')
+            .set('Accept', 'application/json')
+            .send(payload)
+            .expect('Content-Type', /json/)
+            .expect(409);
         });
     });
 

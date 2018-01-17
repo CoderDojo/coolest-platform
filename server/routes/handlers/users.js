@@ -16,9 +16,16 @@ module.exports = {
         }),
     (req, res, next) => {
       if (res.locals.err && res.locals.err.status === 409) {
-        return userController.get({ email: req.body.email }, ['project', 'auth'])
+        return userController.get({ email: req.body.email }, ['project', { auth: (qb) => { qb.andWhere('auth.role', 'basic'); } }])
           .then((user) => {
-            if (user.project.length <= 0) {
+            /*  eslint-disable max-len */
+            /*  
+             * bookshelf query system works into mostly individual queries
+             * : user, auth and project are "assembled" into a result
+             * hence, user's project may be empty, but auth will not exists if the user's auth is not basic
+             */ 
+            /*  eslint-enable max-len */
+            if (user.auth.id && user.project.length <= 0) {
               delete res.locals.err;
               return authController.refresh(user.auth.id)
                 .then((auth) => {

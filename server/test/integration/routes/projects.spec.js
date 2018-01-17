@@ -5,7 +5,7 @@ const seeder = require('../../database/seed');
 
 dbConfig['@global'] = true;
 dbConfig['@noCallThru'] = true;
-describe('integration: users', () => {
+describe('integration: projects', () => {
   let app;
   let token;
   let eventId;
