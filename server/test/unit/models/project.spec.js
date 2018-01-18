@@ -125,5 +125,37 @@ describe('auth model', () => {
       expect(project.andWhere.getCall(1)).to.have.been.calledWith(sinon.match.object, 'LIKE', '%test@%');
       expect(project.andWhere.getCall(1).args[0].toString()).to.have.eql('LOWER("supervisor"."email")');
     });
+    it('should remove empty filters', () => {
+      const project = new Project();
+      project.query = sinon.stub().callsArgWith(0, project).returns(project);
+      project.columns = sinon.stub().returns(project);
+      project.innerJoin = sinon.stub().returns(project);
+      project.andWhere = sinon.stub().returns(project);
+      project.adminView({ name: '' });
+      expect(project.query).to.have.been.calledTwice;
+      expect(project.columns).to.have.been.calledOnce;
+      expect(project.innerJoin.callCount).to.equal(4);
+      expect(project.innerJoin.getCall(0)).to.have.been.calledWith('project_users as opu', sinon.match.func);
+      expect(project.innerJoin.getCall(1)).to.have.been.calledWith('user as owner', 'opu.user_id', 'owner.id');
+      expect(project.innerJoin.getCall(2)).to.have.been.calledWith('project_users as spu', sinon.match.func);
+      expect(project.innerJoin.getCall(3)).to.have.been.calledWith('user as supervisor', 'spu.user_id', 'supervisor.id');
+      expect(project.andWhere).to.not.have.been.called;
+    });
+    it('should snake_case parameters', () => {
+      const project = new Project();
+      project.query = sinon.stub().callsArgWith(0, project).returns(project);
+      project.columns = sinon.stub().returns(project);
+      project.innerJoin = sinon.stub().returns(project);
+      project.andWhere = sinon.stub().returns(project);
+      project.adminView({ createdAt: 'AAA' });
+      expect(project.query).to.have.been.calledTwice;
+      expect(project.columns).to.have.been.calledOnce;
+      expect(project.innerJoin.callCount).to.equal(4);
+      expect(project.innerJoin.getCall(0)).to.have.been.calledWith('project_users as opu', sinon.match.func);
+      expect(project.innerJoin.getCall(1)).to.have.been.calledWith('user as owner', 'opu.user_id', 'owner.id');
+      expect(project.innerJoin.getCall(2)).to.have.been.calledWith('project_users as spu', sinon.match.func);
+      expect(project.andWhere.getCall(0)).to.have.been.calledWith(sinon.match.object, 'LIKE', '%aaa%');
+      expect(project.andWhere.getCall(0).args[0].toString()).to.have.eql('LOWER("project"."created_at")');
+    });
   });
 });

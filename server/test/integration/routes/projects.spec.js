@@ -368,6 +368,28 @@ describe('integration: projects', () => {
           expect(res.body.data.length).to.equal(1);
         });
     });
+    it('should ignore empty filters', async () => {
+      await request(app)
+        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[category]=&query[name]=MyPoneyProject&query[supervisor.email]=another&ascending=false&token=${refAuth.token}`)
+        .expect(200)
+        .then((res) => {
+          expect(Object.keys(res.body)).to.eql(['data', 'count']);
+          // Project with supervisor from prev test
+          expect(res.body.count).to.equal(1);
+          expect(res.body.data.length).to.equal(1);
+        });
+    });
+    it('should support camelCase names', async () => {
+      await request(app)
+        .get(`/api/v1/events/${eventId}/projects?limit=10&orderBy=supervisor.createdAt&query[createdAt]=2018-01-01&ascending=false&token=${refAuth.token}`)
+        .expect(200)
+        .then((res) => {
+          expect(Object.keys(res.body)).to.eql(['data', 'count']);
+          // Project with supervisor from prev test
+          expect(res.body.count).to.equal(0);
+          expect(res.body.data.length).to.equal(0);
+        });
+    });
     it('should be covered by admin token', async () => {
       await request(app)
         .get(`/api/v1/events/${eventId}/projects?token=${token}`)

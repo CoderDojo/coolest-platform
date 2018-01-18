@@ -248,7 +248,7 @@ describe('projects controllers', () => {
       projectModel.adminView = sinon.stub().returns(projectModel);
 
       await controllers.getByEvent('event1', {
-        orderBy: 'banana',
+        orderBy: 'bananaSplit',
         ascending: 'true',
         query: {
           name: 'aa',
@@ -260,7 +260,7 @@ describe('projects controllers', () => {
       expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
       expect(projectModel.adminView).to.have.been.calledOnce;
       expect(projectModel.adminView).to.have.been.calledWith({ name: 'aa' });
-      expect(projectModel.orderBy).to.have.been.calledWith('banana', 'asc');
+      expect(projectModel.orderBy).to.have.been.calledWith('banana_split', 'asc');
       expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor'] });
     });
   });

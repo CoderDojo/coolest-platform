@@ -1,5 +1,6 @@
 const bookshelf = require('../database');
 const logger = require('../util/logger');
+const snakeCase = require('decamelize');
 
 const Project = bookshelf.Model.extend({
   tableName: 'project',
@@ -36,10 +37,13 @@ const Project = bookshelf.Model.extend({
       .query((qb) => {
         if (filters) {
           Object.keys(filters).forEach((field, index) => {
-            let formattedField = field;
-            if (formattedField.split('.').length === 1) formattedField = `project.${formattedField}`;
-            formattedField = db.raw('LOWER(??)', [formattedField]);
-            qb.andWhere(formattedField, 'LIKE', `%${filters[field].toLowerCase()}%`);
+            const value = filters[field];
+            if (value && value.length > 0) {
+              let formattedField = field;
+              if (formattedField.split('.').length === 1) formattedField = `project.${formattedField}`;
+              formattedField = db.raw('LOWER(??)', [snakeCase(formattedField)]);
+              qb.andWhere(formattedField, 'LIKE', `%${value.toLowerCase()}%`);
+            }
           });
         }
       });
