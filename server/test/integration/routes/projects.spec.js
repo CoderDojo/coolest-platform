@@ -303,11 +303,35 @@ describe('integration: projects', () => {
     });
     it('should order the list depending on query', async () => {
       await request(app)
-        .get(`/api/v1/events/${eventId}/projects?limit=10&orderBy=name&ascending=false&token=${refAuth.token}`)
+        .get(`/api/v1/events/${eventId}/projects?limit=20&orderBy=name&ascending=false&token=${refAuth.token}`)
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
           expect(res.body.count).to.equal(52);
+          expect(res.body.data.length).to.equal(20);
+          expect(res.body.data[0].name).to.be.eql('MyPoneyProject9');
+        });
+    });
+    it('should allow ordering by subqueries values (owner)', async () => {
+      await request(app)
+        .get(`/api/v1/events/${eventId}/projects?limit=10&orderBy=owner.email&ascending=true&token=${refAuth.token}`)
+        .expect(200)
+        .then((res) => {
+          expect(Object.keys(res.body)).to.eql(['data', 'count']);
+          expect(res.body.count).to.equal(52);
+          expect(res.body.data[0].owner.email).to.be.eql('me@example.com');
+          expect(res.body.data[0].name).to.be.eql('MyPoneyProject');
+        });
+    });
+    it('should allow ordering by subqueries values (supervisor)', async () => {
+      await request(app)
+        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&ascending=false&token=${refAuth.token}`)
+        .expect(200)
+        .then((res) => {
+          expect(Object.keys(res.body)).to.eql(['data', 'count']);
+          expect(res.body.count).to.equal(52);
+          expect(res.body.data.length).to.equal(50);
+          expect(res.body.data[0].supervisor.email).to.be.eql('test9@example.com');
           expect(res.body.data[0].name).to.be.eql('MyPoneyProject9');
         });
     });

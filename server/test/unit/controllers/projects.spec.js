@@ -232,10 +232,12 @@ describe('projects controllers', () => {
       projectModel.where = sinon.stub().returns(projectModel);
       projectModel.orderBy = sinon.stub().returns(projectModel);
       projectModel.fetchPage = sinon.stub().returns(projectModel);
+      projectModel.adminView = sinon.stub().returns(projectModel);
 
       await controllers.getByEvent('event1', {});
       expect(projectModel.where).to.have.been.calledOnce;
       expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
+      expect(projectModel.adminView).to.have.been.calledOnce;
       expect(projectModel.orderBy).to.have.been.calledWith('created_at', 'desc');
       expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 25, page: 1, withRelated: ['owner', 'supervisor'] });
     });
@@ -243,6 +245,7 @@ describe('projects controllers', () => {
       projectModel.where = sinon.stub().returns(projectModel);
       projectModel.orderBy = sinon.stub().returns(projectModel);
       projectModel.fetchPage = sinon.stub().returns(projectModel);
+      projectModel.adminView = sinon.stub().returns(projectModel);
 
       await controllers.getByEvent('event1', {
         orderBy: 'banana',
@@ -252,6 +255,7 @@ describe('projects controllers', () => {
       });
       expect(projectModel.where).to.have.been.calledOnce;
       expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
+      expect(projectModel.adminView).to.have.been.calledOnce;
       expect(projectModel.orderBy).to.have.been.calledWith('banana', 'asc');
       expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor'] });
     });

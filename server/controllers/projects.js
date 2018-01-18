@@ -67,6 +67,7 @@ class Project {
 
   static getByEvent(eventId, query) {
     return ProjectModel.where({ event_id: eventId })
+      .adminView()
       .orderBy(query.orderBy || 'created_at', query.ascending === 'true' ? 'asc' : 'desc')
       .fetchPage({
         pageSize: query.limit || 25,
