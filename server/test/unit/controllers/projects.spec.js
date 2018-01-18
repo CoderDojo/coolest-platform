@@ -250,12 +250,16 @@ describe('projects controllers', () => {
       await controllers.getByEvent('event1', {
         orderBy: 'banana',
         ascending: 'true',
+        query: {
+          name: 'aa',
+        },
         page: 2,
         limit: 30,
       });
       expect(projectModel.where).to.have.been.calledOnce;
       expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
       expect(projectModel.adminView).to.have.been.calledOnce;
+      expect(projectModel.adminView).to.have.been.calledWith({ name: 'aa' });
       expect(projectModel.orderBy).to.have.been.calledWith('banana', 'asc');
       expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor'] });
     });

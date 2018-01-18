@@ -335,6 +335,39 @@ describe('integration: projects', () => {
           expect(res.body.data[0].name).to.be.eql('MyPoneyProject9');
         });
     });
+    it('should allow filtering', async () => {
+      await request(app)
+        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[name]=Project1&ascending=false&token=${refAuth.token}`)
+        .expect(200)
+        .then((res) => {
+          expect(Object.keys(res.body)).to.eql(['data', 'count']);
+          // Project from 1 to 10-19
+          expect(res.body.count).to.equal(11);
+          expect(res.body.data.length).to.equal(11);
+        });
+    });
+    it('should allow filtering from sub-orgs', async () => {
+      await request(app)
+        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[supervisor.email]=test1&ascending=false&token=${refAuth.token}`)
+        .expect(200)
+        .then((res) => {
+          expect(Object.keys(res.body)).to.eql(['data', 'count']);
+          // Emails from 1 to 10-19
+          expect(res.body.count).to.equal(11);
+          expect(res.body.data.length).to.equal(11);
+        });
+    });
+    it('should allow multiple filtering', async () => {
+      await request(app)
+        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[name]=MyPoneyProject&query[supervisor.email]=another&ascending=false&token=${refAuth.token}`)
+        .expect(200)
+        .then((res) => {
+          expect(Object.keys(res.body)).to.eql(['data', 'count']);
+          // Project with supervisor from prev test
+          expect(res.body.count).to.equal(1);
+          expect(res.body.data.length).to.equal(1);
+        });
+    });
     it('should be covered by admin token', async () => {
       await request(app)
         .get(`/api/v1/events/${eventId}/projects?token=${token}`)

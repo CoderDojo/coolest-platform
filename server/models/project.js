@@ -16,7 +16,7 @@ const Project = bookshelf.Model.extend({
   supervisor() {
     return this.belongsToMany('User').through('ProjectUsers').query(q => q.where('type', 'supervisor'));
   },
-  adminView() {
+  adminView(filters) {
     // NOTE: if this monstruosity doesn't work, fallback to 
     // a view + custom Model (knex join) + serializer (field into object => https://www.npmjs.com/package/treeize)
     const db = bookshelf.knex;
@@ -32,7 +32,17 @@ const Project = bookshelf.Model.extend({
             .andOn('spu.type', '=', db.raw('\'supervisor\''));
         })
         .innerJoin('user as supervisor', 'spu.user_id', 'supervisor.id');
-    });
+    })
+      .query((qb) => {
+        if (filters) {
+          Object.keys(filters).forEach((field, index) => {
+            let formattedField = field;
+            if (formattedField.split('.').length === 1) formattedField = `project.${formattedField}`;
+            formattedField = db.raw('LOWER(??)', [formattedField]);
+            qb.andWhere(formattedField, 'LIKE', `%${filters[field].toLowerCase()}%`);
+          });
+        }
+      });
   },
   // Helper
   isOwner(userId) {
