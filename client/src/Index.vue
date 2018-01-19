@@ -15,7 +15,9 @@
   };
 </script>
 
-<style scoped>
+<style lang="scss">
+  @import './assets/scss/main.scss';
+
   .logo {
     max-width: 180px;
     margin: 20px;

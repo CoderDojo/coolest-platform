@@ -14,8 +14,8 @@ import EditProject from '@/project/Edit';
 
 // ADMIN
 const Admin = () => import(/* webpackChunkName: "admin" */ '@/admin/Base');
-const AdminIndex = () => import(/* webpackChunkName: "admin" */ '@/admin/Index');
 const AdminLogin = () => import(/* webpackChunkName: "admin" */ '@/admin/auth/Login');
+const AdminProjects = () => import(/* webpackChunkName: "admin" */ '@/admin/Projects');
 
 Vue.use(Router);
 
@@ -84,13 +84,20 @@ export default new Router({
         {
           path: '',
           name: 'Admin',
-          component: AdminIndex,
+          redirect: 'events/cp-2018',
           beforeEnter: adminNavGuard,
         },
         {
           path: 'login',
           name: 'AdminLogin',
           component: AdminLogin,
+        },
+        {
+          path: 'events/:eventSlug',
+          name: 'AdminProjects',
+          component: AdminProjects,
+          beforeEnter: adminNavGuard,
+          props: true,
         },
       ],
     },

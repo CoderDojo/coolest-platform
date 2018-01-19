@@ -1,6 +1,17 @@
+const uuidv1 = require('uuid/v1');
+
+const eventId = '4e285af0-fb81-11e7-8f56-d700b261c5a5';
+const categories = {
+  scratch: 'Scratch',
+  web: 'Websites & Web Games',
+  evo: 'Evolution',
+  hardware: 'Hardware',
+};
+const orgs = ['coderdojo', 'codeclub', 'raspberryjam', 'pioneers'];
+
 const users = [
   {
-    id: 'baz',
+    id: uuidv1(),
     firstName: 'Baz',
     lastName: 'Bar',
     dob: '1983-02-12T00:00:00.000Z',
@@ -9,70 +20,82 @@ const users = [
     phone: '353851234567',
     country: 'IE',
     parent: {},
-    type: 'supervisor'
-  }
+    type: 'supervisor',
+  },
 ];
 
 const events = [
   {
-    id: 'cp-2018',
+    id: eventId,
+    slug: 'cp-2018',
     name: 'Coolest Projects Dublin 2018',
     location: 'RDS Dublin',
     date: '2018-05-26T00:00:00.000Z',
-    categories: [
-      'Scratch',
-      'Websites & Web Games',
-      'Evolution',
-    ],
+    categories,
     questions: ['social_project', 'educational_project', 'innovator_stage']
-  }
+  },
 ];
 
 const projects = [
   {
-    id: 'sap',
-    eventId: 'cp-2018',
+    id: uuidv1(),
+    eventId,
     name: 'Super Awesome Project',
     category: 'scratch',
-    dojoId: 'foo',
+    org: 'coderdojo',
+    orgRef: uuidv1(),
+    owner: {
+      firstName: 'Baz',
+      lastName: 'Bar',
+      email: 'baz@example.com',
+      phone: '+353851234567',
+      type: 'supervisor',
+    },
+    supervisor: {
+      firstName: 'Baz',
+      lastName: 'Bar',
+      email: 'baz@example.com',
+      phone: '+353851234567',
+      type: 'supervisor',
+    },
     users: [
       {
         firstName: 'Foo',
         lastName: 'Bar',
         dob: '2004-06-25T00:00:00.000Z',
         gender: 'female',
-        email: '',
-        phone: '',
-        country: 'IE',
-        parent: {
-          firstName: 'Baz',
-          lastName: 'Bar',
-          dob: '1983-02-12T00:00:00.000Z',
-          gender: 'male',
-          email: 'baz@example.com',
-          phone: '353851234567',
-        },
-        type: 'member'
+        type: 'member',
       },
       {
         firstName: 'Baz',
         lastName: 'Bar',
-        dob: '1983-02-12T00:00:00.000Z',
-        gender: 'male',
         email: 'baz@example.com',
-        phone: '353851234567',
-        country: 'IE',
-        parent: {},
-        type: 'supervisor'
-      }
-    ]
+        phone: '+353851234567',
+        type: 'supervisor',
+      },
+    ],
   },
   {
-    id: 'scp',
-    eventId: 'cp-2018',
+    id: uuidv1(),
+    eventId,
     name: 'Sweet Cool Project',
     category: 'hardware',
-    dojoId: 'foo',
+    org: 'codeclub',
+    orgRef: uuidv1(),
+    owner: {
+      firstName: 'Baz',
+      lastName: 'Bar',
+      email: 'baz@example.com',
+      phone: '+353851234567',
+      type: 'supervisor',
+    },
+    supervisor: {
+      firstName: 'Baz',
+      lastName: 'Bar',
+      email: 'baz@example.com',
+      phone: '+353851234567',
+      type: 'supervisor',
+    },
     users: [
       {
         firstName: 'Qux',
@@ -90,7 +113,7 @@ const projects = [
           email: 'baz@example.com',
           phone: '353851234567',
         },
-        type: 'member'
+        type: 'member',
       },
       {
         firstName: 'Baz',
@@ -101,14 +124,63 @@ const projects = [
         phone: '353851234567',
         country: 'IE',
         parent: {},
-        type: 'supervisor'
-      }
-    ]
-  }
+        type: 'supervisor',
+      },
+    ],
+  },
 ];
+
+for (let i = 0; i < 100; i += 1) {
+  projects.push({
+    id: uuidv1(),
+    eventId,
+    name: `Test Project ${i + 1}`,
+    category: Object.keys(categories)[Math.floor(Math.random() * 3)],
+    org: orgs[Math.floor(Math.random() * 3)],
+    orgRef: uuidv1(),
+    owner: {
+      email: `testowner${i + 1}@example.com`,
+      type: 'owner',
+    },
+    supervisor: {
+      firstName: 'Test',
+      lastName: `Supervisor ${i + 1}`,
+      email: `testsupervisor${i + 1}@example.com`,
+      phone: '+3531234567',
+      type: 'supervisor',
+    },
+    users: [
+      {
+        email: `testowner${i + 1}@example.com`,
+        type: 'owner',
+      },
+      {
+        firstName: 'Test',
+        lastName: `Member ${i + 1}-1`,
+        email: `testmember${i + 1}-1@example.com`,
+        dob: '2004-06-25T00:00:00.000Z',
+        type: 'member',
+      },
+      {
+        firstName: 'Test',
+        lastName: `Member ${i + 1}-2`,
+        email: `testmember${i + 1}-2@example.com`,
+        dob: '2006-02-13T00:00:00.000Z',
+        type: 'member',
+      },
+      {
+        firstName: 'Test',
+        lastName: `Supervisor ${i + 1}`,
+        email: `testsupervisor${i + 1}@example.com`,
+        phone: '+3531234567',
+        type: 'supervisor',
+      },
+    ],
+  });
+}
 
 module.exports = {
   users,
   events,
-  projects
+  projects,
 };

@@ -41,6 +41,18 @@ module.exports = {
     (req, res) => res.status(200).json(res.locals.project),
   ],
 
+  getAll: [
+    (req, res) =>
+      projectController
+        .getByEvent(req.params.eventId, req.query)
+        .then((projects) => {
+          res.status(200).json({
+            data: projects.models,
+            count: projects.pagination.rowCount,
+          });
+        }),
+  ],
+
   param: (req, res, next, id) =>
     projectController
       .get({ id }, ['owner'])

@@ -46,6 +46,44 @@ server.post('/api/v1/admin/auth/token', (req, res) => {
   }
 });
 
+server.get('/api/v1/events/cp-2018', (req, res) => {
+  res.json(db.events[0]);
+});
+
+server.use('/api/v1/events/:eventId/projects', (req, res, next) => {
+  req.query._sort = req.query.orderBy;
+  if (req.query.ascending) {
+    req.query._order = req.query.ascending === '0' ? 'desc' : 'asc';
+  }
+  next();
+});
+
+router.render = (req, res) => {
+  if (res.locals.data.length) {
+    let data = res.locals.data;
+    const limitMatch = req.originalUrl.match(/limit=([0-9]+)/);
+    const limit = limitMatch ? limitMatch[1] : null;
+    const pageMatch = req.originalUrl.match(/page=([0-9]+)/);
+    const page = pageMatch ? pageMatch[1] : 1;
+    if (limit) {
+      data = data.slice((page - 1) * limit, page * limit);
+    }
+    res.json({
+      data,
+      count: res.locals.data.length,
+    });
+  } else {
+    res.json(res.locals.data);
+  }
+};
+
+// server.get('/api/v1/events/:eventId/projects', (req, res) => {
+//   res.json({
+//     data: res.locals.data,
+//     count: res.locals.data.length,
+//   });
+// });
+
 server.use('/api/v1', router);
 
 server.listen(3000, () => {

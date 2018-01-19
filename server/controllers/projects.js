@@ -2,6 +2,7 @@ const ProjectModel = require('../models/project');
 const UserHandler = require('./users');
 const UserModel = require('../models/user');
 const { pick } = require('lodash');
+const snakeCase = require('decamelize');
 
 class Project {
   static post(creator, project, eventId) {
@@ -63,6 +64,17 @@ class Project {
 
   static get(identifier, withRelated) {
     return ProjectModel.where(identifier).fetch({ withRelated });
+  }
+
+  static getByEvent(eventId, query) {
+    return ProjectModel.where({ event_id: eventId })
+      .adminView(query.query)
+      .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === '1' ? 'asc' : 'desc')
+      .fetchPage({
+        pageSize: query.limit || 25,
+        page: query.page || 1,
+        withRelated: ['owner', 'supervisor'],
+      });
   }
 }
 

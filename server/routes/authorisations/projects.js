@@ -5,20 +5,28 @@ const utils = require('./utils');
 const acl = new Acl(new Acl.memoryBackend());
 
 module.exports.define = (apiPrefix) => {
-  acl.allow([{
-    roles: ['basic'],
-    allows: [{
-      resources: `${apiPrefix}`,
-      permissions: ['post'],
-    }],
-  },
-  {
-    roles: ['basic'],
-    allows: [{
-      resources: `${apiPrefix}/:id`,
-      permissions: ['get', 'patch'],
-    }],
-  },
+  acl.allow([
+    {
+      roles: ['basic'],
+      allows: [{
+        resources: `${apiPrefix}`,
+        permissions: ['post'],
+      }],
+    },
+    {
+      roles: ['admin'],
+      allows: [{
+        resources: `${apiPrefix}`,
+        permissions: ['get'],
+      }],
+    },
+    {
+      roles: ['basic'],
+      allows: [{
+        resources: `${apiPrefix}/:id`,
+        permissions: ['get', 'patch'],
+      }],
+    },
   ]);
 };
 
