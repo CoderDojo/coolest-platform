@@ -234,7 +234,7 @@ describe('projects controllers', () => {
       projectModel.fetchPage = sinon.stub().returns(projectModel);
       projectModel.adminView = sinon.stub().returns(projectModel);
 
-      await controllers.getByEvent('event1', {});
+      await controllers.getByEvent('event1', {}, true);
       expect(projectModel.where).to.have.been.calledOnce;
       expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
       expect(projectModel.adminView).to.have.been.calledOnce;
@@ -255,13 +255,35 @@ describe('projects controllers', () => {
         },
         page: 2,
         limit: 30,
-      });
+      }, true);
       expect(projectModel.where).to.have.been.calledOnce;
       expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
       expect(projectModel.adminView).to.have.been.calledOnce;
       expect(projectModel.adminView).to.have.been.calledWith({ name: 'aa' });
       expect(projectModel.orderBy).to.have.been.calledWith('banana_split', 'asc');
       expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor'] });
+    });
+    it('should ignore pagination by default', async () => {
+      projectModel.where = sinon.stub().returns(projectModel);
+      projectModel.orderBy = sinon.stub().returns(projectModel);
+      projectModel.fetchAll = sinon.stub().returns(projectModel);
+      projectModel.adminView = sinon.stub().returns(projectModel);
+
+      await controllers.getByEvent('event1', {
+        orderBy: 'banana',
+        ascending: 'true',
+        query: {
+          name: 'aa',
+        },
+        page: 2,
+        limit: 30,
+      });
+      expect(projectModel.where).to.have.been.calledOnce;
+      expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
+      expect(projectModel.adminView).to.have.been.calledOnce;
+      expect(projectModel.adminView).to.have.been.calledWith({ name: 'aa' });
+      expect(projectModel.orderBy).to.have.been.calledWith('banana', 'asc');
+      expect(projectModel.fetchAll).to.have.been.calledWith({ withRelated: ['owner', 'supervisor'] });
     });
   });
 });

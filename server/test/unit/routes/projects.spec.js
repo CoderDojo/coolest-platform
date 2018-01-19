@@ -206,7 +206,7 @@ describe('router: project', () => {
     });
   });
 
-  describe('get', () => {
+  describe('get :id', () => {
     let handler;
     const projectController = class {};
     let sandbox;
@@ -240,6 +240,181 @@ describe('router: project', () => {
       expect(json).to.have.been.calledWith('foo');
     });
   });
+
+  describe('GET /', () => {
+    let handler;
+    const projectController = class {};
+    const sandbox = sinon.sandbox.create();
+
+    before(() => {
+      handlers = (proxy('../../../routes/handlers/projects', {
+        '../../controllers/projects': projectController,
+      })).getAll;
+      handler = (req, res, next) => {
+        return handlers[0](req, res, next);
+      };
+      projectController.getByEvent = sandbox.stub();
+    });
+
+    beforeEach(() => {
+      sandbox.reset();
+    });
+
+    it('should return a list of projects as json', async () => {
+      const mockReq = {
+        params: { eventId: '111' },
+        query: { orderBy: 'banana' },
+        accepts: sinon.stub().returns(false),
+        get: sinon.stub().returns(false),
+      };
+      const json = sandbox.stub();
+      const mockRes = {
+        status: sandbox.stub().returns({ json }),
+      };
+      const res = {
+        models: [],
+        pagination: {
+          rowCount: 0,
+        },
+      };
+      projectController.getByEvent.resolves(res);
+      await handler(mockReq, mockRes);
+
+      expect(mockRes.status).to.have.been.calledOnce;
+      expect(mockRes.status).to.have.been.calledWith(200);
+      expect(projectController.getByEvent).to.have.been.calledOnce;
+      expect(projectController.getByEvent).to.have.been.calledWith(
+        mockReq.params.eventId,
+        mockReq.query,
+        true,
+      );
+      expect(json).to.have.been.calledOnce;
+      expect(json).to.have.been.calledWith({ count: 0, data: [] });
+    });
+
+    it('should return a list of projects as csv when passed the format parameter', async () => {
+      const mockReq = {
+        params: { eventId: '111' },
+        query: { orderBy: 'banana', format: 'csv' },
+        accepts: sandbox.stub().returns(false),
+        get: sinon.stub().returns(false),
+      };
+      const send = sandbox.stub();
+      const mockRes = {
+        setHeader: sandbox.stub(),
+        status: sandbox.stub().returns({ send }),
+      };
+      const res = {
+        models: [],
+        pagination: {
+          rowCount: 0,
+        },
+        toJSON: sandbox.stub(),
+      };
+      res.toJSON.returns(res.models);
+      projectController.getByEvent.resolves(res);
+      await handler(mockReq, mockRes);
+
+      expect(mockRes.status).to.have.been.calledOnce;
+      expect(mockRes.status).to.have.been.calledWith(200);
+      expect(projectController.getByEvent).to.have.been.calledOnce;
+      expect(projectController.getByEvent).to.have.been.calledWith(
+        mockReq.params.eventId,
+        mockReq.query,
+        false,
+      );
+      expect(mockRes.setHeader).to.have.been.calledOnce;
+      expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
+      expect(send).to.have.been.calledOnce;
+      expect(send).to.have.been.calledWith('"Name","Description","Category","Supervisor Email","Owner Email","Created At","Updated At"');
+    });
+
+    it('should return a list of projects as csv when passed the Accept header', async () => {
+      const mockReq = {
+        params: { eventId: '111' },
+        query: { orderBy: 'banana' },
+        accepts: sandbox.stub().returns(true),
+        get: sinon.stub().returns(true),
+      };
+      const send = sandbox.stub();
+      const mockRes = {
+        setHeader: sandbox.stub(),
+        status: sandbox.stub().returns({ send }),
+      };
+      const res = {
+        models: [],
+        pagination: {
+          rowCount: 0,
+        },
+        toJSON: sandbox.stub(),
+      };
+      res.toJSON.returns(res.models);
+      projectController.getByEvent.resolves(res);
+      await handler(mockReq, mockRes);
+
+      expect(mockRes.status).to.have.been.calledOnce;
+      expect(mockRes.status).to.have.been.calledWith(200);
+      expect(projectController.getByEvent).to.have.been.calledOnce;
+      expect(projectController.getByEvent).to.have.been.calledWith(
+        mockReq.params.eventId,
+        mockReq.query,
+        false,
+      );
+      expect(mockRes.setHeader).to.have.been.calledOnce;
+      expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
+      expect(send).to.have.been.calledOnce;
+      expect(send).to.have.been.calledWith('"Name","Description","Category","Supervisor Email","Owner Email","Created At","Updated At"');
+    });
+
+    it('should format data for csv', async () => {
+      const mockReq = {
+        params: { eventId: '111' },
+        query: { orderBy: 'banana', format: 'csv' },
+        accepts: sandbox.stub().returns(false),
+        get: sinon.stub().returns(false),
+      };
+      const send = sandbox.stub();
+      const mockRes = {
+        setHeader: sandbox.stub(),
+        status: sandbox.stub().returns({ send }),
+      };
+      const res = {
+        models: [{
+          name: 'Desu',
+          category: 'HTML',
+          owner: {
+            email: 'test@test.com',
+          },
+          supervisor: {
+            email: 'sup@sup.com',
+          },
+          createdAt: 1516358474342,
+          updatedAt: 1516358474342,
+        }],
+        pagination: {
+          rowCount: 0,
+        },
+        toJSON: sandbox.stub(),
+      };
+      res.toJSON.returns(res.models);
+      projectController.getByEvent.resolves(res);
+      await handler(mockReq, mockRes);
+
+      expect(mockRes.status).to.have.been.calledOnce;
+      expect(mockRes.status).to.have.been.calledWith(200);
+      expect(projectController.getByEvent).to.have.been.calledOnce;
+      expect(projectController.getByEvent).to.have.been.calledWith(
+        mockReq.params.eventId,
+        mockReq.query,
+        false,
+      );
+      expect(mockRes.setHeader).to.have.been.calledOnce;
+      expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
+      expect(send).to.have.been.calledOnce;
+      expect(send).to.have.been.calledWith('"Name","Description","Category","Supervisor Email","Owner Email","Created At","Updated At"\n"Desu",,"HTML","sup@sup.com","test@test.com","2018-1-19","2018-1-19"');
+    });
+  });
+
 
   describe('patch', () => {
     let handler;
