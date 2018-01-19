@@ -1,4 +1,5 @@
-FROM node:carbon as builder
+FROM node:carbon-alpine as builder
+RUN apk --no-cache add python build-base
 WORKDIR /usr/src/app
 COPY yarn.lock package.json ./
 RUN yarn
@@ -12,6 +13,7 @@ ENV NODE_ENV=production
 EXPOSE 3000
 COPY yarn.lock package.json ./
 RUN yarn
+RUN npm rebuild bcrypt --build-from-source
 COPY --from=builder /usr/src/app/client/dist/ public
 COPY server .
 CMD ["node", "bin/www"]
