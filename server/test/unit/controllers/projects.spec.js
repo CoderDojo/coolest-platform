@@ -271,7 +271,7 @@ describe('projects controllers', () => {
 
       await controllers.getByEvent('event1', {
         orderBy: 'banana',
-        ascending: 'true',
+        ascending: '1',
         query: {
           name: 'aa',
         },
