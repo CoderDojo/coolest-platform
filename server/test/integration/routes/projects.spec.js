@@ -303,7 +303,7 @@ describe('integration: projects', () => {
     });
     it('should order the list depending on query', async () => {
       await request(app)
-        .get(`/api/v1/events/${eventId}/projects?limit=20&orderBy=name&ascending=false&token=${refAuth.token}`)
+        .get(`/api/v1/events/${eventId}/projects?limit=20&orderBy=name&ascending=0&token=${refAuth.token}`)
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
@@ -314,7 +314,7 @@ describe('integration: projects', () => {
     });
     it('should allow ordering by subqueries values (owner)', async () => {
       await request(app)
-        .get(`/api/v1/events/${eventId}/projects?limit=10&orderBy=owner.email&ascending=true&token=${refAuth.token}`)
+        .get(`/api/v1/events/${eventId}/projects?limit=10&orderBy=owner.email&ascending=1&token=${refAuth.token}`)
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
@@ -325,7 +325,7 @@ describe('integration: projects', () => {
     });
     it('should allow ordering by subqueries values (supervisor)', async () => {
       await request(app)
-        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&ascending=false&token=${refAuth.token}`)
+        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&ascending=0&token=${refAuth.token}`)
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
@@ -337,7 +337,7 @@ describe('integration: projects', () => {
     });
     it('should allow filtering', async () => {
       await request(app)
-        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[name]=Project1&ascending=false&token=${refAuth.token}`)
+        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[name]=Project1&ascending=0&token=${refAuth.token}`)
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
@@ -348,7 +348,7 @@ describe('integration: projects', () => {
     });
     it('should allow filtering from sub-orgs', async () => {
       await request(app)
-        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[supervisor.email]=test1&ascending=false&token=${refAuth.token}`)
+        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[supervisor.email]=test1&ascending=0&token=${refAuth.token}`)
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
@@ -359,7 +359,7 @@ describe('integration: projects', () => {
     });
     it('should allow multiple filtering', async () => {
       await request(app)
-        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[name]=MyPoneyProject&query[supervisor.email]=another&ascending=false&token=${refAuth.token}`)
+        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[name]=MyPoneyProject&query[supervisor.email]=another&ascending=0&token=${refAuth.token}`)
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
@@ -370,7 +370,7 @@ describe('integration: projects', () => {
     });
     it('should ignore empty filters', async () => {
       await request(app)
-        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[category]=&query[name]=MyPoneyProject&query[supervisor.email]=another&ascending=false&token=${refAuth.token}`)
+        .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[category]=&query[name]=MyPoneyProject&query[supervisor.email]=another&ascending=0&token=${refAuth.token}`)
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
@@ -381,7 +381,7 @@ describe('integration: projects', () => {
     });
     it('should support camelCase names', async () => {
       await request(app)
-        .get(`/api/v1/events/${eventId}/projects?limit=10&orderBy=supervisor.createdAt&query[createdAt]=2018-01-01&ascending=false&token=${refAuth.token}`)
+        .get(`/api/v1/events/${eventId}/projects?limit=10&orderBy=supervisor.createdAt&query[createdAt]=2018-01-01&ascending=0&token=${refAuth.token}`)
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);

@@ -69,7 +69,7 @@ class Project {
   static getByEvent(eventId, query) {
     return ProjectModel.where({ event_id: eventId })
       .adminView(query.query)
-      .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === 'true' ? 'asc' : 'desc')
+      .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === '1' ? 'asc' : 'desc')
       .fetchPage({
         pageSize: query.limit || 25,
         page: query.page || 1,

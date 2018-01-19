@@ -249,7 +249,7 @@ describe('projects controllers', () => {
 
       await controllers.getByEvent('event1', {
         orderBy: 'bananaSplit',
-        ascending: 'true',
+        ascending: '1',
         query: {
           name: 'aa',
         },

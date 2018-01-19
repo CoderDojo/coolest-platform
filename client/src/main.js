@@ -4,7 +4,9 @@ import Vue from 'vue';
 import VueResource from 'vue-resource';
 import VeeValidate from 'vee-validate';
 import VueAnalytics from 'vue-analytics';
+import { ServerTable } from 'vue-tables-2';
 import 'vue-dob-picker/dist/static/vue-dob-picker.css';
+import 'font-awesome/css/font-awesome.min.css';
 import App from './App';
 import router from './router';
 
@@ -16,6 +18,7 @@ Vue.use(VueAnalytics, {
   id: process.env.GOOGLE_ANALYTICS_PROPERTY_ID,
   router,
 });
+Vue.use(ServerTable, {}, false, 'bootstrap4');
 
 const authToken = localStorage.getItem('authToken');
 

@@ -19,3 +19,21 @@ services:
       - ./:/usr/src/app/
     depends_on:
       - db
+  platform_mock:
+    image: node:carbon
+    command: yarn start-with-mocks
+    working_dir: /usr/src/app
+    environment:
+      NODE_ENV: development
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/usr/src/app/
+  test:
+    image: circleci/node:carbon-browsers
+    command: yarn test
+    working_dir: /usr/src/app
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./:/usr/src/app/
