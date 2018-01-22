@@ -8,6 +8,7 @@ const logger = new winston.Logger({
       json: false,
       colorize: true,
       handleExceptions: true,
+      silent: process.env.NODE_ENV === 'test',
     }),
   ],
 });
