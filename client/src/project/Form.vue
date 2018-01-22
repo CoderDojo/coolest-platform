@@ -2,7 +2,7 @@
   <form novalidate @submit.prevent="onSubmit">
     <div class="row">
       <div class="col">
-        <label>Project Name</label>
+        <label>Project name</label>
         <input
           v-model="projectDetails.name"
           v-validate="'required|max:50'"
@@ -16,12 +16,12 @@
     </div>
     <div class="row">
       <div class="col">
-        <label>Project Description</label>
+        <label>Project description</label>
         <textarea
           v-model="projectDetails.description"
           v-validate="'required|max:1000'"
           data-vv-name="projectDescription"
-          placeholder="A few sentences to describe what your project is about and what technology you think you are using to build it."
+          placeholder="A few sentences to describe what your project is about and what technology you are using to build it."
           class="full-width-block"
           rows="4"
           :class="{ error: errors.has('projectDescription') }"></textarea>
@@ -31,7 +31,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <label>Project Category</label>
+        <label>Project category</label>
         <p><small><a href="http://coolestprojects.org/registration-2018/project-categories/" target="_blank">You can read the category descriptions here</a></small></p>
         <select
           v-model="projectDetails.category"
@@ -149,8 +149,8 @@
       </div>
       <div class="row">
         <div class="col">
-          <label v-show="!participants[n - 1].name">Date of Birth</label>
-          <label v-show="participants[n - 1].name">Date of Birth of "{{ participants[n - 1].name }}"</label>
+          <label v-show="!participants[n - 1].name">Date of birth</label>
+          <label v-show="participants[n - 1].name">Date of birth of "{{ participants[n - 1].name }}"</label>
           <vue-dob-picker
             class="full-width-block"
             v-model="participants[n - 1].dob"
@@ -195,7 +195,7 @@
               <option value="female">Female</option>
               <option value="undisclosed">Other/Rather not say</option>
           </select>
-          <span class="error-message" v-show="errors.has(`participant-${n}-gender:required`)">* Participant's gender is required</span>
+          <span class="error-message" v-show="errors.has(`participant-${n}-gender:required`)">* We want everyone to enjoy Coolest Projects equally. Gathering this information helps us check how well we’re doing.</span>
         </div>
       </div>
     </div>
@@ -209,7 +209,7 @@
       <div class="col">
         <div class="row row-no-margin">
           <div class="col">
-            <label>First Name of Adult Supervisor</label>
+            <label>First name of adult supervisor</label>
             <input
               type="text"
               v-model="supervisor.firstName"
@@ -221,7 +221,7 @@
             <span class="error-message" v-show="errors.has('supervisor-firstName')">* Supervisor's first name is required</span>
           </div>
           <div class="col">
-            <label>Surname of Adult Supervisor</label>
+            <label>Surname of adult supervisor</label>
             <input
               type="text"
               v-model="supervisor.lastName"
@@ -237,7 +237,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <label>Email of Adult Supervisor</label>
+        <label>Email of adult supervisor</label>
         <input
           type="email"
           placeholder="e.g. emily.smith@example.com"
@@ -252,7 +252,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <label>Phone Number of Adult Supervisor</label>
+        <label>Phone number of adult supervisor</label>
         <input
           type="text"
           placeholder="e.g. +353851234567"
@@ -262,18 +262,18 @@
           class="full-width-block"
           :class="{ error: errors.has('supervisor-phone') }" />
         <span class="error-message" v-show="errors.has('supervisor-phone:required')">* Supervisor's phone number is required</span>
-        <span class="error-message" v-show="errors.has('supervisor-phone:regex')">* Supervisor's phone number must include country code. e.g. for Ireland, +353</span>
+        <span class="error-message" v-show="errors.has('supervisor-phone:regex')">* Please include the country code. For example, a phone number in Ireland should begin +353</span>
       </div>
     </div>
     <hr />
     <div class="row">
       <div class="col">
-        <p>If you have any questions about coolest projects please check out <a href="http://www.coolestprojects.org">www.coolestprojects.org</a> or contact us at <a href="mailto:hello@coolestprojects.org">hello@coolestprojects.org</a>.</p>
+        <p>If you have any questions about Coolest Projects please check out <a href="http://www.coolestprojects.org">www.coolestprojects.org</a> or contact us at <a href="mailto:hello@coolestprojects.org">hello@coolestprojects.org</a>.</p>
       </div>
     </div>
     <div class="row">
       <div class="col text-center">
-        <button type="submit" class="btn btn-primary">Register Project</button>
+        <button type="submit" class="btn btn-primary">Register project</button>
       </div>
     </div>
     <div class="row">

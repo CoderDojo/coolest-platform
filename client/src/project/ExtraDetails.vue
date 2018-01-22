@@ -2,13 +2,13 @@
   <form v-if="event && project" novalidate @submit.prevent="onSubmit">
     <div class="row">
       <div class="col">
-        <h2>Extra Details</h2>
+        <h2>Extra details</h2>
         <p>These questions are additional information about your project which we might use for some special judging on the day.</p>
       </div>
     </div>
     <div v-if="hasQuestion('social_project')" class="row row-v-center">
       <div class="col">
-        <p>Do you think your project trys to tackle a social problem?</p>
+        <p>Do you think your project tries to tackle a social problem?</p>
       </div>
       <div>
         <select v-model="answers.social_project">
