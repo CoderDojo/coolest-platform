@@ -180,6 +180,7 @@
             v-validate="participants[n - 1].specialRequirementsProvided === 'true' ? 'required' : ''"
             :data-vv-name="`participant-${n}-specialRequirements`"
             rows="5"
+            placeholder="Please add any allergies, disability requirements or special requests so we can try to facilitate these on the day."
             :class="{ error: errors.has(`participant-${n}-specialRequirements`) }"></textarea>
           <span class="error-message" v-show="errors.has(`participant-${n}-specialRequirements`)">* If you have special requirements, you must provide them</span>
         </div>
