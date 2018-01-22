@@ -66,15 +66,18 @@ class Project {
     return ProjectModel.where(identifier).fetch({ withRelated });
   }
 
-  static getByEvent(eventId, query) {
-    return ProjectModel.where({ event_id: eventId })
+  static getByEvent(eventId, query, paginated) {
+    const projects = ProjectModel.where({ event_id: eventId })
       .adminView(query.query)
-      .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === '1' ? 'asc' : 'desc')
-      .fetchPage({
+      .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === '1' ? 'asc' : 'desc');
+    if (paginated) {
+      return projects.fetchPage({
         pageSize: query.limit || 25,
         page: query.page || 1,
         withRelated: ['owner', 'supervisor'],
       });
+    }
+    return projects.fetchAll({ withRelated: ['owner', 'supervisor'] });
   }
 }
 

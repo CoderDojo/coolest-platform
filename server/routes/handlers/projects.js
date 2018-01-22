@@ -1,4 +1,5 @@
 const projectController = require('../../controllers/projects');
+const json2csv = require('json2csv');
 
 module.exports = {
   post: [
@@ -42,15 +43,35 @@ module.exports = {
   ],
 
   getAll: [
-    (req, res) =>
-      projectController
-        .getByEvent(req.params.eventId, req.query)
+    (req, res) => {
+      const paginated = !(req.query.format && req.query.format === 'csv');
+      return projectController
+        .getByEvent(req.params.eventId, req.query, paginated)
         .then((projects) => {
-          res.status(200).json({
+          const dateFormat = date => new Date(date).toLocaleDateString();
+          if (!paginated) {
+            res.setHeader('Content-Type', 'text/csv');
+            const data = projects.toJSON();
+            const fields = [
+              { label: 'Name', value: 'name' },
+              { label: 'Description', value: 'description' },
+              { label: 'Category', value: 'category' },
+              { label: 'Supervisor Email', value: 'supervisor.email' },
+              { label: 'Owner Email', value: 'owner.email' },
+              { label: 'Created At', value: row => dateFormat(row.createdAt) },
+              { label: 'Updated At', value: row => dateFormat(row.updatedAt) },
+            ];
+            return res.status(200).send(json2csv({
+              data,
+              fields,
+            }));
+          }
+          return res.status(200).json({
             data: projects.models,
             count: projects.pagination.rowCount,
           });
-        }),
+        });
+    },
   ],
 
   param: (req, res, next, id) =>
