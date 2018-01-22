@@ -423,19 +423,6 @@ describe('integration: projects', () => {
             expect(columns).to.eql(['"Name"', '"Description"', '"Category"', '"Supervisor Email"', '"Owner Email"', '"Created At"', '"Updated At"']);
           });
       });
-      it('should return a csv when content-type header is specified', async () => {
-        await request(app)
-          .get(`/api/v1/events/${eventId}/projects?limit=50&query[supervisor.email]=doubidou&ascending=false&token=${refAuth.token}`)
-          .set('Accept', 'text/csv')
-          .expect(200)
-          .then((res) => {
-            expect(res.text).not.to.be.empty;
-            const lines = res.text.split('\n');
-            expect(lines.length).to.equal(1); // headers
-            const columns = lines[0].split(',');
-            expect(columns).to.eql(['"Name"', '"Description"', '"Category"', '"Supervisor Email"', '"Owner Email"', '"Created At"', '"Updated At"']);
-          });
-      });
     });
   });
 

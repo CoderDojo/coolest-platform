@@ -329,43 +329,6 @@ describe('router: project', () => {
       expect(send).to.have.been.calledWith('"Name","Description","Category","Supervisor Email","Owner Email","Created At","Updated At"');
     });
 
-    it('should return a list of projects as csv when passed the Accept header', async () => {
-      const mockReq = {
-        params: { eventId: '111' },
-        query: { orderBy: 'banana' },
-        accepts: sandbox.stub().returns(true),
-        get: sinon.stub().returns(true),
-      };
-      const send = sandbox.stub();
-      const mockRes = {
-        setHeader: sandbox.stub(),
-        status: sandbox.stub().returns({ send }),
-      };
-      const res = {
-        models: [],
-        pagination: {
-          rowCount: 0,
-        },
-        toJSON: sandbox.stub(),
-      };
-      res.toJSON.returns(res.models);
-      projectController.getByEvent.resolves(res);
-      await handler(mockReq, mockRes);
-
-      expect(mockRes.status).to.have.been.calledOnce;
-      expect(mockRes.status).to.have.been.calledWith(200);
-      expect(projectController.getByEvent).to.have.been.calledOnce;
-      expect(projectController.getByEvent).to.have.been.calledWith(
-        mockReq.params.eventId,
-        mockReq.query,
-        false,
-      );
-      expect(mockRes.setHeader).to.have.been.calledOnce;
-      expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
-      expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"Name","Description","Category","Supervisor Email","Owner Email","Created At","Updated At"');
-    });
-
     it('should format data for csv', async () => {
       const mockReq = {
         params: { eventId: '111' },

@@ -44,8 +44,7 @@ module.exports = {
 
   getAll: [
     (req, res) => {
-      const paginated = !((req.query.format && req.query.format === 'csv') ||
-              (req.get('Accept') && req.accepts('text/csv')));
+      const paginated = !(req.query.format && req.query.format === 'csv');
       return projectController
         .getByEvent(req.params.eventId, req.query, paginated)
         .then((projects) => {
