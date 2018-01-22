@@ -80,6 +80,9 @@ describe('Auth component', () => {
             },
           },
         });
+        vm.$validator = {
+          validateAll: sandbox.stub().returns(true),
+        };
         vm.$ga = {
           event: sandbox.stub(),
         };
@@ -105,6 +108,9 @@ describe('Auth component', () => {
         vm.email = 'example@example.com';
         vm.eventId = 'foo';
         UserServiceMock.create.withArgs(vm.email).rejects({ status: 409 });
+        vm.$validator = {
+          validateAll: sandbox.stub().returns(true),
+        };
         vm.$ga = {
           event: sandbox.stub(),
         };
