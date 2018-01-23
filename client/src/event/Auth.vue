@@ -47,28 +47,19 @@
 <script>
   import Cookie from 'js-cookie';
   import UserService from '@/user/service';
-  import EventService from '@/event/service';
+  import FetchEventMixin from '@/event/FetchEventMixin';
 
   export default {
     name: 'Auth',
-    props: {
-      eventSlug: {
-        required: true,
-        type: String,
-      },
-    },
+    mixins: [FetchEventMixin],
     data() {
       return {
         email: null,
-        event: null,
         error: null,
         approval: false,
       };
     },
     methods: {
-      async fetchEvent() {
-        this.event = (await EventService.get(this.eventSlug)).body;
-      },
       async onSubmit() {
         const valid = await this.$validator.validateAll();
         if (valid) {
@@ -86,9 +77,6 @@
           }
         }
       },
-    },
-    created() {
-      this.fetchEvent();
     },
   };
 </script>

@@ -59,41 +59,18 @@
 </template>
 
 <script>
-  import EventService from '@/event/service';
   import ProjectService from '@/project/service';
+  import FetchProjectMixin from '@/project/FetchProjectMixin';
 
   export default {
     name: 'ExtraDetails',
-    props: {
-      eventSlug: {
-        type: String,
-        required: true,
-      },
-      projectId: {
-        type: String,
-        required: true,
-      },
-      _event: {
-        type: Object,
-      },
-      _project: {
-        type: Object,
-      },
-    },
+    mixins: [FetchProjectMixin],
     data() {
       return {
-        project: null,
-        event: null,
         answers: {},
       };
     },
     methods: {
-      async fetchEvent() {
-        this.event = (await EventService.get(this.eventSlug)).body;
-      },
-      async fetchProject() {
-        this.project = (await ProjectService.get(this.event.id, this.projectId)).body;
-      },
       hasQuestion(q) {
         return this.event.questions && this.event.questions.indexOf(q) >= 0;
       },
@@ -116,18 +93,6 @@
           },
         });
       },
-    },
-    async created() {
-      if (this._event) {
-        this.event = this._event;
-      } else {
-        await this.fetchEvent();
-      }
-      if (this._project) {
-        this.project = this._project;
-      } else {
-        this.fetchProject();
-      }
     },
   };
 </script>

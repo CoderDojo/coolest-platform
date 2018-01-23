@@ -74,7 +74,7 @@ class Project {
       return projects.fetchPage({
         pageSize: query.limit || 25,
         page: query.page || 1,
-        withRelated: ['owner', 'supervisor'],
+        withRelated: ['owner', 'supervisor', 'members'],
       });
     }
     return projects.fetchAll({ withRelated: ['owner', 'supervisor'] });

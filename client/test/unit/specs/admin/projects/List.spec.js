@@ -1,19 +1,13 @@
 import vueUnitHelper from 'vue-unit-helper';
-import AdminProjects from '!!vue-loader?inject!@/admin/Projects';
+import AdminProjectsList from '@/admin/projects/List';
 
-describe('Admin Projects component', () => {
+describe('Admin Projects List component', () => {
   let sandbox;
-  let MockEventService;
   let vm;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    MockEventService = {
-      get: sandbox.stub(),
-    };
-    vm = vueUnitHelper(AdminProjects({
-      '@/event/service': MockEventService,
-    }));
+    vm = vueUnitHelper(AdminProjectsList);
   });
 
   afterEach(() => {
@@ -154,20 +148,6 @@ describe('Admin Projects component', () => {
   });
 
   describe('methods', () => {
-    describe('fetchEvent', () => {
-      it('should fetch the event using EventService', async () => {
-        // ARRANGE
-        vm.eventSlug = 'foo';
-        MockEventService.get.withArgs('foo').resolves({ body: 'bar' });
-
-        // ACT
-        await vm.fetchEvent();
-
-        // ASSERT
-        expect(vm.event).to.equal('bar');
-      });
-    });
-
     describe('requestAdapter', () => {
       it('should store data into tableState and return it', () => {
         // ARRANGE
@@ -180,19 +160,6 @@ describe('Admin Projects component', () => {
         expect(vm.tableState).to.equal('foo');
         expect(res).to.equal('foo');
       });
-    });
-  });
-
-  describe('created', () => {
-    it('should fetch the event', () => {
-      // ARRANGE
-      sandbox.stub(vm, 'fetchEvent');
-
-      // ACT
-      vm.$lifecycleMethods.created();
-
-      // ASSERT
-      expect(vm.fetchEvent).to.have.been.calledOnce;
     });
   });
 });

@@ -6,32 +6,23 @@
 </template>
 
 <script>
-  import EventService from '@/event/service';
   import ProjectService from '@/project/service';
   import ProjectForm from '@/project/Form';
+  import FetchEventMixin from '@/event/FetchEventMixin';
 
   export default {
     name: 'CreateProject',
-    props: {
-      eventSlug: {
-        required: true,
-        type: String,
-      },
-    },
+    mixins: [FetchEventMixin],
     components: {
       ProjectForm,
     },
     data() {
       return {
-        event: null,
         submitted: false,
         error: null,
       };
     },
     methods: {
-      async fetchEvent() {
-        this.event = (await EventService.get(this.eventSlug)).body;
-      },
       async onSubmit(projectPayload) {
         try {
           const createdProject =
@@ -63,7 +54,6 @@
     },
     created() {
       window.addEventListener('beforeunload', this.onBeforeUnload);
-      this.fetchEvent();
     },
     destroyed() {
       window.removeEventListener('beforeunload', this.onBeforeUnload);
