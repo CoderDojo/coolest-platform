@@ -16,14 +16,15 @@
 </script>
 
 <style lang="scss">
+  @import '../assets/scss/_colors.scss';
   @import '~bootstrap/dist/css/bootstrap.min.css';
 
   .navbar-branding {
-    background: #E73359;
+    background: $coolest-red;
     margin-bottom: 15px;
 
     a {
-      color: #fff;
+      color: $coolest-white;
     }
   }
 </style>
