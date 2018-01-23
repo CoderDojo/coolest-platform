@@ -267,9 +267,10 @@ describe('integration: projects', () => {
           // Content
           expect(res.body.count).to.equal(52);
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
-          expect(Object.keys(res.body.data[0])).to.eql(['id', 'name', 'category', 'createdAt', 'updatedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor']);
+          expect(Object.keys(res.body.data[0])).to.eql(['id', 'name', 'category', 'createdAt', 'updatedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
           expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
           expect(Object.keys(res.body.data[0].supervisor)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
+          expect(Object.keys(res.body.data[0].members[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
           // Ordering
           expect(res.body.data.length).to.equal(25);
           expect(res.body.data[0].name).to.eql('MyPoneyProject49');

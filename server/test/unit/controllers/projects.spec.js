@@ -239,7 +239,7 @@ describe('projects controllers', () => {
       expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
       expect(projectModel.adminView).to.have.been.calledOnce;
       expect(projectModel.orderBy).to.have.been.calledWith('created_at', 'desc');
-      expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 25, page: 1, withRelated: ['owner', 'supervisor'] });
+      expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 25, page: 1, withRelated: ['owner', 'supervisor', 'members'] });
     });
     it('should accept params to customize the search', async () => {
       projectModel.where = sinon.stub().returns(projectModel);
@@ -261,7 +261,7 @@ describe('projects controllers', () => {
       expect(projectModel.adminView).to.have.been.calledOnce;
       expect(projectModel.adminView).to.have.been.calledWith({ name: 'aa' });
       expect(projectModel.orderBy).to.have.been.calledWith('banana_split', 'asc');
-      expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor'] });
+      expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor', 'members'] });
     });
     it('should ignore pagination by default', async () => {
       projectModel.where = sinon.stub().returns(projectModel);
@@ -283,7 +283,7 @@ describe('projects controllers', () => {
       expect(projectModel.adminView).to.have.been.calledOnce;
       expect(projectModel.adminView).to.have.been.calledWith({ name: 'aa' });
       expect(projectModel.orderBy).to.have.been.calledWith('banana', 'asc');
-      expect(projectModel.fetchAll).to.have.been.calledWith({ withRelated: ['owner', 'supervisor'] });
+      expect(projectModel.fetchAll).to.have.been.calledWith({ withRelated: ['owner', 'supervisor', 'members'] });
     });
   });
 });

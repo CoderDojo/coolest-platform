@@ -201,7 +201,7 @@ describe('router: project', () => {
       };
       await handler(mockReq, {}, nextMock, id);
       expect(getController).to.have.been.calledOnce;
-      expect(getController).to.have.been.calledWith({ id }, ['owner']);
+      expect(getController).to.have.been.calledWith({ id }, ['owner', 'supervisor', 'members']);
       expect(mockReq.app.locals.project).to.equal(res);
     });
   });

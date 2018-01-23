@@ -77,7 +77,7 @@ class Project {
         withRelated: ['owner', 'supervisor', 'members'],
       });
     }
-    return projects.fetchAll({ withRelated: ['owner', 'supervisor'] });
+    return projects.fetchAll({ withRelated: ['owner', 'supervisor', 'members'] });
   }
 }
 
