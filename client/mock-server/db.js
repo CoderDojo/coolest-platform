@@ -44,6 +44,11 @@ const projects = [
     category: 'scratch',
     org: 'coderdojo',
     orgRef: uuidv1(),
+    answers: {
+      social_project: true,
+      educational_project: false,
+      innovator_stage: true,
+    },
     owner: {
       firstName: 'Baz',
       lastName: 'Bar',

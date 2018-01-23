@@ -6,7 +6,6 @@ describe('Auth component', () => {
   let CookieMock;
   let AuthServiceMock;
   let UserServiceMock;
-  let EventServiceMock;
   let vm;
 
   beforeEach(() => {
@@ -20,13 +19,9 @@ describe('Auth component', () => {
     UserServiceMock = {
       create: sandbox.stub(),
     };
-    EventServiceMock = {
-      get: sandbox.stub(),
-    };
     vm = vueUnitHelper(Auth({
       'js-cookie': CookieMock,
       '@/user/service': UserServiceMock,
-      '@/event/service': EventServiceMock,
     }));
     vm.$router = {
       push: sandbox.stub(),
@@ -39,20 +34,6 @@ describe('Auth component', () => {
   });
 
   describe('methods', () => {
-    describe('fetchEvent', () => {
-      it('should load the event for the given eventSlug', async () => {
-        // ARRANGE
-        vm.eventSlug = 'foo';
-        EventServiceMock.get.withArgs('foo').resolves({ body: 'bar' });
-
-        // ACT
-        await vm.fetchEvent();
-
-        // ASSERT
-        expect(vm.event).to.equal('bar');
-      });
-    });
-
     describe('onSubmit', () => {
       it.skip('should navigate to auth-email when auth succeeds', async () => {
         // ARRANGE
@@ -125,19 +106,6 @@ describe('Auth component', () => {
         expect(vm.$router.push).to.not.have.been.called;
         expect(vm.error).to.eql({ status: 409 });
       });
-    });
-  });
-
-  describe('created', () => {
-    it('should fetch the event', () => {
-      // ARRANGE
-      sandbox.stub(vm, 'fetchEvent');
-
-      // ACT
-      vm.$lifecycleMethods.created();
-
-      // ASSERT
-      expect(vm.fetchEvent).to.have.been.calledOnce;
     });
   });
 });

@@ -8,8 +8,11 @@ const Project = bookshelf.Model.extend({
     return this.belongsTo('Event');
   },
   // Relations
-  members() {
+  users() {
     return this.belongsToMany('User').through('ProjectUsers');
+  },
+  members() {
+    return this.belongsToMany('User').through('ProjectUsers').query(q => q.where('type', 'member'));
   },
   owner() {
     return this.belongsToMany('User').through('ProjectUsers').query(q => q.where('type', 'owner'));

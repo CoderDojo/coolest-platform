@@ -76,7 +76,7 @@ module.exports = {
 
   param: (req, res, next, id) =>
     projectController
-      .get({ id }, ['owner'])
+      .get({ id }, ['owner', 'supervisor', 'members'])
       .then((param) => {
         req.app.locals.project = param;
         next();

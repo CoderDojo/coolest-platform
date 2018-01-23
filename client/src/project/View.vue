@@ -6,28 +6,10 @@
 </template>
 
 <script>
-  import ProjectService from '@/project/service';
+  import FetchProjectMixin from '@/project/FetchProjectMixin';
 
   export default {
     name: 'ViewProject',
-    props: {
-      id: {
-        type: String,
-        required: true,
-      },
-    },
-    data() {
-      return {
-        project: {},
-      };
-    },
-    methods: {
-      async fetchProject() {
-        this.project = (await ProjectService.get(this.id)).body;
-      },
-    },
-    created() {
-      this.fetchProject();
-    },
+    mixins: [FetchProjectMixin],
   };
 </script>

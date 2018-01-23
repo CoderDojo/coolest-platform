@@ -21,7 +21,7 @@ module.exports.define = (apiPrefix) => {
       }],
     },
     {
-      roles: ['basic'],
+      roles: ['basic', 'admin'],
       allows: [{
         resources: `${apiPrefix}/:id`,
         permissions: ['get', 'patch'],
@@ -32,7 +32,7 @@ module.exports.define = (apiPrefix) => {
 
 module.exports.isAllowed = (req, res, next) => {
   if (req.params.id) {
-    if (req.app.locals.project && req.app.locals.project.isOwner(req.user.userId)) {
+    if ((req.app.locals.project && req.app.locals.project.isOwner(req.user.userId)) || req.user.role === 'admin') {
       return next();
     }
     return utils.disallowed(next);

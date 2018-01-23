@@ -3,21 +3,16 @@ import CreateProject from '!!vue-loader?inject!@/project/Create';
 
 describe('Create Project component', () => {
   let sandbox;
-  let EventServiceMock;
   let ProjectServiceMock;
   let vm;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    EventServiceMock = {
-      get: sandbox.stub(),
-    };
     ProjectServiceMock = {
       get: sandbox.stub(),
       create: sandbox.stub(),
     };
     vm = vueUnitHelper(CreateProject({
-      '@/event/service': EventServiceMock,
       '@/project/service': ProjectServiceMock,
     }));
   });
@@ -27,20 +22,6 @@ describe('Create Project component', () => {
   });
 
   describe('methods', () => {
-    describe('fetchEvent', () => {
-      it('should fetch the event using EventService', async () => {
-        // ARRANGE
-        vm.eventSlug = 'foo';
-        EventServiceMock.get.withArgs('foo').resolves({ body: 'bar' });
-
-        // ACT
-        await vm.fetchEvent();
-
-        // ASSERT
-        expect(vm.event).to.equal('bar');
-      });
-    });
-
     describe('onSubmit', () => {
       it('should remove the beforeunload event and set submitted to true', async () => {
         // ARRANGE
@@ -182,19 +163,6 @@ describe('Create Project component', () => {
         expect(e.returnValue).to.equal(expectedString);
         expect(res).to.equal(expectedString);
       });
-    });
-  });
-
-  describe('created', () => {
-    it('should fetch the event', () => {
-      // ARRANGE
-      sandbox.stub(vm, 'fetchEvent');
-
-      // ACT
-      vm.$lifecycleMethods.created();
-
-      // ASSERT
-      expect(vm.fetchEvent).to.have.been.calledOnce;
     });
   });
 

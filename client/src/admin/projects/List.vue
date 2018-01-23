@@ -9,24 +9,19 @@
       <span slot="category" slot-scope="props">{{ event.categories[props.row.category] }}</span>
       <a v-if="props.row.owner" slot="owner.email" slot-scope="props" :href="`mailto:${props.row.owner.email}`">{{ props.row.owner.email }}</a>
       <a v-if="props.row.supervisor" slot="supervisor.email" slot-scope="props" :href="`mailto:${props.row.supervisor.email}`">{{ props.row.supervisor.email }}</a>
+      <router-link class="fa fa-eye" slot="view" slot-scope="props" :to="{ name: 'AdminProjectsView', params: { projectId: props.row.id, eventSlug, _project: props.row, _event: event } }"></router-link>
     </v-server-table>
   </div>
 </template>
 
 <script>
-  import EventService from '@/event/service';
+  import FetchEventMixin from '@/event/FetchEventMixin';
 
   export default {
     name: 'AdminProjects',
-    props: {
-      eventSlug: {
-        required: true,
-        type: String,
-      },
-    },
+    mixins: [FetchEventMixin],
     data() {
       return {
-        event: {},
         columns: [
           'name',
           'category',
@@ -34,6 +29,7 @@
           'updatedAt',
           'owner.email',
           'supervisor.email',
+          'view',
         ],
         tableState: {},
       };
@@ -45,6 +41,14 @@
           filterable: [
             'name',
             'category',
+            'owner.email',
+            'supervisor.email',
+          ],
+          sortable: [
+            'name',
+            'category',
+            'createdAt',
+            'updatedAt',
             'owner.email',
             'supervisor.email',
           ],
@@ -61,6 +65,7 @@
             updatedAt: 'Updated At',
             'owner.email': 'Owner Email',
             'supervisor.email': 'Supervisor Email',
+            view: '',
           },
           highlightMatches: true,
           orderBy: {
@@ -108,20 +113,10 @@
       },
     },
     methods: {
-      async fetchEvent() {
-        this.event = (await EventService.get(this.eventSlug)).body;
-      },
       requestAdapter(data) {
         this.tableState = data;
         return data;
       },
     },
-    created() {
-      this.fetchEvent();
-    },
   };
 </script>
-
-<style lang="scss">
-  @import '~bootstrap/dist/css/bootstrap.min.css';
-</style>

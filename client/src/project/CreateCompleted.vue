@@ -26,57 +26,15 @@ The next step, have fun and keep building your project!</p>
 
 <script>
   import moment from 'moment';
-  import EventService from '@/event/service';
-  import ProjectService from '@/project/service';
+  import FetchProjectMixin from '@/project/FetchProjectMixin';
 
   export default {
     name: 'CreateProjectCompleted',
-    props: {
-      eventSlug: {
-        type: String,
-        required: true,
-      },
-      projectId: {
-        type: String,
-        required: true,
-      },
-      _event: {
-        type: Object,
-      },
-      _project: {
-        type: Object,
-      },
-    },
-    data() {
-      return {
-        event: null,
-        project: null,
-      };
-    },
+    mixins: [FetchProjectMixin],
     computed: {
       eventDateFormatted() {
         return moment.utc(this.event.date).format('MMM Do');
       },
-    },
-    methods: {
-      async fetchEvent() {
-        this.event = (await EventService.get(this.eventSlug)).body;
-      },
-      async fetchProject() {
-        this.project = (await ProjectService.get(this.event.id, this.projectId)).body;
-      },
-    },
-    async created() {
-      if (this._event) {
-        this.event = this._event;
-      } else {
-        await this.fetchEvent();
-      }
-      if (this._project) {
-        this.project = this._project;
-      } else {
-        this.fetchProject();
-      }
     },
   };
 </script>

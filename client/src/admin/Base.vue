@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav class="navbar navbar-branding">
-      <span>Coolest Projects Admin</span>
+      <router-link :to="{ name: 'Admin' }">Coolest Projects Admin</router-link>
     </nav>
     <div class="container-fluid">
       <router-view></router-view>
@@ -15,10 +15,15 @@
   };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+  @import '~bootstrap/dist/css/bootstrap.min.css';
+
   .navbar-branding {
-    color: #fff;
     background: #E73359;
     margin-bottom: 15px;
+
+    a {
+      color: #fff;
+    }
   }
 </style>
