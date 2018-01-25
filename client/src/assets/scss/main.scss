@@ -101,6 +101,7 @@ textarea {
 
   &.disabled, &.disabled:hover {
     background-color: $coolest-grey;
+    border: solid 1px $coolest-border;
     box-shadow: none;
     color: $coolest-black;
     cursor: default;
