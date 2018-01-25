@@ -7,6 +7,10 @@
     </div>
     <v-server-table v-if="event.id" :url="tableUrl" :columns="columns" :options="options">
       <span slot="category" slot-scope="props">{{ event.categories[props.row.category] }}</span>
+      <span v-if="props.row.org" slot="org" slot-scope="props">
+        <a v-if="props.row.org === 'coderdojo'" :href="`https://zen.coderdojo.com/dojos/${props.row.orgRef}`">CoderDojo</a>
+        <span v-else>{{ props.row.org }}</span>
+      </span>
       <a v-if="props.row.owner" slot="owner.email" slot-scope="props" :href="`mailto:${props.row.owner.email}`">{{ props.row.owner.email }}</a>
       <a v-if="props.row.supervisor" slot="supervisor.email" slot-scope="props" :href="`mailto:${props.row.supervisor.email}`">{{ props.row.supervisor.email }}</a>
       <router-link class="fa fa-eye" slot="view" slot-scope="props" :to="{ name: 'AdminProjectsView', params: { projectId: props.row.id, eventSlug, _project: props.row, _event: event } }"></router-link>
@@ -27,6 +31,7 @@
           'category',
           'createdAt',
           'updatedAt',
+          'org',
           'owner.email',
           'supervisor.email',
           'view',
@@ -41,6 +46,7 @@
           filterable: [
             'name',
             'category',
+            'org',
             'owner.email',
             'supervisor.email',
           ],
@@ -49,6 +55,7 @@
             'category',
             'createdAt',
             'updatedAt',
+            'org',
             'owner.email',
             'supervisor.email',
           ],
@@ -63,6 +70,7 @@
             name: 'Project Name',
             createdAt: 'Created At',
             updatedAt: 'Updated At',
+            org: 'Organisation',
             'owner.email': 'Owner Email',
             'supervisor.email': 'Supervisor Email',
             view: '',
@@ -74,6 +82,24 @@
           },
           listColumns: {
             category: this.categoriesFilterOptions,
+            org: [
+              {
+                id: 'coderdojo',
+                text: 'CoderDojo',
+              },
+              {
+                id: 'codeclub',
+                text: 'Code Club',
+              },
+              {
+                id: 'raspberryjam',
+                text: 'Raspberry Jam',
+              },
+              {
+                id: 'pioneers',
+                text: 'Pioneers',
+              },
+            ],
           },
           requestAdapter: this.requestAdapter,
         };
