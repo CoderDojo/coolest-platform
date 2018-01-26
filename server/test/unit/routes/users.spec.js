@@ -63,18 +63,22 @@ describe('router: user', () => {
       expect(nextMock).to.have.been.calledTwice;
     });
 
-    it('should allow login for existing user without project', async () => {
+    it('should reauth an existing user', async () => {
       const postController = sandbox.stub();
       const getController = sandbox.stub();
       const refreshController = sandbox.stub();
       const mockUser = { email: 'text@example.com' };
-      const mockAnswer = Object.assign({}, mockUser, { auth: { id: '111' } }, { project: [] });
+      const mockAnswer = Object.assign({}, mockUser, { auth: { id: '111' } });
+      const sendReturningAuthEmail = sandbox.stub().resolves();
       const mockReq = {
-        body: mockUser,
+        body: Object.assign(mockUser, { eventSlug: 'cp-2018' }),
         app: {
           locals: {
             logger: {
               error: loggerStub,
+            },
+            mailing: {
+              sendReturningAuthEmail,
             },
           },
         },
@@ -91,25 +95,35 @@ describe('router: user', () => {
       await handler(mockReq, mockRes, nextMock);
       expect(postController).to.have.been.calledWith({ email: mockReq.body.email });
       expect(getController).to.have.been.calledOnce;
-      expect(getController).to.have.been.calledWith({ email: mockReq.body.email }, ['project', sinon.match.object]);
+      expect(getController).to.have.been.calledWith(
+        { email: mockReq.body.email },
+        [sinon.match.object],
+      );
       expect(refreshController).to.have.been.calledOnce;
       expect(refreshController).to.have.been.calledWith('111');
-      expect(loggerStub).to.not.have.been.called;
-      expect(jsonStub).to.have.been.calledWith({ user: mockUser, auth: { id: '111', token: 'new' } });
-      expect(nextMock).to.have.been.calledTwice;
+      expect(sendReturningAuthEmail).to.have.been.calledOnce;
+      expect(sendReturningAuthEmail).to.have.been.calledWith(mockUser.email, 'cp-2018', 'new');
+      expect(loggerStub).to.have.been.calledOnce;
+      expect(loggerStub).to.have.been.calledWith(mockErr);
+      expect(jsonStub).to.not.have.been.called;
+      expect(nextMock).to.have.been.calledThrice;
     });
 
-    it('should disallow login for existing user with project', async () => {
+    it('should disallow login for admins', async () => {
       const postController = sandbox.stub();
       const getController = sandbox.stub();
-      const mockUser = { email: 'text@example.com' };
-      const mockAnswer = Object.assign({}, mockUser, { auth: {} }, { project: { id: 1 } });
+      const mockUser = { email: 'hello@coolestprojects.org' };
+      const mockAnswer = Object.assign({}, mockUser);
+      const sendReturningAuthEmail = sandbox.stub().resolves();
       const mockReq = {
-        body: mockUser,
+        body: Object.assign(mockUser, { eventSlug: 'cp-2018' }),
         app: {
           locals: {
             logger: {
               error: loggerStub,
+            },
+            mailing: {
+              sendReturningAuthEmail,
             },
           },
         },
@@ -125,12 +139,15 @@ describe('router: user', () => {
       await handler(mockReq, mockRes, nextMock);
       expect(postController).to.have.been.calledWith({ email: mockReq.body.email });
       expect(getController).to.have.been.calledOnce;
-      expect(getController).to.have.been.calledWith({ email: mockReq.body.email }, ['project', sinon.match.object]);
+      expect(getController).to.have.been.calledWith(
+        { email: mockReq.body.email },
+        [sinon.match.object],
+      );
       expect(loggerStub).to.have.been.calledOnce;
-      expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
+      expect(loggerStub.getCall(0).args[0].message).to.equal('Fake err');
+      expect(loggerStub.getCall(0).args[0].status).to.equal(401);
+      expect(jsonStub).to.not.have.been.called;
       expect(nextMock).to.have.been.calledThrice;
-      expect(nextMock.getCall(2).args[0].message).to.equal('Error while saving a user.');
-      expect(nextMock.getCall(2).args[0].status).to.equal(409);
     });
 
     it('should log generic error triggered by the controller', async () => {
