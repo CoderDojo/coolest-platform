@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 const AuthService = {
-  auth: email => Vue.http.post('/api/v1/auth', { email }),
+  authToken: token => Vue.http.post('/api/v1/auth/token', { token }),
 };
 
 export default AuthService;
