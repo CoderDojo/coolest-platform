@@ -4,7 +4,6 @@ import Auth from '!!vue-loader?inject!@/event/Auth';
 describe('Auth component', () => {
   let sandbox;
   let CookieMock;
-  let AuthServiceMock;
   let UserServiceMock;
   let vm;
 
@@ -12,9 +11,6 @@ describe('Auth component', () => {
     sandbox = sinon.sandbox.create();
     CookieMock = {
       set: sandbox.stub(),
-    };
-    AuthServiceMock = {
-      auth: sandbox.stub(),
     };
     UserServiceMock = {
       create: sandbox.stub(),
@@ -35,21 +31,6 @@ describe('Auth component', () => {
 
   describe('methods', () => {
     describe('onSubmit', () => {
-      it.skip('should navigate to auth-email when auth succeeds', async () => {
-        // ARRANGE
-        vm.email = 'example@example.com';
-        AuthServiceMock.auth.withArgs(vm.email).resolves();
-
-        // ACT
-        await vm.onSubmit();
-
-        // ASSERT
-        expect(AuthServiceMock.auth).to.have.been.calledOnce;
-        expect(vm.$router.push).to.have.been.calledOnce;
-        expect(vm.$router.push).to.have.been.calledWith({ name: 'AuthEmail' });
-        expect(UserServiceMock.create).to.not.have.been.called;
-      });
-
       it('should create a user and navigate to create-project', async () => {
         // ARRANGE
         vm.email = 'example@example.com';
