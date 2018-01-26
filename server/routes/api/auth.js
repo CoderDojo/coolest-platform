@@ -7,7 +7,12 @@ module.exports = (router, prefix) => {
   router.post(`${base}/token`, async (req, res, next) =>
     authHandler
       .verify(req.body.token, 'basic')
-      .then(auth => res.status(auth ? 204 : 401).send())
+      .then((auth) => {
+        if (auth && auth.userId) {
+          return res.status(200).json(auth);
+        }
+        return Promise.reject(new Error('Authentication not found'));
+      })
       .catch((e) => {
         req.app.locals.logger.error(e);
         const err = new Error('Invalid authentication');

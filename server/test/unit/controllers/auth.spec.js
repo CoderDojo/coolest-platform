@@ -111,7 +111,8 @@ describe('auth controllers', () => {
       expect(authModel.verifyToken).to.have.been.calledOnce;
       expect(authModel.verifyToken).to.have.been.calledWith(token);
       // Return a truthy value if found
-      expect(res).to.be.true;
+      expect(Object.keys(res)).to.eql(['userId']);
+      expect(res.userId).to.be.equal('xxxx');
     });
 
 
