@@ -24,7 +24,8 @@ class Auth {
       .fetch()
       .then((auth) => {
         if (auth) {
-          return !!AuthModel.verifyToken(token);
+          const authorisation = AuthModel.verifyToken(token);
+          return { userId: authorisation.data };
         }
         throw new Error('Invalid token');
       });

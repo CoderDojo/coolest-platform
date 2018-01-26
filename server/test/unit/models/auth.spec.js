@@ -44,17 +44,40 @@ describe('auth model', () => {
   });
 
   describe('verifyToken', () => {
-    it('should use jwt', () => {
-      const verifySpy = sinon.spy(jsonwebtoken, 'verify');
+    afterEach(() => {
+      sandbox.reset();
+      sandbox.restore();
+    });
+    it('should return the decrypted token on success', () => {
+      const verifySpy = sandbox.spy(jsonwebtoken, 'verify');
       const auth = new Auth();
       const token = auth.createToken('user1');
-      Auth.verifyToken(token);
+      const res = Auth.verifyToken(token);
       expect(verifySpy).to.have.been.calledOnce;
       expect(verifySpy).to.have.been.calledWith(
         token,
         config.authSecret,
         { maxAge: config.authTimeout },
       );
+      expect(res.data).to.equal('user1');
+      expect(Object.keys(res)).to.eql(['data', 'iat', 'exp']);
+    });
+    it('should throw on error or falsy', () => {
+      const verifySpy = sandbox.spy(jsonwebtoken, 'verify');
+      const auth = new Auth();
+      let token = auth.createToken('user1');
+      token = token.substring(1);
+      try {
+        Auth.verifyToken(token);
+      } catch (e) {
+        expect(verifySpy).to.have.been.calledOnce;
+        expect(verifySpy).to.have.been.calledWith(
+          token,
+          config.authSecret,
+          { maxAge: config.authTimeout },
+        );
+        expect(e.message).to.equal('invalid token');
+      }
     });
   });
   describe('setPassword', () => {
