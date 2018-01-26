@@ -41,39 +41,24 @@ describe('integration: users', () => {
         });
     });
 
-    it('should return the user if there is no project', async () => {
-      const payload = { email: 'me@example.com' };
-      await new Promise(resolve => setTimeout(resolve, 1000))
-        .then(() => {
-          return request(app)
-            .post('/api/v1/users')
-            .set('Accept', 'application/json')
-            .send(payload)
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .then((res) => {
-              expect(res.body.auth.token).to.not.equal(refToken);
-              expect(res.body.user).to.have.all.keys(['email', 'createdAt', 'updatedAt', 'id', 'firstName', 'lastName', 'country', 'dob', 'gender', 'phone', 'specialRequirements']);
-              // eslint-disable-next-line max-len
-              expect(res.body.auth).to.have.all.keys(['userId', 'createdAt', 'updatedAt', 'id', 'token', 'role']);
-              expect(res.body.user.email).to.equal(payload.email);
-              expect(res.body.user.id).to.equal(res.body.auth.userId);
-              refToken = res.body.auth.token;
-            });
-        });
+    it('should send an auth email for a returning user', async () => {
+      const payload = { email: 'me@example.com', eventSlug: 'cp-2018' };
+      await request(app)
+        .post('/api/v1/users')
+        .set('Accept', 'application/json')
+        .send(payload)
+        .expect('Content-Type', /json/)
+        .expect(409);
     });
 
-    it('should not return an admin user if the admin user has no project', async () => {
-      const payload = { email: 'hello@coolestprojects.org' };
-      await new Promise(resolve => setTimeout(resolve, 1000))
-        .then(() => {
-          return request(app)
-            .post('/api/v1/users')
-            .set('Accept', 'application/json')
-            .send(payload)
-            .expect('Content-Type', /json/)
-            .expect(409);
-        });
+    it('should not work for admin user', async () => {
+      const payload = { email: 'hello@coolestprojects.org', eventSlug: 'cp-2018' };
+      await request(app)
+        .post('/api/v1/users')
+        .set('Accept', 'application/json')
+        .send(payload)
+        .expect('Content-Type', /json/)
+        .expect(401);
     });
 
     it('should not create a user when the email exists (case insensitive)', async () => {

@@ -13,6 +13,7 @@ services:
     working_dir: /usr/src/app
     environment:
       NODE_ENV: development
+      HOSTNAME: 'http://platform.local'
     ports:
       - 8080:8080
     volumes:

@@ -40,6 +40,27 @@ class Mailing {
       template_id: '6d20e65f-ae16-4b25-a17f-66d0398f474f',
     });
   }
+
+  sendReturningAuthEmail(email, slug, token) {
+    return this.send({
+      to: email,
+      from: {
+        email: 'enquiries+bot@coderdojo.org',
+        name: 'Coolest Projects',
+      },
+      reply_to: {
+        email: 'enquiries+bot@coderdojo.org',
+        name: 'Coolest Projects Support',
+      },
+      subject: 'Welcome on CP',
+      substitutions: {
+        email,
+        link: `${process.env.HOSTNAME}/event/${slug}/my-projects?token=${token}`,
+      },
+      categories: this.categories.concat(['cp-returning-auth']),
+      template_id: '9f9ecdb3-df2b-403a-9f79-c80f91adf0ca',
+    });
+  }
 }
 
 module.exports = Mailing;

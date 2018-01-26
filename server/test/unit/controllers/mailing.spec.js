@@ -109,5 +109,48 @@ describe('mailing controllers', () => {
         });
       });
     });
+
+    describe('sendReturningAuthEmail', () => {
+      it('should call the mailer instance', async () => {
+        // DATA
+        const apiKey = 'apiKey';
+        const configMock = { apiKey };
+        const email = 'dada@da';
+        const slug = 'cp-2018';
+        const token = 'newtoken';
+        // STUBS
+        const Mailing = proxy('../../../controllers/mailing', {
+          '@sendgrid/mail': {
+            setApiKey: setApiKeyStub,
+            setSubstitutionWrappers: setSubstitutionWrappersStub,
+            send: sendStub,
+          },
+        });
+        // ACT
+        const mailingController = new Mailing(configMock);
+        mailingController.sendReturningAuthEmail(email, slug, token);
+
+        // Build the request
+        expect(mailingController.mailer.send).to.have.been.calledOnce;
+        expect(mailingController.mailer.send).to.have.been.calledWith({
+          to: 'dada@da',
+          from: {
+            email: 'enquiries+bot@coderdojo.org',
+            name: 'Coolest Projects',
+          },
+          reply_to: {
+            email: 'enquiries+bot@coderdojo.org',
+            name: 'Coolest Projects Support',
+          },
+          subject: 'Welcome on CP',
+          substitutions: {
+            email,
+            link: 'http://platform.local/event/cp-2018/my-projects?token=newtoken',
+          },
+          categories: ['coolest-projects', 'cp-returning-auth'],
+          template_id: '9f9ecdb3-df2b-403a-9f79-c80f91adf0ca',
+        });
+      });
+    });
   });
 });
