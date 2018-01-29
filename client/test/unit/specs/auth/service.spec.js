@@ -9,16 +9,16 @@ describe('Auth service', () => {
     sandbox.restore();
   });
 
-  describe('auth()', () => {
-    it('should make a post call to /api/v1/auth with the given email', async () => {
+  describe('authToken()', () => {
+    it('should make a post call to /api/v1/auth/token with the given token', async () => {
       // ARRANGE
-      const email = 'example@example.com';
+      const token = 'some-token';
       sandbox.stub(Vue.http, 'post')
-        .withArgs('/api/v1/auth', { email })
+        .withArgs('/api/v1/auth/token', { token })
         .resolves('success');
 
       // ACT
-      const response = await AuthService.auth(email);
+      const response = await AuthService.authToken(token);
 
       // ASSERT
       expect(response).to.equal('success');

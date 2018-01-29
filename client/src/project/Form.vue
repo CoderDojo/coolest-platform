@@ -274,7 +274,7 @@
     </div>
     <div class="row">
       <div class="col text-center">
-        <button type="submit" class="btn btn-primary">Register project</button>
+        <button type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
       </div>
     </div>
     <div class="row">
@@ -295,6 +295,7 @@
   import { ModelListSelect } from 'vue-search-select';
   import { clone, pick } from 'lodash';
   import moment from 'moment';
+  import ProjectService from '@/project/service';
 
   export default {
     name: 'ProjectForm',
@@ -304,9 +305,6 @@
         type: Object,
       },
       project: {
-        type: Object,
-      },
-      error: {
         type: Object,
       },
     },
@@ -323,6 +321,8 @@
         supervisor: {},
         fromDojo: undefined,
         org: undefined,
+        submitted: false,
+        error: null,
       };
     },
     computed: {
@@ -367,6 +367,7 @@
           this.participants = project.users.filter(user => user.type === 'member').map((user) => {
             const _user = clone(user);
             _user.specialRequirementsProvided = !!user.specialRequirements;
+            _user.dob = new Date(user.dob);
             delete _user.type;
             return _user;
           });
@@ -374,6 +375,9 @@
           this.supervisor = clone(project.users.find(user => user.type === 'supervisor'));
           delete this.supervisor.type;
         },
+      },
+      submitButtonText() {
+        return this.projectDetails.id ? 'Update project' : 'Register project';
       },
     },
     watch: {
@@ -401,6 +405,7 @@
           query: {
             verified: 1,
             deleted: 0,
+            stage: { ne$: 4 },
             fields$: ['id', 'name'],
             sort$: {
               name: 1,
@@ -411,13 +416,73 @@
       async onSubmit() {
         const valid = await this.$validator.validateAll();
         if (valid) {
-          this.$emit('projectFormSubmitted', this.projectPayload);
+          let project;
+          if (this.projectPayload.id) {
+            project = await this.update();
+          } else {
+            project = await this.register();
+          }
+          window.removeEventListener('beforeunload', this.onBeforeUnload);
+          this.submitted = true;
+          this.$router.push({
+            name: this.event.questions && this.event.questions.length > 0 ? 'ProjectExtraDetails' : 'CreateProjectCompleted',
+            params: {
+              eventSlug: this.event.slug,
+              projectId: project.id,
+              _event: this.event,
+              _project: project,
+            },
+          });
         }
+      },
+      async register() {
+        try {
+          const project = (await ProjectService.create(this.event.id, this.projectPayload)).body;
+          this.$ga.event({
+            eventCategory: 'ProjectRegistration',
+            eventAction: 'NewProject',
+            eventLabel: this.event.id,
+          });
+          return project;
+        } catch (err) {
+          this.error = err;
+        }
+      },
+      async update() {
+        try {
+          const project =
+            (await ProjectService.update(this.event.id, this.project.id, this.projectPayload)).body;
+          this.$ga.event({
+            eventCategory: 'ProjectRegistration',
+            eventAction: 'UpdateProject',
+            eventLabel: this.event.id,
+          });
+          return project;
+        } catch (err) {
+          this.error = err;
+        }
+      },
+      onBeforeUnload(e) {
+        e.returnValue = 'Are you sure you don\'t want to complete your registration application?';
+        return 'Are you sure you don\'t want to complete your registration application?';
       },
       getAge: dob => moment().diff(dob, 'years'),
     },
     created() {
+      if (this.project) this.projectPayload = this.project;
+      window.addEventListener('beforeunload', this.onBeforeUnload);
       this.fetchDojos();
+    },
+    destroyed() {
+      window.removeEventListener('beforeunload', this.onBeforeUnload);
+    },
+    beforeRouteLeave(to, from, next) {
+      if (this.submitted) {
+        next();
+      } else {
+        // eslint-disable-next-line
+        next(confirm('Are you sure you don\'t want to complete your registration application?'));
+      }
     },
   };
 </script>

@@ -39,6 +39,7 @@ const events = [
 const projects = [
   {
     id: uuidv1(),
+    userId: users[0].id, // Only used to associate project with owner in json-server
     eventId,
     name: 'Super Awesome Project',
     category: 'scratch',
@@ -82,6 +83,7 @@ const projects = [
   },
   {
     id: uuidv1(),
+    userId: users[0].id, // Only used to associate project with owner in json-server
     eventId,
     name: 'Sweet Cool Project',
     category: 'hardware',
