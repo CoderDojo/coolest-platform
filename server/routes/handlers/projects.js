@@ -74,6 +74,19 @@ module.exports = {
     },
   ],
 
+  getUserProjects: [
+    // This is fairly lazy solution. Optimaly, the project_users relation should be loaded
+    // with their projects
+    (req, res) => {
+      const query = { 'owner.id': req.user.userId };
+      return projectController.getByEvent(req.params.eventId, { query }, true)
+        .then(projects => res.status(200).json({
+          data: projects.models,
+          count: projects.pagination.rowCount,
+        }));
+    },
+  ],
+
   param: (req, res, next, id) =>
     projectController
       .get({ id }, ['owner', 'supervisor', 'members'])

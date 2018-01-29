@@ -457,4 +457,56 @@ describe('router: project', () => {
       expect(nextMock.getCall(0).args[0].message).to.equal('Error while saving your project.');
     });
   });
+  describe('/users/:uId/projects', () => {
+    let handler;
+    let sandbox;
+    let errorHandler;
+    const projectController = class {};
+    before(() => {
+      sandbox = sinon.sandbox.create();
+      handlers = (proxy('../../../routes/handlers/projects', {
+        '../../controllers/projects': projectController,
+      })).getUserProjects;
+      errorHandler = sandbox.stub();
+      handler = (req, res, next) => {
+        return handlers[0](req, res, next)
+          .catch(err => errorHandler(err));
+      };
+    });
+
+    it('should applies params', async () => {
+      const getByEvent = sandbox.stub();
+      const json = sandbox.stub();
+      const status = sandbox.stub().returns({ json });
+      const next = sandbox.stub();
+      const userId = 'user1';
+      const eventId = 'event1';
+      const mockResponse = {
+        models: [],
+        pagination: {
+          rowCount: 0,
+        },
+      };
+      projectController.getByEvent = getByEvent.resolves(mockResponse);
+      const req = {
+        user: {
+          userId,
+        },
+        params: {
+          eventId,
+        },
+      };
+      const res = {
+        status,
+      };
+      await handler(req, res, next);
+      expect(getByEvent).to.have.been.calledOnce;
+      expect(getByEvent).to.have.been.calledWith(eventId, { query: { 'owner.id': userId } });
+      expect(status).to.have.been.calledOnce;
+      expect(status).to.have.been.calledWith(200);
+      expect(json).to.have.been.calledOnce;
+      expect(json).to.have.been.calledWith({ data: [], count: 0 });
+      expect(next).to.not.have.been.called;
+    });
+  });
 });

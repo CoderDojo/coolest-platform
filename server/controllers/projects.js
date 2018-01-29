@@ -8,6 +8,7 @@ class Project {
   static post(creator, project, eventId) {
     // TODO : apply endpoint validation
     // TODO : transaction
+    // TODO : split into handler 
     const projectPayload = Object.assign(
       {},
       pick(project, ['name', 'category', 'description', 'org', 'orgRef']),
