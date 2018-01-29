@@ -67,9 +67,9 @@ class Project {
     return ProjectModel.where(identifier).fetch({ withRelated });
   }
 
-  static getByEvent(eventId, query, paginated) {
-    const projects = ProjectModel.where({ event_id: eventId })
-      .adminView(query.query)
+  static getExtended(query, paginated) {
+    const projects = new ProjectModel()
+      .joinView(query.query)
       .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === '1' ? 'asc' : 'desc');
     if (paginated) {
       return projects.fetchPage({
