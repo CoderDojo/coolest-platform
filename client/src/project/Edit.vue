@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div v-if="event.id && project.id">
     <h2>Edit Project {{ project.name }}</h2>
-    <project-form :event="eventId" :project="project"></project-form>
+    <project-form :event="event" :project="project"></project-form>
   </div>
 </template>
 

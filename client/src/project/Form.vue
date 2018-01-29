@@ -78,7 +78,7 @@
               :isError="errors.has('orgRef')"></model-list-select>
           </div>
         </div>
-        <span class="error-message" v-show="errors.has('orgRef:required')">* If you attend a Dojo, you must select which Dojo</span>
+        <span class="error-message" v-show="org === 'coderdojo' && errors.has('orgRef:required')">* If you attend a Dojo, you must select which Dojo</span>
       </div>
     </div>
     <div v-show="org && org !== 'coderdojo'" class="row">
@@ -274,7 +274,7 @@
     </div>
     <div class="row">
       <div class="col text-center">
-        <button type="submit" class="btn btn-primary">Register project</button>
+        <button type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
       </div>
     </div>
     <div class="row">
@@ -295,6 +295,7 @@
   import { ModelListSelect } from 'vue-search-select';
   import { clone, pick } from 'lodash';
   import moment from 'moment';
+  import ProjectService from '@/project/service';
 
   export default {
     name: 'ProjectForm',
@@ -304,9 +305,6 @@
         type: Object,
       },
       project: {
-        type: Object,
-      },
-      error: {
         type: Object,
       },
     },
@@ -321,8 +319,9 @@
         projectDetails: {},
         participants: [{ specialRequirementsProvided: false }],
         supervisor: {},
-        fromDojo: undefined,
         org: undefined,
+        submitted: false,
+        error: null,
       };
     },
     computed: {
@@ -338,6 +337,7 @@
           ]);
           project.users = this.participants.map((participant) => {
             const _participant = pick(participant, [
+              'id',
               'firstName',
               'lastName',
               'dob',
@@ -350,6 +350,7 @@
           project.users = [
             ...project.users,
             {
+              id: this.supervisor.id,
               firstName: this.supervisor.firstName,
               lastName: this.supervisor.lastName,
               email: this.supervisor.email,
@@ -364,24 +365,32 @@
           this.projectDetails = pick(project, [
             'id', 'name', 'description', 'category', 'org', 'orgRef',
           ]);
-          this.participants = project.users.filter(user => user.type === 'member').map((user) => {
+          this.org = project.org;
+          this.participants = project.members.map((user) => {
             const _user = clone(user);
             _user.specialRequirementsProvided = !!user.specialRequirements;
+            _user.dob = new Date(user.dob);
             delete _user.type;
             return _user;
           });
           this.numParticipants = this.participants.length;
-          this.supervisor = clone(project.users.find(user => user.type === 'supervisor'));
+          this.supervisor = project.supervisor;
           delete this.supervisor.type;
         },
+      },
+      submitButtonText() {
+        return this.projectDetails.id ? 'Update project' : 'Register project';
       },
     },
     watch: {
       org(newOrg) {
-        this.projectDetails.orgRef = undefined;
-        this.projectDetails.org = newOrg;
+        if (this.projectDetails.org !== newOrg) {
+          this.projectDetails.orgRef = undefined;
+          this.projectDetails.org = newOrg;
+        }
       },
-      numParticipants(newLength, oldLength) {
+      numParticipants(newLength) {
+        const oldLength = this.participants.length;
         if (newLength > oldLength) {
           for (let i = 0; i < newLength - oldLength; i += 1) {
             this.participants.push({ specialRequirementsProvided: false });
@@ -390,10 +399,6 @@
           this.participants.splice(newLength, oldLength - newLength);
         }
       },
-      fromDojo() {
-        delete this.projectDetails.dojoId;
-        delete this.projectDetails.alternativeReference;
-      },
     },
     methods: {
       async fetchDojos() {
@@ -401,6 +406,7 @@
           query: {
             verified: 1,
             deleted: 0,
+            stage: { ne$: 4 },
             fields$: ['id', 'name'],
             sort$: {
               name: 1,
@@ -411,13 +417,74 @@
       async onSubmit() {
         const valid = await this.$validator.validateAll();
         if (valid) {
-          this.$emit('projectFormSubmitted', this.projectPayload);
+          let project;
+          if (this.projectPayload.id) {
+            project = await this.update();
+          } else {
+            project = await this.register();
+          }
+          window.removeEventListener('beforeunload', this.onBeforeUnload);
+          this.submitted = true;
+          this.$router.push({
+            name: this.event.questions && this.event.questions.length > 0 ? 'ProjectExtraDetails' : 'CreateProjectCompleted',
+            params: {
+              eventSlug: this.event.slug,
+              projectId: project.id,
+              _event: this.event,
+              _project: project,
+            },
+          });
         }
+      },
+      async register() {
+        try {
+          const project = (await ProjectService.create(this.event.id, this.projectPayload)).body;
+          this.$ga.event({
+            eventCategory: 'ProjectRegistration',
+            eventAction: 'NewProject',
+            eventLabel: this.event.id,
+          });
+          return project;
+        } catch (err) {
+          this.error = err;
+        }
+      },
+      async update() {
+        try {
+          const project =
+            (await ProjectService.update(this.event.id, this.project.id, this.projectPayload)).body;
+          this.$ga.event({
+            eventCategory: 'ProjectRegistration',
+            eventAction: 'UpdateProject',
+            eventLabel: this.event.id,
+          });
+          return project;
+        } catch (err) {
+          this.error = err;
+        }
+      },
+      onBeforeUnload(e) {
+        const msg = 'Are you sure you don\'t want to complete your registration application?';
+        e.returnValue = msg;
+        return msg;
       },
       getAge: dob => moment().diff(dob, 'years'),
     },
     created() {
+      if (this.project) this.projectPayload = this.project;
+      window.addEventListener('beforeunload', this.onBeforeUnload);
       this.fetchDojos();
+    },
+    destroyed() {
+      window.removeEventListener('beforeunload', this.onBeforeUnload);
+    },
+    beforeRouteLeave(to, from, next) {
+      if (this.submitted) {
+        next();
+      } else {
+        // eslint-disable-next-line
+        next(confirm('Are you sure you don\'t want to complete your registration application?'));
+      }
     },
   };
 </script>
