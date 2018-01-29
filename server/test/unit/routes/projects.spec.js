@@ -504,7 +504,7 @@ describe('router: project', () => {
       };
       await handler(req, res, next);
       expect(getExtended).to.have.been.calledOnce;
-      expect(getExtended).to.have.been.calledWith({ query: { event_id: eventId, 'owner.id': userId } });
+      expect(getExtended).to.have.been.calledWith({ scopes: { 'owner.id': userId, event_id: eventId } });
       expect(status).to.have.been.calledOnce;
       expect(status).to.have.been.calledWith(200);
       expect(json).to.have.been.calledOnce;

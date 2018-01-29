@@ -70,6 +70,12 @@ class Project {
   static getExtended(query, paginated) {
     const projects = new ProjectModel()
       .joinView(query.query)
+      .query((qb) => {
+        Object.keys(query.scopes).forEach((field) => {
+          const value = query.scopes[field];
+          qb.andWhere(snakeCase(field), '=', value);
+        });
+      })
       .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === '1' ? 'asc' : 'desc');
     if (paginated) {
       return projects.fetchPage({

@@ -45,8 +45,7 @@ module.exports = {
   getAll: [
     (req, res) => {
       const paginated = !(req.query.format && req.query.format === 'csv');
-      req.query.query = req.query.query || {};
-      req.query.query.event_id = req.params.eventId;
+      req.query.scopes = { event_id: req.params.eventId };
       return projectController
         .getExtended(req.query, paginated)
         .then((projects) => {
@@ -80,8 +79,8 @@ module.exports = {
     // This is fairly lazy solution. Optimaly, the project_users relation should be loaded
     // with their projects
     (req, res) => {
-      const query = { 'owner.id': req.user.userId, event_id: req.params.eventId };
-      return projectController.getExtended({ query }, true)
+      const scopes = { 'owner.id': req.user.userId, event_id: req.params.eventId };
+      return projectController.getExtended({ scopes }, true)
         .then(projects => res.status(200).json({
           data: projects.models,
           count: projects.pagination.rowCount,

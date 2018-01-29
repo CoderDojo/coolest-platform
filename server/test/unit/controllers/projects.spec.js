@@ -234,9 +234,17 @@ describe('projects controllers', () => {
       projectInstance.orderBy = sinon.stub().returns(projectInstance);
       projectInstance.fetchPage = sinon.stub().returns(projectInstance);
       projectInstance.joinView = sinon.stub().returns(projectInstance);
+      projectInstance.query = sinon.stub().returns(projectInstance);
+      projectInstance.andWhere = sinon.stub().returns(projectInstance);
+      projectInstance.query = sinon.stub()
+        .callsArgWith(0, projectInstance)
+        .returns(projectInstance);
 
-      await controllers.getExtended({ query: { event_id: 'event1' } }, true);
+      await controllers.getExtended({ scopes: { event_id: 'event1' } }, true);
       expect(projectInstance.joinView).to.have.been.calledOnce;
+      expect(projectInstance.joinView).to.have.been.calledWith(undefined);
+      expect(projectInstance.andWhere).to.have.been.calledOnce;
+      expect(projectInstance.andWhere).to.have.been.calledWith('event_id', '=', 'event1');
       expect(projectInstance.orderBy).to.have.been.calledWith('created_at', 'desc');
       expect(projectInstance.fetchPage).to.have.been.calledWith({ pageSize: 25, page: 1, withRelated: ['owner', 'supervisor', 'members'] });
     });
@@ -245,19 +253,29 @@ describe('projects controllers', () => {
       projectInstance.orderBy = sinon.stub().returns(projectInstance);
       projectInstance.fetchPage = sinon.stub().returns(projectInstance);
       projectInstance.joinView = sinon.stub().returns(projectInstance);
+      projectInstance.andWhere = sinon.stub().returns(projectInstance);
+      projectInstance.query = sinon.stub()
+        .callsArgWith(0, projectInstance)
+        .returns(projectInstance);
 
       await controllers.getExtended({
         orderBy: 'bananaSplit',
         ascending: '1',
         query: {
           name: 'aa',
+        },
+        scopes: {
           event_id: 'event1',
+          'owner.id': 'user1',
         },
         page: 2,
         limit: 30,
       }, true);
       expect(projectInstance.joinView).to.have.been.calledOnce;
-      expect(projectInstance.joinView).to.have.been.calledWith({ event_id: 'event1', name: 'aa' });
+      expect(projectInstance.joinView).to.have.been.calledWith({ name: 'aa' });
+      expect(projectInstance.andWhere).to.have.been.calledTwice;
+      expect(projectInstance.andWhere.getCall(0)).to.have.been.calledWith('event_id', '=', 'event1');
+      expect(projectInstance.andWhere.getCall(1)).to.have.been.calledWith('owner.id', '=', 'user1');
       expect(projectInstance.orderBy).to.have.been.calledWith('banana_split', 'asc');
       expect(projectInstance.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor', 'members'] });
     });
@@ -266,19 +284,22 @@ describe('projects controllers', () => {
       projectInstance.orderBy = sinon.stub().returns(projectInstance);
       projectInstance.fetchAll = sinon.stub().returns(projectInstance);
       projectInstance.joinView = sinon.stub().returns(projectInstance);
+      projectInstance.query = sinon.stub().returns(projectInstance);
 
       await controllers.getExtended({
         orderBy: 'banana',
         ascending: '1',
         query: {
           name: 'aa',
+        },
+        scopes: {
           event_id: 'event1',
         },
         page: 2,
         limit: 30,
       });
       expect(projectInstance.joinView).to.have.been.calledOnce;
-      expect(projectInstance.joinView).to.have.been.calledWith({ event_id: 'event1', name: 'aa' });
+      expect(projectInstance.joinView).to.have.been.calledWith({ name: 'aa' });
       expect(projectInstance.orderBy).to.have.been.calledWith('banana', 'asc');
       expect(projectInstance.fetchAll).to.have.been.calledWith({ withRelated: ['owner', 'supervisor', 'members'] });
     });
