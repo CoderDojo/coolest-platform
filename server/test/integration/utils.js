@@ -39,13 +39,16 @@ module.exports = (app) => {
       .get(`/api/v1/events/${slug}`);
   }
 
-  function createUser(email) {
+  function createUser(email, full) {
     return request(app)
       .post('/api/v1/users')
       .set('Accept', 'application/json')
       .send({ email })
       .then((res) => {
-        return Promise.resolve(res.body.auth.token);
+        if (!full) {
+          return Promise.resolve(res.body.auth.token);
+        }
+        return Promise.resolve(res.body);
       });
   }
 

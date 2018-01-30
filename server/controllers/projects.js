@@ -8,6 +8,7 @@ class Project {
   static post(creator, project, eventId) {
     // TODO : apply endpoint validation
     // TODO : transaction
+    // TODO : split into handler 
     const projectPayload = Object.assign(
       {},
       pick(project, ['name', 'category', 'description', 'org', 'orgRef']),
@@ -66,9 +67,15 @@ class Project {
     return ProjectModel.where(identifier).fetch({ withRelated });
   }
 
-  static getByEvent(eventId, query, paginated) {
-    const projects = ProjectModel.where({ event_id: eventId })
-      .adminView(query.query)
+  static getExtended(query, paginated) {
+    const projects = new ProjectModel()
+      .joinView(query.query)
+      .query((qb) => {
+        Object.keys(query.scopes).forEach((field) => {
+          const value = query.scopes[field];
+          qb.andWhere(snakeCase(field), '=', value);
+        });
+      })
       .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === '1' ? 'asc' : 'desc');
     if (paginated) {
       return projects.fetchPage({

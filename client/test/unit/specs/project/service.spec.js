@@ -10,15 +10,16 @@ describe('Project service', () => {
   });
 
   describe('list()', () => {
-    it('should make a get call to /api/v1/events/:eventId/projects with given eventId', async () => {
+    it('should make a get call to /api/v1/events/:eventId/users/:userId/projects with given eventId and userId', async () => {
       // ARRANGE
-      const eventId = 'cp2018';
+      const eventId = 'foo';
+      const userId = 'bar';
       sandbox.stub(Vue.http, 'get')
-        .withArgs(`/api/v1/events/${eventId}/projects`)
+        .withArgs(`/api/v1/events/${eventId}/users/${userId}/projects`)
         .resolves('success');
 
       // ACT
-      const response = await ProjectService.list(eventId);
+      const response = await ProjectService.list(eventId, userId);
 
       // ASSERT
       expect(response).to.equal('success');

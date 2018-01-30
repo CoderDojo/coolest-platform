@@ -253,7 +253,7 @@ describe('router: project', () => {
       handler = (req, res, next) => {
         return handlers[0](req, res, next);
       };
-      projectController.getByEvent = sandbox.stub();
+      projectController.getExtended = sandbox.stub();
     });
 
     beforeEach(() => {
@@ -277,15 +277,16 @@ describe('router: project', () => {
           rowCount: 0,
         },
       };
-      projectController.getByEvent.resolves(res);
+      const mockQuery = mockReq.query;
+      mockQuery.event_id = mockReq.params;
+      projectController.getExtended.resolves(res);
       await handler(mockReq, mockRes);
 
       expect(mockRes.status).to.have.been.calledOnce;
       expect(mockRes.status).to.have.been.calledWith(200);
-      expect(projectController.getByEvent).to.have.been.calledOnce;
-      expect(projectController.getByEvent).to.have.been.calledWith(
-        mockReq.params.eventId,
-        mockReq.query,
+      expect(projectController.getExtended).to.have.been.calledOnce;
+      expect(projectController.getExtended).to.have.been.calledWith(
+        mockQuery,
         true,
       );
       expect(json).to.have.been.calledOnce;
@@ -311,16 +312,17 @@ describe('router: project', () => {
         },
         toJSON: sandbox.stub(),
       };
+      const mockQuery = mockReq.query;
+      mockQuery.event_id = mockReq.params;
       res.toJSON.returns(res.models);
-      projectController.getByEvent.resolves(res);
+      projectController.getExtended.resolves(res);
       await handler(mockReq, mockRes);
 
       expect(mockRes.status).to.have.been.calledOnce;
       expect(mockRes.status).to.have.been.calledWith(200);
-      expect(projectController.getByEvent).to.have.been.calledOnce;
-      expect(projectController.getByEvent).to.have.been.calledWith(
-        mockReq.params.eventId,
-        mockReq.query,
+      expect(projectController.getExtended).to.have.been.calledOnce;
+      expect(projectController.getExtended).to.have.been.calledWith(
+        mockQuery,
         false,
       );
       expect(mockRes.setHeader).to.have.been.calledOnce;
@@ -359,16 +361,17 @@ describe('router: project', () => {
         },
         toJSON: sandbox.stub(),
       };
+      const mockQuery = mockReq.query;
+      mockQuery.event_id = mockReq.params;
       res.toJSON.returns(res.models);
-      projectController.getByEvent.resolves(res);
+      projectController.getExtended.resolves(res);
       await handler(mockReq, mockRes);
 
       expect(mockRes.status).to.have.been.calledOnce;
       expect(mockRes.status).to.have.been.calledWith(200);
-      expect(projectController.getByEvent).to.have.been.calledOnce;
-      expect(projectController.getByEvent).to.have.been.calledWith(
-        mockReq.params.eventId,
-        mockReq.query,
+      expect(projectController.getExtended).to.have.been.calledOnce;
+      expect(projectController.getExtended).to.have.been.calledWith(
+        mockQuery,
         false,
       );
       expect(mockRes.setHeader).to.have.been.calledOnce;
@@ -455,6 +458,58 @@ describe('router: project', () => {
       expect(updateController).to.have.been.calledWith(originalProject, { id, name: 'proj' });
       expect(nextMock).to.have.been.calledOnce;
       expect(nextMock.getCall(0).args[0].message).to.equal('Error while saving your project.');
+    });
+  });
+  describe('/users/:uId/projects', () => {
+    let handler;
+    let sandbox;
+    let errorHandler;
+    const projectController = class {};
+    before(() => {
+      sandbox = sinon.sandbox.create();
+      handlers = (proxy('../../../routes/handlers/projects', {
+        '../../controllers/projects': projectController,
+      })).getUserProjects;
+      errorHandler = sandbox.stub();
+      handler = (req, res, next) => {
+        return handlers[0](req, res, next)
+          .catch(err => errorHandler(err));
+      };
+    });
+
+    it('should applies params', async () => {
+      const getExtended = sandbox.stub();
+      const json = sandbox.stub();
+      const status = sandbox.stub().returns({ json });
+      const next = sandbox.stub();
+      const userId = 'user1';
+      const eventId = 'event1';
+      const mockResponse = {
+        models: [],
+        pagination: {
+          rowCount: 0,
+        },
+      };
+      projectController.getExtended = getExtended.resolves(mockResponse);
+      const req = {
+        user: {
+          userId,
+        },
+        params: {
+          eventId,
+        },
+      };
+      const res = {
+        status,
+      };
+      await handler(req, res, next);
+      expect(getExtended).to.have.been.calledOnce;
+      expect(getExtended).to.have.been.calledWith({ scopes: { 'owner.id': userId, event_id: eventId } });
+      expect(status).to.have.been.calledOnce;
+      expect(status).to.have.been.calledWith(200);
+      expect(json).to.have.been.calledOnce;
+      expect(json).to.have.been.calledWith({ data: [], count: 0 });
+      expect(next).to.not.have.been.called;
     });
   });
 });
