@@ -10,22 +10,31 @@ server.use(middlewares);
 server.use(require('body-parser').json());
 
 server.use(jsonServer.rewriter({
+  '/api/v1/events/:eventId/projects': '/api/v1/projects',
+  '/api/v1/events/:eventId/users/:userId': '/api/v1/users/:userId',
+  '/api/v1/events/:eventId/users/:userId/projects': '/api/v1/users/:userId/projects',
   '/api/v1/events/:eventId/projects/:projectId': '/api/v1/projects/:projectId',
 }));
 
-server.post('/api/v1/auth', (req, res) => {
-  if (req.body.email === 'existinguser@example.com') {
-    res.status(204).send();
+server.post('/api/v1/auth/token', (req, res) => {
+  if (req.body.token === 'someuser') {
+    res.status(200).send({
+      userId: db.users[0].id,
+    });
   } else {
     res.status(403).send();
   }
 });
 
 server.use('/api/v1/users', (req, res, next) => {
-  req.body.auth = {
-    token: '1234asdf',
-  };
-  next();
+  if (req.body.email === 'exists@example.com') {
+    res.status(409).send();
+  } else {
+    req.body.auth = {
+      token: 'someuser',
+    };
+    next();
+  }
 });
 
 server.post('/api/v1/admin/auth', (req, res) => {

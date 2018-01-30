@@ -4,7 +4,7 @@ const utils = require('./utils');
 // eslint-disable-next-line new-cap
 const acl = new Acl(new Acl.memoryBackend());
 
-module.exports.define = (apiPrefix) => {
+module.exports.define = (apiPrefix, originalPrefix) => {
   acl.allow([
     {
       roles: ['basic'],
@@ -25,6 +25,13 @@ module.exports.define = (apiPrefix) => {
       allows: [{
         resources: `${apiPrefix}/:id`,
         permissions: ['get', 'patch'],
+      }],
+    },
+    {
+      roles: ['basic'],
+      allows: [{
+        resources: `${originalPrefix}/events/:eventId/users/:userId/projects`,
+        permissions: ['get'],
       }],
     },
   ]);

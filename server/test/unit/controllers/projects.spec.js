@@ -218,9 +218,11 @@ describe('projects controllers', () => {
       expect(fetch.getCall(0).args[0]).to.be.eql({ withRelated: ['bla'] });
     });
   });
-  describe('getByEvent', () => {
+  describe('getExtended', () => {
     let controllers;
-    const projectModel = {};
+    const projectInstance = {};
+    // eslint-disable-next-line func-style
+    const projectModel = function () { return projectInstance; };
     before(() => {
       controllers = proxy('../../../controllers/projects', {
         '../models/user': {},
@@ -229,61 +231,77 @@ describe('projects controllers', () => {
       });
     });
     it('should fetch Page with default params', async () => {
-      projectModel.where = sinon.stub().returns(projectModel);
-      projectModel.orderBy = sinon.stub().returns(projectModel);
-      projectModel.fetchPage = sinon.stub().returns(projectModel);
-      projectModel.adminView = sinon.stub().returns(projectModel);
+      projectInstance.orderBy = sinon.stub().returns(projectInstance);
+      projectInstance.fetchPage = sinon.stub().returns(projectInstance);
+      projectInstance.joinView = sinon.stub().returns(projectInstance);
+      projectInstance.query = sinon.stub().returns(projectInstance);
+      projectInstance.andWhere = sinon.stub().returns(projectInstance);
+      projectInstance.query = sinon.stub()
+        .callsArgWith(0, projectInstance)
+        .returns(projectInstance);
 
-      await controllers.getByEvent('event1', {}, true);
-      expect(projectModel.where).to.have.been.calledOnce;
-      expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
-      expect(projectModel.adminView).to.have.been.calledOnce;
-      expect(projectModel.orderBy).to.have.been.calledWith('created_at', 'desc');
-      expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 25, page: 1, withRelated: ['owner', 'supervisor', 'members'] });
+      await controllers.getExtended({ scopes: { event_id: 'event1' } }, true);
+      expect(projectInstance.joinView).to.have.been.calledOnce;
+      expect(projectInstance.joinView).to.have.been.calledWith(undefined);
+      expect(projectInstance.andWhere).to.have.been.calledOnce;
+      expect(projectInstance.andWhere).to.have.been.calledWith('event_id', '=', 'event1');
+      expect(projectInstance.orderBy).to.have.been.calledWith('created_at', 'desc');
+      expect(projectInstance.fetchPage).to.have.been.calledWith({ pageSize: 25, page: 1, withRelated: ['owner', 'supervisor', 'members'] });
     });
     it('should accept params to customize the search', async () => {
-      projectModel.where = sinon.stub().returns(projectModel);
-      projectModel.orderBy = sinon.stub().returns(projectModel);
-      projectModel.fetchPage = sinon.stub().returns(projectModel);
-      projectModel.adminView = sinon.stub().returns(projectModel);
+      projectInstance.where = sinon.stub().returns(projectInstance);
+      projectInstance.orderBy = sinon.stub().returns(projectInstance);
+      projectInstance.fetchPage = sinon.stub().returns(projectInstance);
+      projectInstance.joinView = sinon.stub().returns(projectInstance);
+      projectInstance.andWhere = sinon.stub().returns(projectInstance);
+      projectInstance.query = sinon.stub()
+        .callsArgWith(0, projectInstance)
+        .returns(projectInstance);
 
-      await controllers.getByEvent('event1', {
+      await controllers.getExtended({
         orderBy: 'bananaSplit',
         ascending: '1',
         query: {
           name: 'aa',
         },
+        scopes: {
+          event_id: 'event1',
+          'owner.id': 'user1',
+        },
         page: 2,
         limit: 30,
       }, true);
-      expect(projectModel.where).to.have.been.calledOnce;
-      expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
-      expect(projectModel.adminView).to.have.been.calledOnce;
-      expect(projectModel.adminView).to.have.been.calledWith({ name: 'aa' });
-      expect(projectModel.orderBy).to.have.been.calledWith('banana_split', 'asc');
-      expect(projectModel.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor', 'members'] });
+      expect(projectInstance.joinView).to.have.been.calledOnce;
+      expect(projectInstance.joinView).to.have.been.calledWith({ name: 'aa' });
+      expect(projectInstance.andWhere).to.have.been.calledTwice;
+      expect(projectInstance.andWhere.getCall(0)).to.have.been.calledWith('event_id', '=', 'event1');
+      expect(projectInstance.andWhere.getCall(1)).to.have.been.calledWith('owner.id', '=', 'user1');
+      expect(projectInstance.orderBy).to.have.been.calledWith('banana_split', 'asc');
+      expect(projectInstance.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor', 'members'] });
     });
     it('should ignore pagination by default', async () => {
-      projectModel.where = sinon.stub().returns(projectModel);
-      projectModel.orderBy = sinon.stub().returns(projectModel);
-      projectModel.fetchAll = sinon.stub().returns(projectModel);
-      projectModel.adminView = sinon.stub().returns(projectModel);
+      projectInstance.where = sinon.stub().returns(projectInstance);
+      projectInstance.orderBy = sinon.stub().returns(projectInstance);
+      projectInstance.fetchAll = sinon.stub().returns(projectInstance);
+      projectInstance.joinView = sinon.stub().returns(projectInstance);
+      projectInstance.query = sinon.stub().returns(projectInstance);
 
-      await controllers.getByEvent('event1', {
+      await controllers.getExtended({
         orderBy: 'banana',
         ascending: '1',
         query: {
           name: 'aa',
         },
+        scopes: {
+          event_id: 'event1',
+        },
         page: 2,
         limit: 30,
       });
-      expect(projectModel.where).to.have.been.calledOnce;
-      expect(projectModel.where).to.have.been.calledWith({ event_id: 'event1' });
-      expect(projectModel.adminView).to.have.been.calledOnce;
-      expect(projectModel.adminView).to.have.been.calledWith({ name: 'aa' });
-      expect(projectModel.orderBy).to.have.been.calledWith('banana', 'asc');
-      expect(projectModel.fetchAll).to.have.been.calledWith({ withRelated: ['owner', 'supervisor', 'members'] });
+      expect(projectInstance.joinView).to.have.been.calledOnce;
+      expect(projectInstance.joinView).to.have.been.calledWith({ name: 'aa' });
+      expect(projectInstance.orderBy).to.have.been.calledWith('banana', 'asc');
+      expect(projectInstance.fetchAll).to.have.been.calledWith({ withRelated: ['owner', 'supervisor', 'members'] });
     });
   });
 });

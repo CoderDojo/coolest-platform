@@ -72,13 +72,13 @@ describe('auth model', () => {
       expect(project.relations.supervisor.attributes).to.eql({ id: '1' });
     });
   });
-  describe('adminView', () => {
+  describe('joinView', () => {
     it('should join user for owner & supervisor', () => {
       const project = new Project();
       project.query = sinon.stub().callsArgWith(0, project).returns(project);
       project.columns = sinon.stub().returns(project);
       project.innerJoin = sinon.stub().returns(project);
-      project.adminView();
+      project.joinView();
       expect(project.query).to.have.been.calledTwice;
       expect(project.columns).to.have.been.calledOnce;
       expect(project.innerJoin.callCount).to.equal(4);
@@ -93,7 +93,7 @@ describe('auth model', () => {
       project.columns = sinon.stub().returns(project);
       project.innerJoin = sinon.stub().returns(project);
       project.andWhere = sinon.stub().returns(project);
-      project.adminView({ name: 'Derp' });
+      project.joinView({ name: 'Derp' });
       expect(project.query).to.have.been.calledTwice;
       expect(project.columns).to.have.been.calledOnce;
       expect(project.innerJoin.callCount).to.equal(4);
@@ -111,7 +111,7 @@ describe('auth model', () => {
       project.columns = sinon.stub().returns(project);
       project.innerJoin = sinon.stub().returns(project);
       project.andWhere = sinon.stub().returns(project);
-      project.adminView({ name: 'Derp', 'supervisor.email': 'test@' });
+      project.joinView({ name: 'Derp', 'supervisor.email': 'test@' });
       expect(project.query).to.have.been.calledTwice;
       expect(project.columns).to.have.been.calledOnce;
       expect(project.innerJoin.callCount).to.equal(4);
@@ -131,7 +131,7 @@ describe('auth model', () => {
       project.columns = sinon.stub().returns(project);
       project.innerJoin = sinon.stub().returns(project);
       project.andWhere = sinon.stub().returns(project);
-      project.adminView({ name: '' });
+      project.joinView({ name: '' });
       expect(project.query).to.have.been.calledTwice;
       expect(project.columns).to.have.been.calledOnce;
       expect(project.innerJoin.callCount).to.equal(4);
@@ -147,7 +147,7 @@ describe('auth model', () => {
       project.columns = sinon.stub().returns(project);
       project.innerJoin = sinon.stub().returns(project);
       project.andWhere = sinon.stub().returns(project);
-      project.adminView({ createdAt: 'AAA' });
+      project.joinView({ createdAt: 'AAA' });
       expect(project.query).to.have.been.calledTwice;
       expect(project.columns).to.have.been.calledOnce;
       expect(project.innerJoin.callCount).to.equal(4);

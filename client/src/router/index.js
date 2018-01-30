@@ -2,9 +2,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import scrollBehavior from '@/router/scrollBehaviour';
 import adminNavGuard from '@/router/adminNavGuard';
+import userAuthNavGuard from '@/router/userAuthNavGuard';
 import Index from '@/Index';
 import Auth from '@/event/Auth';
-import AuthEmail from '@/auth/Email';
 import ProjectList from '@/project/List';
 import ViewProject from '@/project/View';
 import CreateProject from '@/project/Create';
@@ -28,53 +28,69 @@ export default new Router({
       path: '/',
       redirect: '/events/cp-2018',
       component: Index,
+      name: 'Index',
       children: [
         {
-          path: 'auth-email',
-          name: 'AuthEmail',
-          component: AuthEmail,
-        },
-        {
           path: 'events/:eventSlug',
-          name: 'Auth',
-          component: Auth,
+          component: {
+            template: '<router-view></router-view>',
+          },
           props: true,
-        },
-        {
-          path: 'events/:eventSlug/projects',
-          name: 'ProjectList',
-          component: ProjectList,
-          props: true,
-        },
-        {
-          path: 'events/:eventSlug/projects/create',
-          name: 'CreateProject',
-          component: CreateProject,
-          props: true,
-        },
-        {
-          path: 'events/:eventSlug/projects/:projectId/extra',
-          name: 'ProjectExtraDetails',
-          component: ProjectExtraDetails,
-          props: true,
-        },
-        {
-          path: 'events/:eventSlug/projects/:projectId/complete',
-          name: 'CreateProjectCompleted',
-          component: CreateProjectCompleted,
-          props: true,
-        },
-        {
-          path: 'events/:eventSlug/projects/:projectId',
-          name: 'ViewProject',
-          component: ViewProject,
-          props: true,
-        },
-        {
-          path: 'events/:eventSlug/projects/:projectId/edit',
-          name: 'EditProject',
-          component: EditProject,
-          props: true,
+          children: [
+            {
+              path: '',
+              name: 'Auth',
+              component: Auth,
+              props: true,
+            },
+            {
+              path: 'my-projects',
+              name: 'ProjectList',
+              component: ProjectList,
+              props: true,
+              beforeEnter: userAuthNavGuard,
+            },
+            {
+              path: 'projects',
+              component: {
+                template: '<router-view></router-view>',
+              },
+              props: true,
+              beforeEnter: userAuthNavGuard,
+              children: [
+                {
+                  path: 'create',
+                  name: 'CreateProject',
+                  component: CreateProject,
+                  props: true,
+                },
+                {
+                  path: ':projectId/extra',
+                  name: 'ProjectExtraDetails',
+                  component: ProjectExtraDetails,
+                  props: true,
+                },
+                {
+                  path: ':projectId/complete',
+                  name: 'CreateProjectCompleted',
+                  component: CreateProjectCompleted,
+                  props: true,
+                },
+                {
+                  path: ':projectId',
+                  name: 'ViewProject',
+                  component: ViewProject,
+                  props: true,
+                },
+                {
+                  path: ':projectId/edit',
+                  name: 'EditProject',
+                  component: EditProject,
+                  props: true,
+                },
+              ],
+            },
+          ],
         },
       ],
     },
@@ -95,17 +111,25 @@ export default new Router({
         },
         {
           path: 'events/:eventSlug',
-          name: 'AdminProjects',
-          component: AdminProjectsList,
-          beforeEnter: adminNavGuard,
+          component: {
+            template: '<router-view></router-view>',
+          },
           props: true,
-        },
-        {
-          path: 'events/:eventSlug/projects/:projectId',
-          name: 'AdminProjectsView',
-          component: AdminProjectsView,
           beforeEnter: adminNavGuard,
-          props: true,
+          children: [
+            {
+              path: '',
+              name: 'AdminProjects',
+              component: AdminProjectsList,
+              props: true,
+            },
+            {
+              path: 'projects/:projectId',
+              name: 'AdminProjectsView',
+              component: AdminProjectsView,
+              props: true,
+            },
+          ],
         },
       ],
     },

@@ -20,7 +20,7 @@ const Project = bookshelf.Model.extend({
   supervisor() {
     return this.belongsToMany('User').through('ProjectUsers').query(q => q.where('type', 'supervisor'));
   },
-  adminView(filters) {
+  joinView(filters) {
     // NOTE: if this monstruosity doesn't work, fallback to 
     // a view + custom Model (knex join) + serializer (field into object => https://www.npmjs.com/package/treeize)
     const db = bookshelf.knex;
