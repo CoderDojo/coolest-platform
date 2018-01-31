@@ -187,7 +187,7 @@ describe('integration: projects', () => {
     });
   });
 
-  describe.only('/:id PUT', () => {
+  describe('/:id PUT', () => {
     const project = {
       name: 'Self-overwriting-project',
       category: 'Hardware',
