@@ -186,6 +186,129 @@ describe('integration: projects', () => {
         });
     });
   });
+
+  describe.only('/:id PUT', () => {
+    const project = {
+      name: 'Self-overwriting-project',
+      category: 'Hardware',
+      users: [
+        {
+          firstName: 'replaceable',
+          lastName: 'Kid',
+          dob: '2008-12-01T20:00.000Z',
+          gender: 'male',
+          type: 'member',
+        },
+        {
+          firstName: 'exchangeable',
+          lastName: 'orga',
+          dob: '1991-12-01T20:00.000Z',
+          gender: 'male',
+          email: 'updatable@example.com',
+          phone: '3538123123123',
+          country: 'IE',
+          type: 'supervisor',
+        },
+      ],
+    };
+    let refProject;
+    let _token;
+
+    before(() => {
+      return util.user.create('updater@example.com')
+        .then((ntoken) => {
+          _token = ntoken;
+          return util.project.create(_token, eventId, project);
+        })
+        .then((res) => {
+          return util.project.get(_token, eventId, res.body.id);
+        })
+        .then((res) => { refProject = res.body; });
+    });
+
+    it('should update a project (same struct)', async () => {
+      const payload = project;
+      project.id = refProject.id;
+      payload.name = 'Self-updated';
+      payload.users[0].id = refProject.members[0].id;
+      payload.users[0].firstName = 'replaced';
+      payload.users[0].gender = 'female';
+      payload.users[1].id = refProject.supervisor.id;
+      await util.project.update(_token, eventId, refProject.id, payload)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((res) => {
+          expect(res.body).to.have.all.keys(['name', 'category', 'org', 'orgRef', 'description', 'answers', 'id', 'createdAt', 'updatedAt', 'eventId', 'users']);
+          expect(res.body.name).to.be.equal('Self-updated');
+          expect(res.body.users.length).to.eql(3);
+          expect(res.body.users[0]).to.have.all.keys(['createdAt', 'updatedAt', 'id', 'firstName', 'lastName', 'email', 'phone', 'country', 'specialRequirements', 'dob', 'gender']);
+          expect(res.body.users[0].firstName).to.be.equal('replaced');
+          expect(res.body.users[0].gender).to.be.equal('female');
+          expect(res.body.users[0].id).to.be.equal(payload.users[0].id);
+          expect(res.body.users[1].id).to.be.equal(payload.users[1].id);
+        });
+    });
+
+    it('should be requiering a valid auth (owner)', async () => {
+      const payload = project;
+      project.id = refProject.id;
+      payload.users[0].id = refProject.members[0].id;
+      payload.users[1].id = refProject.supervisor.id;
+      await util.project.update(token, eventId, refProject.id, payload)
+        .expect('Content-Type', /json/)
+        .expect(403);
+    });
+    it('should allow change of emails', async () => {
+      const payload = project;
+      project.id = refProject.id;
+      payload.users[0].id = refProject.members[0].id;
+      payload.users[1].id = refProject.supervisor.id;
+      payload.users[1].email = 'updated@example.com';
+      await util.project.update(_token, eventId, refProject.id, payload)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((res) => {
+          expect(res.body.users.length).to.eql(3);
+          expect(res.body.users[1].email).to.be.equal('updated@example.com');
+          expect(res.body.users[1].id).to.be.equal(payload.users[1].id);
+        });
+    });
+    it('should allow adding of users', async () => {
+      const payload = project;
+      project.id = refProject.id;
+      payload.users[0].id = refProject.members[0].id;
+      payload.users[1].id = refProject.supervisor.id;
+      payload.users[2] = {
+        firstName: 'freshAsNew',
+        lastName: 'Kid',
+        dob: '2008-12-01T20:00.000Z',
+        gender: 'other',
+        type: 'member',
+      };
+      await util.project.update(_token, eventId, refProject.id, payload)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((res) => {
+          expect(res.body.users.length).to.eql(4);
+          const newKid = res.body.users.find(u => u.firstName === payload.users[2].firstName);
+          expect([payload.users[0].id, payload.users[1].id]).to.not.include(newKid.id);
+        });
+    });
+    it('should allow removal of users', async () => {
+      const payload = project;
+      project.id = refProject.id;
+      payload.users.shift();
+      await util.project.update(_token, eventId, refProject.id, payload)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .then((res) => {
+          // original kid are deleted,
+          // only the owner and the supervisor are left
+          expect(res.body.users.length).to.equal(3);
+        });
+    });
+  });
+
   describe('/:id patch', () => {
     it('should allow update of a project', async () => {
       const payload = {

@@ -1,4 +1,5 @@
 const proxy = require('proxyquire').noCallThru();
+const _ = require('lodash');
 
 describe('router: project', () => {
   let handlers;
@@ -381,6 +382,249 @@ describe('router: project', () => {
     });
   });
 
+  describe('put', () => {
+    let handler;
+    const projectController = class {};
+    const userController = class {};
+    let sandbox;
+    let errorHandler;
+    before(() => {
+      sandbox = sinon.sandbox.create();
+      handlers = (proxy('../../../routes/handlers/projects', {
+        '../../controllers/projects': projectController,
+        '../../controllers/users': userController,
+      })).put;
+      errorHandler = sandbox.stub();
+      handler = (req, res, next) => {
+        return handlers[0](req, res, next)
+          .then(() => handlers[1](req, res, next))
+          .then(() => handlers[2](req, res, next))
+          .then(() => handlers[3](req, res, next))
+          .catch(err => errorHandler(err));
+      };
+    });
+    it('should update the project and its users', async () => {
+      const id = 'faaa';
+      const newUsers = [{ id: '2', type: 'member' }, { type: 'member' }];
+      const origUsers = [];
+      const userAssociation = [{ id: 'x', userId: '1', type: 'owner' }, { id: 'xx', userId: '2', type: 'member' }];
+      const originalProject = { id, name: 'oldproj', users: origUsers };
+      const newProject = { id: 'faa2', name: 'proj', users: newUsers };
+      const res = Object.assign({}, newProject, { id }, { users: origUsers });
+      const resModel = Object.assign({}, res);
+      const usersCollection = { attach: sandbox.stub() };
+      const jsonModel = Object.assign({}, res, { userAssociation });
+      const refreshedModel = Object.assign(
+        {},
+        jsonModel,
+        { users: sandbox.stub(), toJSON: sandbox.stub() },
+      );
+      resModel.refresh = sandbox.stub().resolves(refreshedModel);
+      refreshedModel.refresh = sandbox.stub().resolves(refreshedModel);
+      refreshedModel.toJSON.returns(jsonModel);
+      usersCollection.attach.returns(refreshedModel);
+      refreshedModel.users.returns(usersCollection);
+      originalProject.refresh = sandbox.stub().resolves(originalProject);
+      originalProject.toJSON = sandbox.stub().returns(originalProject);
+      projectController.update = sandbox.stub().resolves(resModel);
+      projectController.getMissingUsers = sandbox.stub().returns([]);
+      projectController.removeUsers = sandbox.stub().resolves(resModel);
+      projectController.get = sandbox.stub().resolves(refreshedModel);
+      userController.removeUsers = sandbox.stub().resolves();
+      userController.save = sandbox.stub().callsFake(u => Promise.resolve(Object.assign({}, { id: '5' }, u)));
+      const nextMock = sandbox.stub();
+      const mockReq = {
+        params: { id },
+        body: newProject,
+        app: {
+          locals: {
+            project: originalProject,
+          },
+        },
+      };
+      const json = sandbox.stub();
+      const mockRes = {
+        locals: {},
+        status: sandbox.stub().returns({ json }),
+      };
+      await handler(mockReq, mockRes, nextMock);
+      // Handler 1: save project
+      expect(projectController.update).to.have.been.calledOnce;
+      expect(projectController.update).to.have.been.calledWith(originalProject, _.omit(res, ['users']));
+      expect(resModel.refresh).to.have.been.calledOnce;
+      expect(resModel.refresh).to.have.been.calledWith({ withRelated: ['users', 'userAssociation'] });
+      // Handler 2: delete missing users
+      expect(projectController.getMissingUsers).to.have.been.calledOnce;
+      expect(projectController.getMissingUsers).to.have.been.calledWith(
+        origUsers,
+        newUsers,
+        userAssociation,
+      );
+      expect(projectController.removeUsers).to.have.been.calledWith(id, []);
+      expect(userController.removeUsers).to.have.been.calledWith([]);
+      // Handler 3: save (new) users
+      expect(userController.save).to.have.been.calledTwice;
+      // One update of existing user, one creation of a new user
+      expect(usersCollection.attach).to.have.been.calledOnce;
+      // Handler 4: Refresh and format
+      expect(projectController.get).to.have.been.calledOnce;
+      expect(projectController.get).to.have.been.calledWith({ id }, ['users']);
+      expect(mockRes.locals.project).to.eql(refreshedModel);
+      expect(mockRes.status).to.have.been.calledOnce;
+      expect(mockRes.status).to.have.been.calledWith(200);
+      expect(json).to.have.been.calledOnce;
+      expect(json).to.have.been.calledWith(refreshedModel);
+      expect(nextMock).to.have.been.calledThrice;
+    });
+
+    it('should exclude the update of the owner and user with ids which are not part of the project', async () => {
+      const id = 'faaa';
+      const newUsers = [{ id: '2', type: 'member' }, { id: 'wizard', type: 'owner' }];
+      const origUsers = [];
+      const userAssociation = [{ id: 'x', userId: '1', type: 'owner' }];
+      const originalProject = { id, name: 'oldproj', users: origUsers };
+      const newProject = { id: 'faa2', name: 'proj', users: newUsers };
+      const res = Object.assign({}, newProject, { id }, { users: origUsers });
+      const resModel = Object.assign({}, res);
+      const usersCollection = { attach: sandbox.stub() };
+      const jsonModel = Object.assign({}, res, { userAssociation });
+      const refreshedModel = Object.assign(
+        {},
+        jsonModel,
+        { users: sandbox.stub(), toJSON: sandbox.stub() },
+      );
+      resModel.refresh = sandbox.stub().resolves(refreshedModel);
+      refreshedModel.refresh = sandbox.stub().resolves(refreshedModel);
+      refreshedModel.toJSON.returns(jsonModel);
+      usersCollection.attach.returns(refreshedModel);
+      refreshedModel.users.returns(usersCollection);
+      originalProject.refresh = sandbox.stub().resolves(originalProject);
+      originalProject.toJSON = sandbox.stub().returns(originalProject);
+      projectController.update = sandbox.stub().resolves(resModel);
+      projectController.getMissingUsers = sandbox.stub().returns([]);
+      projectController.removeUsers = sandbox.stub().resolves(resModel);
+      projectController.get = sandbox.stub().resolves(refreshedModel);
+      userController.removeUsers = sandbox.stub().resolves();
+      userController.save = sandbox.stub().callsFake(u => Promise.resolve(Object.assign({}, { id: '5' }, u)));
+      const nextMock = sandbox.stub();
+      const mockReq = {
+        params: { id },
+        body: newProject,
+        app: {
+          locals: {
+            project: originalProject,
+          },
+        },
+      };
+      const json = sandbox.stub();
+      const mockRes = {
+        locals: {},
+        status: sandbox.stub().returns({ json }),
+      };
+      await handler(mockReq, mockRes, nextMock);
+      // Handler 1: save project
+      expect(projectController.update).to.have.been.calledOnce;
+      expect(projectController.update).to.have.been.calledWith(originalProject, _.omit(res, ['users']));
+      expect(resModel.refresh).to.have.been.calledOnce;
+      expect(resModel.refresh).to.have.been.calledWith({ withRelated: ['users', 'userAssociation'] });
+      // Handler 2: delete missing users
+      expect(projectController.getMissingUsers).to.have.been.calledOnce;
+      expect(projectController.getMissingUsers).to.have.been.calledWith(
+        origUsers,
+        newUsers,
+        userAssociation,
+      );
+      expect(projectController.removeUsers).to.have.been.calledWith(id, []);
+      expect(userController.removeUsers).to.have.been.calledWith([]);
+      // Handler 3: save (new) users
+      expect(userController.save).to.not.have.been.called;
+      expect(usersCollection.attach).to.not.have.been.called;
+      // Handler 4: Refresh and format
+      expect(projectController.get).to.have.been.calledOnce;
+      expect(projectController.get).to.have.been.calledWith({ id }, ['users']);
+      expect(mockRes.locals.project).to.eql(refreshedModel);
+      expect(mockRes.status).to.have.been.calledOnce;
+      expect(mockRes.status).to.have.been.calledWith(200);
+      expect(json).to.have.been.calledOnce;
+      expect(json).to.have.been.calledWith(refreshedModel);
+      expect(nextMock).to.have.been.calledThrice;
+    });
+    it('should delete a user', async () => {
+      const id = 'faaa';
+      const newUsers = [{ type: 'member' }];
+      const origUsers = [{ id: '3' }];
+      const userAssociation = [{ id: 'x', userId: '1', type: 'owner' }, { id: 'xx', userId: '3' }];
+      const userToBeRemoved = [{ id: '3' }];
+      const originalProject = { id, name: 'oldproj', users: origUsers };
+      const newProject = { id: 'faa2', name: 'proj', users: newUsers };
+      const res = Object.assign({}, newProject, { id }, { users: origUsers });
+      const resModel = Object.assign({}, res);
+      const usersCollection = { attach: sandbox.stub() };
+      const jsonModel = Object.assign({}, res, { userAssociation });
+      const refreshedModel = Object.assign(
+        {},
+        jsonModel,
+        { users: sandbox.stub(), toJSON: sandbox.stub() },
+      );
+      resModel.refresh = sandbox.stub().resolves(refreshedModel);
+      refreshedModel.refresh = sandbox.stub().resolves(refreshedModel);
+      refreshedModel.toJSON.returns(jsonModel);
+      usersCollection.attach.returns(refreshedModel);
+      refreshedModel.users.returns(usersCollection);
+      originalProject.refresh = sandbox.stub().resolves(originalProject);
+      originalProject.toJSON = sandbox.stub().returns(originalProject);
+      projectController.update = sandbox.stub().resolves(resModel);
+      projectController.getMissingUsers = sandbox.stub().returns(userToBeRemoved);
+      projectController.removeUsers = sandbox.stub().resolves(resModel);
+      projectController.get = sandbox.stub().resolves(refreshedModel);
+      userController.removeUsers = sandbox.stub().resolves();
+      userController.save = sandbox.stub().callsFake(u => Promise.resolve(Object.assign({}, { id: '5' }, u)));
+      const nextMock = sandbox.stub();
+      const mockReq = {
+        params: { id },
+        body: newProject,
+        app: {
+          locals: {
+            project: originalProject,
+          },
+        },
+      };
+      const json = sandbox.stub();
+      const mockRes = {
+        locals: {},
+        status: sandbox.stub().returns({ json }),
+      };
+      await handler(mockReq, mockRes, nextMock);
+      // Handler 1: save project
+      expect(projectController.update).to.have.been.calledOnce;
+      expect(projectController.update).to.have.been.calledWith(originalProject, _.omit(res, ['users']));
+      expect(resModel.refresh).to.have.been.calledOnce;
+      expect(resModel.refresh).to.have.been.calledWith({ withRelated: ['users', 'userAssociation'] });
+      // Handler 2: delete missing users
+      expect(projectController.getMissingUsers).to.have.been.calledOnce;
+      expect(projectController.getMissingUsers).to.have.been.calledWith(
+        origUsers,
+        newUsers,
+        userAssociation,
+      );
+      expect(projectController.removeUsers).to.have.been.calledWith(id, userToBeRemoved);
+      expect(userController.removeUsers).to.have.been.calledWith(userToBeRemoved);
+      // Handler 3: save (new) users
+      expect(userController.save).to.have.been.calledOnce;
+      // One update of existing user, one creation of a new user
+      expect(usersCollection.attach).to.have.been.calledOnce;
+      // Handler 4: Refresh and format
+      expect(projectController.get).to.have.been.calledOnce;
+      expect(projectController.get).to.have.been.calledWith({ id }, ['users']);
+      expect(mockRes.locals.project).to.eql(refreshedModel);
+      expect(mockRes.status).to.have.been.calledOnce;
+      expect(mockRes.status).to.have.been.calledWith(200);
+      expect(json).to.have.been.calledOnce;
+      expect(json).to.have.been.calledWith(refreshedModel);
+      expect(nextMock).to.have.been.calledThrice;
+      expect(userController.save).to.have.been.calledWith(newUsers[0]);
+    });
+  });
 
   describe('patch', () => {
     let handler;
@@ -421,7 +665,7 @@ describe('router: project', () => {
         locals: {},
         status: sandbox.stub().returns({ json }),
       };
-      await handler(mockReq, mockRes, nextMock, id);
+      await handler(mockReq, mockRes, nextMock);
       expect(updateController).to.have.been.calledOnce;
       expect(updateController).to.have.been.calledWith(originalProject, res);
       expect(mockRes.locals.project).to.equal(res);
@@ -453,7 +697,7 @@ describe('router: project', () => {
       const mockRes = {
         locals: {},
       };
-      await handler(mockReq, mockRes, nextMock, id);
+      await handler(mockReq, mockRes, nextMock);
       expect(updateController).to.have.been.calledOnce;
       expect(updateController).to.have.been.calledWith(originalProject, { id, name: 'proj' });
       expect(nextMock).to.have.been.calledOnce;

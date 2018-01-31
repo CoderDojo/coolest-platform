@@ -1,5 +1,7 @@
 const proxy = require('proxyquire').noCallThru();
-const { omit, extend } = require('lodash');
+const {
+  omit, extend, differenceWith, intersectionWith,
+} = require('lodash');
 
 describe('projects controllers', () => {
   const sandbox = sinon.sandbox.create();
@@ -218,6 +220,101 @@ describe('projects controllers', () => {
       expect(fetch.getCall(0).args[0]).to.be.eql({ withRelated: ['bla'] });
     });
   });
+
+  describe('getMissingUsers', () => {
+    let controllers;
+    const projectModel = {};
+    let differenceWithSpy;
+    let intersectionWithSpy;
+    before(() => {
+      differenceWithSpy = sandbox.spy(differenceWith);
+      intersectionWithSpy = sandbox.spy(intersectionWith);
+      controllers = proxy('../../../controllers/projects', {
+        '../models/user': {},
+        '../models/project': projectModel,
+        './users': {},
+        lodash: {
+          differenceWith: differenceWithSpy,
+          intersectionWith: intersectionWithSpy,
+        },
+      });
+    });
+    afterEach(() => {
+      sandbox.reset();
+    });
+    it('should return the missing user', () => {
+      const originalUsers = [{ id: '1' }];
+      const newUsers = [{ type: 'member' }];
+      const association = [{ userId: '1' }];
+
+      const res = controllers.getMissingUsers(originalUsers, newUsers, association);
+      expect(differenceWithSpy).to.have.been.calledOnce;
+      expect(intersectionWithSpy).to.have.been.calledOnce;
+      expect(res).to.eql(['1']);
+    });
+    it('should return empty', () => {
+      const originalUsers = [];
+      const newUsers = [];
+      const association = [];
+
+      const res = controllers.getMissingUsers(originalUsers, newUsers, association);
+      expect(differenceWithSpy).to.have.been.calledOnce;
+      expect(intersectionWithSpy).to.have.been.calledOnce;
+      expect(res).to.eql([]);
+    });
+    it('should not return an owner', () => {
+      const originalUsers = [{ id: 1 }];
+      const newUsers = [];
+      const association = [{ userId: '1', type: 'owner' }];
+
+      const res = controllers.getMissingUsers(originalUsers, newUsers, association);
+      expect(differenceWithSpy).to.have.been.calledOnce;
+      expect(intersectionWithSpy).to.have.been.calledOnce;
+      expect(res).to.eql([]);
+    });
+  });
+
+  describe('removeUsers', () => {
+    let controllers;
+    const projectUsers = {};
+    before(() => {
+      controllers = proxy('../../../controllers/projects', {
+        '../models/user': {},
+        '../models/project': {},
+        '../models/projectUsers': projectUsers,
+        './users': {},
+      });
+    });
+    it('should query the proper user relation', async () => {
+      const userIds = [];
+      const projectId = '1';
+      projectUsers.where = sinon.stub().returns(projectUsers);
+      projectUsers.fetchAll = sinon.stub().resolves([]);
+
+      await controllers.removeUsers(projectId, userIds);
+      expect(projectUsers.where).to.have.been.calledThrice;
+      expect(projectUsers.where.getCall(0)).to.have.been.calledWith('user_id', 'IN', userIds);
+      expect(projectUsers.where.getCall(1)).to.have.been.calledWith('project_id', '=', projectId);
+      expect(projectUsers.where.getCall(2)).to.have.been.calledWith('type', '!=', 'owner');
+      expect(projectUsers.fetchAll).to.have.been.calledOnce;
+    });
+    it('should destroy every model from the response', async () => {
+      const userIds = ['1'];
+      const projectId = '1';
+      const destroy = sinon.stub();
+      projectUsers.where = sinon.stub().returns(projectUsers);
+      projectUsers.fetchAll = sinon.stub().resolves([{ id: '1', destroy }]);
+
+      await controllers.removeUsers(projectId, userIds);
+      expect(projectUsers.where).to.have.been.calledThrice;
+      expect(projectUsers.where.getCall(0)).to.have.been.calledWith('user_id', 'IN', userIds);
+      expect(projectUsers.where.getCall(1)).to.have.been.calledWith('project_id', '=', projectId);
+      expect(projectUsers.where.getCall(2)).to.have.been.calledWith('type', '!=', 'owner');
+      expect(projectUsers.fetchAll).to.have.been.calledOnce;
+      expect(destroy).to.have.been.calledOnce;
+    });
+  });
+
   describe('getExtended', () => {
     let controllers;
     const projectInstance = {};
