@@ -29,6 +29,12 @@ class User {
       .then(user => Promise.resolve(user ? user.toJSON() : null));
   }
 
+  static getAll(identifier, withRelated) {
+    return UserModel.where(identifier)
+      .fetchAll({ withRelated })
+      .then(users => Promise.resolve(users ? users.toJSON() : []));
+  }
+  
   static removeUsers(ids) {
     return UserModel.where('id', 'IN', ids)
       .fetchAll()

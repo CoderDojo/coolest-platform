@@ -2,10 +2,12 @@ const proxy = require('proxyquire').noCallThru();
 
 describe('users controllers', () => {
   const sandbox = sinon.sandbox.create();
+
+  beforeEach(() => {
+    sandbox.reset();
+  });
+
   describe('post', () => {
-    beforeEach(() => {
-      sandbox.reset();
-    });
     it('should create an User', async () => {
       const email = 'test@test.com';
       const mockUserSave = sandbox.stub().resolves({ id: 1, email });
@@ -75,6 +77,102 @@ describe('users controllers', () => {
           expect(_err.message).to.equal(err.message);
           done();
         });
+    });
+  });
+
+  describe('get', () => {
+    it('should return the matching user as JSON', async () => {
+      const user = {
+        toJSON: sandbox.stub().returns({
+          id: 'foo',
+        }),
+      };
+      const mockUserFetch = sandbox.stub().resolves(user);
+      const mockUserForge = sandbox.stub().returns({ fetch: mockUserFetch });
+      const mockUserModel = { forge: mockUserForge };
+      const identifier = { email: 'foo@example.com' };
+      const withRelated = ['auth'];
+      const controller = proxy('../../../controllers/users', {
+        '../models/user': mockUserModel,
+        '../models/auth': {},
+      });
+
+      const res = await controller.get(identifier, withRelated);
+
+      expect(mockUserForge).to.have.been.calledOnce;
+      expect(mockUserForge).to.have.been.calledWith(identifier);
+      expect(mockUserFetch).to.have.been.calledOnce;
+      expect(mockUserFetch).to.have.been.calledWith({ withRelated });
+      expect(user.toJSON).to.have.been.calledOnce;
+      expect(res).to.deep.equal({ id: 'foo' });
+    });
+
+    it('should return null if no user is found', async () => {
+      const mockUserFetch = sandbox.stub().resolves(undefined);
+      const mockUserForge = sandbox.stub().returns({ fetch: mockUserFetch });
+      const mockUserModel = { forge: mockUserForge };
+      const identifier = { email: 'foo@example.com' };
+      const withRelated = ['auth'];
+      const controller = proxy('../../../controllers/users', {
+        '../models/user': mockUserModel,
+        '../models/auth': {},
+      });
+
+      const res = await controller.get(identifier, withRelated);
+
+      expect(mockUserForge).to.have.been.calledOnce;
+      expect(mockUserForge).to.have.been.calledWith(identifier);
+      expect(mockUserFetch).to.have.been.calledOnce;
+      expect(mockUserFetch).to.have.been.calledWith({ withRelated });
+      expect(res).to.equal(null);
+    });
+  });
+
+  describe('getAll', () => {
+    it('should return the matching user as JSON', async () => {
+      const users = {
+        toJSON: sandbox.stub().returns([{
+          id: 'foo',
+        }]),
+      };
+      const mockUserFetchAll = sandbox.stub().resolves(users);
+      const mockUserWhere = sandbox.stub().returns({ fetchAll: mockUserFetchAll });
+      const mockUserModel = { where: mockUserWhere };
+      const identifier = { email: 'foo@example.com' };
+      const withRelated = ['auth'];
+      const controller = proxy('../../../controllers/users', {
+        '../models/user': mockUserModel,
+        '../models/auth': {},
+      });
+
+      const res = await controller.getAll(identifier, withRelated);
+
+      expect(mockUserWhere).to.have.been.calledOnce;
+      expect(mockUserWhere).to.have.been.calledWith(identifier);
+      expect(mockUserFetchAll).to.have.been.calledOnce;
+      expect(mockUserFetchAll).to.have.been.calledWith({ withRelated });
+      expect(users.toJSON).to.have.been.calledOnce;
+      expect(res).to.deep.equal([{ id: 'foo' }]);
+    });
+
+    it('should return null if no user is found', async () => {
+      const mockUserFetchAll = sandbox.stub().resolves(undefined);
+      const mockUserWhere = sandbox.stub().returns({ fetchAll: mockUserFetchAll });
+      const mockUserModel = { where: mockUserWhere };
+      const identifier = { email: 'foo@example.com' };
+      const withRelated = ['auth'];
+      const controller = proxy('../../../controllers/users', {
+        '../models/user': mockUserModel,
+        '../models/auth': {},
+      });
+
+      const res = await controller.getAll(identifier, withRelated);
+
+      expect(mockUserWhere).to.have.been.calledOnce;
+      expect(mockUserWhere).to.have.been.calledWith(identifier);
+      expect(mockUserFetchAll).to.have.been.calledOnce;
+      expect(mockUserFetchAll).to.have.been.calledWith({ withRelated });
+      expect(res).to.deep.equal([]);
     });
   });
 });
