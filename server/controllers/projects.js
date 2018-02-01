@@ -1,6 +1,5 @@
 const ProjectModel = require('../models/project');
 const ProjectUsersModel = require('../models/projectUsers');
-const UserHandler = require('./users');
 const UserModel = require('../models/user');
 const { pick, differenceWith, intersectionWith } = require('lodash');
 const snakeCase = require('decamelize');
@@ -20,6 +19,7 @@ class Project {
     const users = [];
     // Save every user from the form
     project.users.forEach((user) => {
+      // The id is carefully removed to not overwrite an user
       const userPayload = pick(user, [
         'firstName',
         'lastName',
@@ -30,24 +30,13 @@ class Project {
         'phone',
         'country',
       ]);
-      const newUser = ((_userPayload) => {
-        // We reassign the user_id if the user already exists (based on email)
-        if (_userPayload.email) {
-          return UserHandler.get({ email: _userPayload.email }).then((_retrievedUser) => {
-            if (_retrievedUser !== null) _userPayload.id = _retrievedUser.id;
-            return Promise.resolve(_userPayload);
-          });
-        }
-        return Promise.resolve(_userPayload);
-      })(userPayload)
-        .then(_userPayload =>
-          new UserModel(_userPayload)
-            .save()
-            .then((_user) => {
-              users.push(Object.assign(_user.toJSON(), { type: user.type }));
-              // We return the association to be saved in ProjectUsers
-              return Promise.resolve({ user_id: _user.id, type: user.type });
-            }));
+      const newUser = new UserModel(userPayload)
+        .save()
+        .then((_user) => {
+          users.push(Object.assign(_user.toJSON(), { type: user.type }));
+          // We return the association to be saved in ProjectUsers
+          return Promise.resolve({ user_id: _user.id, type: user.type });
+        });
       promises.push(newUser);
     });
 
