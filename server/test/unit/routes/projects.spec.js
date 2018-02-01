@@ -407,13 +407,13 @@ describe('router: project', () => {
       const id = 'faaa';
       const newUsers = [{ id: '2', type: 'member' }, { type: 'member' }];
       const origUsers = [];
-      const userAssociation = [{ id: 'x', userId: '1', type: 'owner' }, { id: 'xx', userId: '2', type: 'member' }];
+      const userAssociations = [{ id: 'x', userId: '1', type: 'owner' }, { id: 'xx', userId: '2', type: 'member' }];
       const originalProject = { id, name: 'oldproj', users: origUsers };
       const newProject = { id: 'faa2', name: 'proj', users: newUsers };
       const res = Object.assign({}, newProject, { id }, { users: origUsers });
       const resModel = Object.assign({}, res);
       const usersCollection = { attach: sandbox.stub() };
-      const jsonModel = Object.assign({}, res, { userAssociation });
+      const jsonModel = Object.assign({}, res, { userAssociations });
       const refreshedModel = Object.assign(
         {},
         jsonModel,
@@ -452,13 +452,13 @@ describe('router: project', () => {
       expect(projectController.update).to.have.been.calledOnce;
       expect(projectController.update).to.have.been.calledWith(originalProject, _.omit(res, ['users']));
       expect(resModel.refresh).to.have.been.calledOnce;
-      expect(resModel.refresh).to.have.been.calledWith({ withRelated: ['users', 'userAssociation'] });
+      expect(resModel.refresh).to.have.been.calledWith({ withRelated: ['users', 'userAssociations'] });
       // Handler 2: delete missing users
       expect(projectController.getMissingUsers).to.have.been.calledOnce;
       expect(projectController.getMissingUsers).to.have.been.calledWith(
         origUsers,
         newUsers,
-        userAssociation,
+        userAssociations,
       );
       expect(projectController.removeUsers).to.have.been.calledWith(id, []);
       expect(userController.removeUsers).to.have.been.calledWith([]);
@@ -481,13 +481,13 @@ describe('router: project', () => {
       const id = 'faaa';
       const newUsers = [{ id: '2', type: 'member' }, { id: 'wizard', type: 'owner' }];
       const origUsers = [];
-      const userAssociation = [{ id: 'x', userId: '1', type: 'owner' }];
+      const userAssociations = [{ id: 'x', userId: '1', type: 'owner' }];
       const originalProject = { id, name: 'oldproj', users: origUsers };
       const newProject = { id: 'faa2', name: 'proj', users: newUsers };
       const res = Object.assign({}, newProject, { id }, { users: origUsers });
       const resModel = Object.assign({}, res);
       const usersCollection = { attach: sandbox.stub() };
-      const jsonModel = Object.assign({}, res, { userAssociation });
+      const jsonModel = Object.assign({}, res, { userAssociations });
       const refreshedModel = Object.assign(
         {},
         jsonModel,
@@ -526,13 +526,13 @@ describe('router: project', () => {
       expect(projectController.update).to.have.been.calledOnce;
       expect(projectController.update).to.have.been.calledWith(originalProject, _.omit(res, ['users']));
       expect(resModel.refresh).to.have.been.calledOnce;
-      expect(resModel.refresh).to.have.been.calledWith({ withRelated: ['users', 'userAssociation'] });
+      expect(resModel.refresh).to.have.been.calledWith({ withRelated: ['users', 'userAssociations'] });
       // Handler 2: delete missing users
       expect(projectController.getMissingUsers).to.have.been.calledOnce;
       expect(projectController.getMissingUsers).to.have.been.calledWith(
         origUsers,
         newUsers,
-        userAssociation,
+        userAssociations,
       );
       expect(projectController.removeUsers).to.have.been.calledWith(id, []);
       expect(userController.removeUsers).to.have.been.calledWith([]);
@@ -553,14 +553,14 @@ describe('router: project', () => {
       const id = 'faaa';
       const newUsers = [{ type: 'member' }];
       const origUsers = [{ id: '3' }];
-      const userAssociation = [{ id: 'x', userId: '1', type: 'owner' }, { id: 'xx', userId: '3' }];
+      const userAssociations = [{ id: 'x', userId: '1', type: 'owner' }, { id: 'xx', userId: '3' }];
       const userToBeRemoved = [{ id: '3' }];
       const originalProject = { id, name: 'oldproj', users: origUsers };
       const newProject = { id: 'faa2', name: 'proj', users: newUsers };
       const res = Object.assign({}, newProject, { id }, { users: origUsers });
       const resModel = Object.assign({}, res);
       const usersCollection = { attach: sandbox.stub() };
-      const jsonModel = Object.assign({}, res, { userAssociation });
+      const jsonModel = Object.assign({}, res, { userAssociations });
       const refreshedModel = Object.assign(
         {},
         jsonModel,
@@ -599,13 +599,13 @@ describe('router: project', () => {
       expect(projectController.update).to.have.been.calledOnce;
       expect(projectController.update).to.have.been.calledWith(originalProject, _.omit(res, ['users']));
       expect(resModel.refresh).to.have.been.calledOnce;
-      expect(resModel.refresh).to.have.been.calledWith({ withRelated: ['users', 'userAssociation'] });
+      expect(resModel.refresh).to.have.been.calledWith({ withRelated: ['users', 'userAssociations'] });
       // Handler 2: delete missing users
       expect(projectController.getMissingUsers).to.have.been.calledOnce;
       expect(projectController.getMissingUsers).to.have.been.calledWith(
         origUsers,
         newUsers,
-        userAssociation,
+        userAssociations,
       );
       expect(projectController.removeUsers).to.have.been.calledWith(id, userToBeRemoved);
       expect(userController.removeUsers).to.have.been.calledWith(userToBeRemoved);

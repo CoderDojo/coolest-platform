@@ -8,7 +8,7 @@ const Project = bookshelf.Model.extend({
     return this.belongsTo('Event');
   },
   // Relations
-  userAssociation() {
+  userAssociations() {
     return this.hasMany('ProjectUsers');
   },
   // NOTE : this could be simplified with a custom join

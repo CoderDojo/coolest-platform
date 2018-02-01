@@ -52,7 +52,7 @@ module.exports = {
         .update(req.app.locals.project, Object.assign({}, req.body, { id: req.params.id }))
         // Pull the original list of users so we can diff in next step
         // User_association helps us retrieve the users's roles in the project based on user_id 
-        .then(p => p.refresh({ withRelated: ['users', 'userAssociation'] }))
+        .then(p => p.refresh({ withRelated: ['users', 'userAssociations'] }))
         .then((project) => {
           res.locals.project = project;
           return next();
@@ -70,11 +70,11 @@ module.exports = {
       const missingUsers = projectController.getMissingUsers(
         origUsers,
         users,
-        origProject.userAssociation,
+        origProject.userAssociations,
       );
       // Delete sync
       return projectController.removeUsers(origProject.id, missingUsers)
-        .then(userController.removeUsers(missingUsers))
+        .then(() => userController.removeUsers(missingUsers))
         .then(() => next())
         .catch((err) => {
           req.app.locals.logger.error(err);
@@ -84,7 +84,10 @@ module.exports = {
     // Create missing or update current users
     (req, res, next) => {
       let users = req.app.locals.users;
-      const assoc = res.locals.project.toJSON().userAssociation;
+      const assoc = res.locals.project.toJSON().userAssociations;
+      // Select from the users payload - to be saved - any user that
+      // has an id that is already part of the project
+      // OR is not an owner
       users = users.filter(u =>
         u.type !== 'owner' &&
         (!!assoc.find(m =>
