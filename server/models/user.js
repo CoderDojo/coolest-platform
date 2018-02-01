@@ -32,6 +32,14 @@ function constructor(...args) {
       email.value = email.value.toLowerCase();
     }
   });
+
+  this.on('fetching:collection', (model, columns, opts) => {
+    const emailIndex = _.findIndex(opts.query._statements, { column: 'email' });
+    if (emailIndex >= 0) {
+      const email = opts.query._statements[emailIndex];
+      email.value = email.value.toLowerCase();
+    }
+  });
   bookshelf.Model.apply(this, args);
 }
 

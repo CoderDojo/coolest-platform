@@ -23,7 +23,7 @@ describe('integration: projects', () => {
     )({ seed: true });
     util = utils(app);
     return Promise.all([
-      getToken('me@example.com')
+      getToken('owner@example.com')
         .then((_token) => {
           token = _token;
           return Promise.resolve();
@@ -68,7 +68,7 @@ describe('integration: projects', () => {
             lastName: 'le',
             dob: '1991-12-01T20:00.000Z',
             gender: 'male',
-            email: 'me@example.com',
+            email: 'owner@example.com',
             phone: '3538123123123',
             country: 'IE',
             type: 'supervisor',
@@ -105,7 +105,7 @@ describe('integration: projects', () => {
             lastName: 'le',
             dob: '1991-12-01T20:00.000Z',
             gender: 'male',
-            email: 'me@example.com',
+            email: 'owner@example.com',
             phone: '3538123123123',
             country: 'IE',
             type: 'supervisor',
@@ -140,7 +140,7 @@ describe('integration: projects', () => {
             lastName: 'le',
             dob: '1991-12-01T20:00.000Z',
             gender: 'male',
-            email: 'me@example.com',
+            email: 'owner@example.com',
             phone: '3538123123123',
             country: 'IE',
             type: 'supervisor',
