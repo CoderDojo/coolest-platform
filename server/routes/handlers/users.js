@@ -50,7 +50,6 @@ module.exports = {
               next();
             });
         }
-        return next();
       }
       return next();
     },
