@@ -50,6 +50,7 @@ describe('user model', () => {
       expect(modelStub.set).not.to.have.been.called;
     });
   });
+
   describe('on:fetching', () => {
     it('should format email on fetch', async () => {
       const optsStub = {
@@ -77,6 +78,41 @@ describe('user model', () => {
             },
             {
               column: 'user.email',
+              value: 'lovver@case.me',
+            },
+          ],
+        },
+      });
+    });
+  });
+
+  describe('on:fetching:collection', () => {
+    it('should format email on fetch', async () => {
+      const optsStub = {
+        query: {
+          _statements: [
+            {
+              column: 'name',
+              value: 'Memememe',
+            },
+            {
+              column: 'email',
+              value: 'LovvEr@cAse.Me',
+            },
+          ],
+        },
+      };
+      const user = await new User();
+      user.trigger('fetching:collection', {}, {}, optsStub);
+      expect(optsStub).to.deep.equal({
+        query: {
+          _statements: [
+            {
+              column: 'name',
+              value: 'Memememe',
+            },
+            {
+              column: 'email',
               value: 'lovver@case.me',
             },
           ],

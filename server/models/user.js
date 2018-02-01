@@ -1,5 +1,5 @@
 const bookshelf = require('../database');
-const _ = require('lodash');
+const { findIndex } = require('lodash');
 
 const User = bookshelf.Model.extend({
   tableName: 'user',
@@ -25,13 +25,20 @@ function constructor(...args) {
     }
   });
 
-  this.on('fetching', (model, columns, opts) => {
-    const emailIndex = _.findIndex(opts.query._statements, { column: 'user.email' });
+  function transformEmailToLowerCase(model, columns, opts) {
+    const emailIndex = findIndex(
+      opts.query._statements,
+      statement => statement.column === 'email' || statement.column === 'user.email',
+    );
     if (emailIndex >= 0) {
       const email = opts.query._statements[emailIndex];
       email.value = email.value.toLowerCase();
     }
-  });
+  }
+
+  this.on('fetching', transformEmailToLowerCase);
+  this.on('fetching:collection', transformEmailToLowerCase);
+
   bookshelf.Model.apply(this, args);
 }
 

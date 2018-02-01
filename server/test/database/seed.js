@@ -9,6 +9,21 @@ module.exports = (bookshelf) => {
   const eventDate = new Date();
   eventDate.setHours(23);
 
+  function createUser(email, password, withAuth) {
+    const userId = uuid();
+    const authId = uuid();
+    const token = jwt.sign({ data: userId }, config.authSecret, { expiresIn: '2h' });
+    return knex.raw(`INSERT INTO user(id, email) VALUES('${userId}', '${email}')`)
+      .then(() => {
+        if (password) {
+          const hash = bcrypt.hashSync(password, 10);
+          return knex.raw(`INSERT INTO auth(id, role, token, user_id, password) VALUES('${authId}', 'admin', '${token}', '${userId}', '${hash}')`);
+        } else if (withAuth) {
+          return knex.raw(`INSERT INTO auth(id, role, token, user_id) VALUES('${authId}', 'basic', '${token}', '${userId}')`);
+        }
+      });
+  }
+
   return knex('event')
     .insert({
       id: uuid(),
@@ -19,12 +34,6 @@ module.exports = (bookshelf) => {
       categories: { scratch: 'Scratch', web: 'Websites & Web Games', evolution: 'Evolution' },
       questions: ['social_project', 'educational_project', 'innovator_stage'],
     })
-    .then(() => {
-      const userId = uuid();
-      const authId = uuid();
-      const hash = bcrypt.hashSync('banana', 10);
-      const token = jwt.sign({ data: userId }, config.authSecret, { expiresIn: '2h' });
-      return knex.raw(`INSERT INTO user(id, email) VALUES('${userId}', 'hello@coolestprojects.org')`)
-        .then(() => knex.raw(`INSERT INTO auth(id, role, token, user_id, password) VALUES('${authId}', 'admin', '${token}', '${userId}', '${hash}')`));
-    });
+    .then(() => createUser('hello@coolestprojects.org', 'banana'))
+    .then(() => createUser('me@example.com'));
 };
