@@ -75,7 +75,7 @@
         return this.event.questions && this.event.questions.indexOf(q) >= 0;
       },
       async onSubmit() {
-        await ProjectService.update(this.event.id, this.projectId, {
+        await ProjectService.partialUpdate(this.event.id, this.projectId, {
           answers: this.answers,
         });
         this.$ga.event({
