@@ -1,7 +1,7 @@
 const ProjectModel = require('../models/project');
-const UserHandler = require('./users');
+const ProjectUsersModel = require('../models/projectUsers');
 const UserModel = require('../models/user');
-const { pick } = require('lodash');
+const { pick, differenceWith, intersectionWith } = require('lodash');
 const snakeCase = require('decamelize');
 
 class Project {
@@ -19,6 +19,7 @@ class Project {
     const users = [];
     // Save every user from the form
     project.users.forEach((user) => {
+      // The id is carefully removed to not overwrite an user
       const userPayload = pick(user, [
         'firstName',
         'lastName',
@@ -29,24 +30,13 @@ class Project {
         'phone',
         'country',
       ]);
-      const newUser = ((_userPayload) => {
-        // We reassign the user_id if the user already exists (based on email)
-        if (_userPayload.email) {
-          return UserHandler.get({ email: _userPayload.email }).then((_retrievedUser) => {
-            if (_retrievedUser !== null) _userPayload.id = _retrievedUser.id;
-            return Promise.resolve(_userPayload);
-          });
-        }
-        return Promise.resolve(_userPayload);
-      })(userPayload)
-        .then(_userPayload =>
-          new UserModel(_userPayload)
-            .save()
-            .then((_user) => {
-              users.push(Object.assign(_user.toJSON(), { type: user.type }));
-              // We return the association to be saved in ProjectUsers
-              return Promise.resolve({ user_id: _user.id, type: user.type });
-            }));
+      const newUser = new UserModel(userPayload)
+        .save()
+        .then((_user) => {
+          users.push(Object.assign(_user.toJSON(), { type: user.type }));
+          // We return the association to be saved in ProjectUsers
+          return Promise.resolve({ user_id: _user.id, type: user.type });
+        });
       promises.push(newUser);
     });
 
@@ -65,6 +55,33 @@ class Project {
 
   static get(identifier, withRelated) {
     return ProjectModel.where(identifier).fetch({ withRelated });
+  }
+
+  static removeUsers(projectId, userIds) {
+    return ProjectUsersModel
+      .where('user_id', 'IN', userIds)
+      .where('project_id', '=', projectId)
+      .where('type', '!=', 'owner')
+      .fetchAll()
+      .then((assocs) => {
+        return Promise.all(assocs.map(assoc => assoc.destroy()));
+      });
+  }
+
+  static getMissingUsers(originalUsers, newUsers, association) {
+    const usersToBeDeleted = differenceWith(
+      originalUsers,
+      newUsers,
+      (u1, u2) => u2.id === u1.id,
+    );
+    // We map the users to their associations
+    const assocIds = intersectionWith(
+      association,
+      usersToBeDeleted,
+      // Filter out the owner : it shouldn't be changed
+      (asso, u) => asso.userId === u.id && asso.type !== 'owner',
+    );
+    return assocIds.map(a => a.userId);
   }
 
   static getExtended(query, paginated) {

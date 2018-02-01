@@ -34,6 +34,16 @@ class User {
       .fetchAll({ withRelated })
       .then(users => Promise.resolve(users ? users.toJSON() : []));
   }
+  
+  static removeUsers(ids) {
+    return UserModel.where('id', 'IN', ids)
+      .fetchAll()
+      .then(users => Promise.all(users.map(u => u.destroy())));
+  }
+
+  static save(payload) {
+    return new UserModel(payload).save();
+  }
 }
 
 module.exports = User;
