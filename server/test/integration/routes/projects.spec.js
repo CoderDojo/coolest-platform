@@ -404,6 +404,7 @@ describe('integration: projects', () => {
   describe('/ GET', () => {
     let refAuth;
     let firstTenProjects;
+    const count = 55;
     before(() => {
       return Promise.all([
         util.auth.get('hello@coolestprojects.org')
@@ -451,7 +452,7 @@ describe('integration: projects', () => {
         .expect(200)
         .then((res) => {
           // Content
-          expect(res.body.count).to.equal(54);
+          expect(res.body.count).to.equal(count);
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
           expect(Object.keys(res.body.data[0])).to.eql(['id', 'name', 'category', 'createdAt', 'updatedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
           expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
@@ -469,7 +470,7 @@ describe('integration: projects', () => {
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
-          expect(res.body.count).to.equal(54);
+          expect(res.body.count).to.equal(count);
           expect(res.body.data.length).to.equal(10);
           firstTenProjects = res.body.data;
         });
@@ -481,7 +482,7 @@ describe('integration: projects', () => {
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
-          expect(res.body.count).to.equal(54);
+          expect(res.body.count).to.equal(count);
           expect(res.body.data.length).to.equal(10);
           expect(res.body.data).not.to.be.eql(firstTenProjects);
           expect(res.body.data.map(project => project.name))
@@ -494,9 +495,9 @@ describe('integration: projects', () => {
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
-          expect(res.body.count).to.equal(54);
+          expect(res.body.count).to.equal(count);
           expect(res.body.data.length).to.equal(20);
-          expect(res.body.data[0].name).to.be.eql('MyPoneyProject9');
+          expect(res.body.data[0].name).to.be.eql('Self-updated');
         });
     });
     it('should allow ordering by subqueries values (owner)', async () => {
@@ -505,7 +506,7 @@ describe('integration: projects', () => {
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
-          expect(res.body.count).to.equal(54);
+          expect(res.body.count).to.equal(count);
           // TODO : better define a project just for this one 
           // which starts with '0aaaa' to ensure the test always passes
           expect(res.body.data[0].owner.email).to.be.eql('listuserprojects@example.com');
@@ -518,10 +519,10 @@ describe('integration: projects', () => {
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
-          expect(res.body.count).to.equal(54);
+          expect(res.body.count).to.equal(count);
           expect(res.body.data.length).to.equal(50);
-          expect(res.body.data[0].supervisor.email).to.be.eql('test9@example.com');
-          expect(res.body.data[0].name).to.be.eql('MyPoneyProject9');
+          expect(res.body.data[0].supervisor.email).to.be.eql('updated@example.com');
+          expect(res.body.data[0].name).to.be.eql('Self-updated');
         });
     });
     it('should allow filtering', async () => {
