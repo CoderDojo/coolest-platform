@@ -177,7 +177,7 @@
             v-show="participants[n - 1].specialRequirementsProvided"
             class="full-width-block"
             v-model="participants[n - 1].specialRequirements"
-            v-validate="participants[n - 1].specialRequirementsProvided === 'true' ? 'required' : ''"
+            v-validate="participants[n - 1].specialRequirementsProvided ? 'required' : ''"
             :data-vv-name="`participant-${n}-specialRequirements`"
             rows="5"
             placeholder="Please add any allergies, disability requirements or special requests so we can try to facilitate these on the day."
