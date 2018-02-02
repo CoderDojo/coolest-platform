@@ -13,12 +13,13 @@ describe('User service', () => {
     it('should make a post call to /api/v1/users with the given email', async () => {
       // ARRANGE
       const email = 'example@example.com';
+      const eventSlug = 'bar';
       sandbox.stub(Vue.http, 'post')
-        .withArgs('/api/v1/users', { email })
+        .withArgs('/api/v1/users', { email, eventSlug })
         .resolves('success');
 
       // ACT
-      const response = await UserService.create(email);
+      const response = await UserService.create(email, eventSlug);
 
       // ASSERT
       expect(response).to.equal('success');
@@ -27,6 +28,7 @@ describe('User service', () => {
     it('should add authToken to localStorage and to req headers if returned', async () => {
       // ARRANGE
       const email = 'example@example.com';
+      const eventSlug = 'bar';
       const res = {
         body: {
           auth: {
@@ -35,12 +37,12 @@ describe('User service', () => {
         },
       };
       sandbox.stub(Vue.http, 'post')
-        .withArgs('/api/v1/users', { email })
+        .withArgs('/api/v1/users', { email, eventSlug })
         .resolves(res);
       sandbox.stub(localStorage, 'setItem');
 
       // ACT
-      await UserService.create(email);
+      await UserService.create(email, eventSlug);
 
       // ASSERT
       expect(localStorage.setItem).to.have.been.calledWith('authToken', 'foo');
