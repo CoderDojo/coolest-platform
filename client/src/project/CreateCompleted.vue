@@ -18,8 +18,15 @@ The next step, have fun and keep building your project!</p>
     </div>
     <div class="row">
       <div class="col">
-        <p>The project supervisor and participants do not need a ticket. For anyone else who wants to come on the day they need to <a href="https://ti.to/coderdojo-coolest-projects/coolest-projects-international-2018">book a ticket</a> when they become available.</p>
+        <p>The project supervisor and participants do not need a ticket. For anyone else who wants to come on the day they need to <a href="https://ti.to/coderdojo-coolest-projects/coolest-projects-international-2018">book a ticket</a>. If you want to manage multiple projects you can add more by clicking the button below.</p>
       </div>
+    </div>
+    <div class="row row-no-margin">
+      <div class="col-1fr"></div>
+      <div class="col-3fr">
+        <router-link class="btn btn-primary-outline full-width-block" :to="{ name: 'ProjectList', params: { _event: event, eventSlug } }">Register a new project</router-link>
+      </div>
+      <div class="col-1fr"></div>
     </div>
   </div>
 </template>

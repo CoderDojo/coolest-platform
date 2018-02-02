@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h2>Register for {{ event.name }}</h2>
+    <h2>Register or edit projects for {{ event.name }}</h2>
     <div v-if="error && error.status === 409">
-      <p>It looks like you've already registered a project with us. We've just sent an email to {{ email }} with a unique link. Click this to edit your project or create an additional one!</p>
+      <p>It looks like you've already registered a project with us. We've just sent an email to {{ email }} with a unique link. Click the link in your email to edit your project or create an additional one!</p>
     </div>
     <form v-else-if="event" @submit.prevent="onSubmit">
       <div class="row">
         <div class="col">
-          <label>This form is to register a project for Coolest Projects International 2018 which will be held on Saturday 26th May 2018 in RDS Simmonscourt, Dublin, Ireland. Just one person should register for each project.</label>
+          <label>This form is to register or edit a project for Coolest Projects International 2018 which will be held on Saturday 26th May 2018 in RDS Simmonscourt, Dublin, Ireland. Just one person should register for each project.</label>
         </div>
       </div>
       <div class="row">

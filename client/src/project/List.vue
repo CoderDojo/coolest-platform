@@ -16,7 +16,7 @@
     <div class="row row-no-margin">
       <div class="col-1fr"></div>
       <div class="col-3fr">
-        <router-link class="btn btn-primary-outline full-width-block" :to="{ name: 'CreateProject', params: { _event: event, eventSlug } }">Create New Project</router-link>
+        <router-link class="btn btn-primary-outline full-width-block" :to="{ name: 'CreateProject', params: { _event: event, eventSlug } }">Create new project</router-link>
       </div>
       <div class="col-1fr"></div>
     </div>
