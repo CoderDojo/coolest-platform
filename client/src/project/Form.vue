@@ -169,15 +169,15 @@
         <div class="col-1fr">
           <label>Any special requirements?</label>
           <select v-model="participants[n - 1].specialRequirementsProvided" v-validate="{ required: true }" :data-vv-name="`participant-${n}-specialRequirementsProvided`" class="full-width-block">
-            <option value="true">Yes</option>
-            <option value="false">No</option>
+            <option :value="true">Yes</option>
+            <option :value="false">No</option>
           </select>
           <span class="error-message" v-show="errors.has(`participant-${n}-specialRequirementsProvided`)" >* You must select whether this participant has special requirements</span>
           <textarea
-            v-show="participants[n - 1].specialRequirementsProvided === 'true'"
+            v-show="participants[n - 1].specialRequirementsProvided"
             class="full-width-block"
             v-model="participants[n - 1].specialRequirements"
-            v-validate="participants[n - 1].specialRequirementsProvided === 'true' ? 'required' : ''"
+            v-validate="participants[n - 1].specialRequirementsProvided ? 'required' : ''"
             :data-vv-name="`participant-${n}-specialRequirements`"
             rows="5"
             placeholder="Please add any allergies, disability requirements or special requests so we can try to facilitate these on the day."

@@ -70,6 +70,11 @@
         answers: {},
       };
     },
+    watch: {
+      project() {
+        this.answers = this.project.answers;
+      },
+    },
     methods: {
       hasQuestion(q) {
         return this.event.questions && this.event.questions.indexOf(q) >= 0;
