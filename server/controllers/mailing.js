@@ -1,4 +1,5 @@
 const mailer = require('@sendgrid/mail');
+const htmlEntities = require('html-entities').AllHtmlEntities;
 const { isEmpty } = require('lodash');
 
 // Examples : https://github.com/sendgrid/sendgrid-nodejs/blob/master/test/typescript/mail.ts
@@ -34,7 +35,7 @@ class Mailing {
       },
       subject: 'Welcome on CP',
       substitutions: {
-        projectName: project.name,
+        projectName: htmlEntities.encode(project.name),
       },
       categories: this.categories.concat(['cp-registration']),
       template_id: '6d20e65f-ae16-4b25-a17f-66d0398f474f',
@@ -55,7 +56,7 @@ class Mailing {
       subject: 'Welcome on CP',
       substitutions: {
         email,
-        link: `${process.env.HOSTNAME}/event/${slug}/my-projects?token=${token}`,
+        link: `${process.env.HOSTNAME}/event/${htmlEntities.encode(slug)}/my-projects?token=${token}`,
       },
       categories: this.categories.concat(['cp-returning-auth']),
       template_id: '9f9ecdb3-df2b-403a-9f79-c80f91adf0ca',
