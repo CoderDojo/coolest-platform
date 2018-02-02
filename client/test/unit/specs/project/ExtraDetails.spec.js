@@ -36,6 +36,20 @@ describe('Project ExtraDetails component', () => {
         // ASSERT
         expect(vm.answers).to.equal('foo');
       });
+
+      it('should set answers to an empty object if the project does not have answers yet', () => {
+        // ARRANGE
+        vm.project = {
+          answers: null,
+        };
+        vm.answers = 'bar';
+
+        // ACT
+        vm.$watchers.project();
+
+        // ASSERT
+        expect(vm.answers).to.deep.equal({});
+      });
     });
   });
 

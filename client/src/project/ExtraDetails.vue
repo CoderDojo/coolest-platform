@@ -72,7 +72,7 @@
     },
     watch: {
       project() {
-        this.answers = this.project.answers;
+        this.answers = this.project.answers || {};
       },
     },
     methods: {
