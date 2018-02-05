@@ -1,12 +1,5 @@
 <template>
-  <div>
-    <nav class="navbar navbar-branding">
-      <router-link :to="{ name: 'Admin' }">Coolest Projects Admin</router-link>
-    </nav>
-    <div class="container-fluid">
-      <router-view></router-view>
-    </div>
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>

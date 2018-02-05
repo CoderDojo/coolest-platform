@@ -147,6 +147,26 @@ describe('Admin Projects List component', () => {
     });
   });
 
+  describe('watchers', () => {
+    describe('itemsPerPage', () => {
+      it('should set the limit on the table', () => {
+        // ARRANGE
+        vm.$refs = {
+          projectListTable: {
+            setLimit: sandbox.stub(),
+          },
+        };
+
+        // ACT
+        vm.$watchers.itemsPerPage(5);
+
+        // ASSERT
+        expect(vm.$refs.projectListTable.setLimit).to.have.been.calledOnce;
+        expect(vm.$refs.projectListTable.setLimit).to.have.been.calledWith(5);
+      });
+    });
+  });
+
   describe('methods', () => {
     describe('requestAdapter', () => {
       it('should store data into tableState and return it', () => {
