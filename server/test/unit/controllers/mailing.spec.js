@@ -145,7 +145,7 @@ describe('mailing controllers', () => {
           subject: 'Welcome on CP',
           substitutions: {
             email,
-            link: 'http://platform.local/event/cp-2018/my-projects?token=newtoken',
+            link: 'http://platform.local/events/cp-2018/my-projects?token=newtoken',
           },
           categories: ['coolest-projects', 'cp-returning-auth'],
           template_id: '9f9ecdb3-df2b-403a-9f79-c80f91adf0ca',
