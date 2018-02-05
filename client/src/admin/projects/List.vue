@@ -1,20 +1,33 @@
 <template>
   <div>
-    <div class="row justify-content-end">
-      <div class="col-auto">
-        <a :href="csvUrl" :download="`${eventSlug}-export.csv`" class="btn btn-outline-primary">Export CSV</a>
-      </div>
+    <nav class="navbar navbar-branding">
+      <router-link :to="{ name: 'Admin' }">Coolest Projects Admin</router-link>
+      <ul class="nav justify-content-end">
+        <li class="nav-item"><span class="nav-link">Per page:</span></li>
+        <li class="nav-item">
+          <select v-model="itemsPerPage" class="form-control">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+          </select>
+        </li>
+        <li class="nav-item">
+          <a :href="csvUrl" :download="`${eventSlug}-export.csv`" class="nav-link">Export CSV</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="container-fluid">
+      <v-server-table ref="projectListTable" v-if="event.id" :url="tableUrl" :columns="columns" :options="options">
+        <span slot="category" slot-scope="props">{{ event.categories[props.row.category] }}</span>
+        <span v-if="props.row.org" slot="org" slot-scope="props">
+          <a v-if="props.row.org === 'coderdojo'" :href="`https://zen.coderdojo.com/dojos/${props.row.orgRef}`">CoderDojo</a>
+          <span v-else>{{ props.row.org }}</span>
+        </span>
+        <a v-if="props.row.owner" slot="owner.email" slot-scope="props" :href="`mailto:${props.row.owner.email}`">{{ props.row.owner.email }}</a>
+        <a v-if="props.row.supervisor" slot="supervisor.email" slot-scope="props" :href="`mailto:${props.row.supervisor.email}`">{{ props.row.supervisor.email }}</a>
+        <router-link class="fa fa-eye" slot="view" slot-scope="props" :to="{ name: 'AdminProjectsView', params: { projectId: props.row.id, eventSlug, _project: props.row, _event: event } }"></router-link>
+      </v-server-table>
     </div>
-    <v-server-table v-if="event.id" :url="tableUrl" :columns="columns" :options="options">
-      <span slot="category" slot-scope="props">{{ event.categories[props.row.category] }}</span>
-      <span v-if="props.row.org" slot="org" slot-scope="props">
-        <a v-if="props.row.org === 'coderdojo'" :href="`https://zen.coderdojo.com/dojos/${props.row.orgRef}`">CoderDojo</a>
-        <span v-else>{{ props.row.org }}</span>
-      </span>
-      <a v-if="props.row.owner" slot="owner.email" slot-scope="props" :href="`mailto:${props.row.owner.email}`">{{ props.row.owner.email }}</a>
-      <a v-if="props.row.supervisor" slot="supervisor.email" slot-scope="props" :href="`mailto:${props.row.supervisor.email}`">{{ props.row.supervisor.email }}</a>
-      <router-link class="fa fa-eye" slot="view" slot-scope="props" :to="{ name: 'AdminProjectsView', params: { projectId: props.row.id, eventSlug, _project: props.row, _event: event } }"></router-link>
-    </v-server-table>
   </div>
 </template>
 
@@ -37,6 +50,7 @@
           'view',
         ],
         tableState: {},
+        itemsPerPage: 50,
       };
     },
     computed: {
@@ -59,7 +73,8 @@
             'owner.email',
             'supervisor.email',
           ],
-          perPage: 50,
+          perPage: this.itemsPerPage,
+          perPageValues: [],
           sortIcon: {
             base: 'fa',
             up: 'fa-sort-asc',
@@ -99,6 +114,10 @@
                 id: 'pioneers',
                 text: 'Pioneers',
               },
+              {
+                id: 'other',
+                text: 'Other',
+              },
             ],
           },
           requestAdapter: this.requestAdapter,
@@ -136,6 +155,11 @@
           queryStr += `&byColumn=${encodeURIComponent(this.tableState.byColumn)}`;
         }
         return `/api/v1/events/${this.event.id}/projects?format=csv&token=${this.token}${queryStr}`;
+      },
+    },
+    watch: {
+      itemsPerPage(val) {
+        this.$refs.projectListTable.setLimit(val);
       },
     },
     methods: {
