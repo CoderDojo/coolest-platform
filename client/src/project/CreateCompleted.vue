@@ -1,8 +1,16 @@
 <template>
   <div v-if="event && project">
     <div class="row">
+      <div class="col">
+        <img :alt="`I'm going to ${event.name}!`" class="share_image" src="../assets/share_image.png" />
+      </div>
+    </div>
+    <div class="row">
       <div class="col text-center">
-        <h1>You're coming to {{ event.name }}!</h1>
+        <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=I%E2%80%99m%20going%20to%20%40coolestprojects%20International%2C%20a%20world-leading%20showcase%20of%20creative%20tech%20projects%20developed%20by%20young%20people%20in%20the%20RDS%2C%20Dublin%20on%20May%2026th&hashtags=CPIntl18&url=https://pic.twitter.com/SAy3DC4nVK" data-size="large"></a>
+      </div>
+      <div class="col text-center">
+        <div class="fb-share-button" data-href="https://coolestprojects.org" data-layout="button" data-size="large" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcoolestprojects.org%2F&amp;src=sdkpreparse"></a></div>
       </div>
     </div>
     <div class="row">
@@ -32,8 +40,19 @@ The next step, have fun and keep building your project!</p>
 </template>
 
 <script>
+  import Vue from 'vue';
   import moment from 'moment';
   import FetchProjectMixin from '@/project/FetchProjectMixin';
+
+  let eventLabel;
+
+  function trackTweet() {
+    Vue.$ga.event({
+      eventCategory: 'CreateProjectCompleted',
+      eventAction: 'tweet',
+      eventLabel,
+    });
+  }
 
   export default {
     name: 'CreateProjectCompleted',
@@ -43,5 +62,49 @@ The next step, have fun and keep building your project!</p>
         return moment.utc(this.event.date).format('MMM Do');
       },
     },
+    methods: {
+      trackTweet,
+    },
+    created() {
+      eventLabel = this.eventSlug;
+    },
   };
+
+  // Code from Twitter and Facebook for share buttons
+  /* eslint-disable */
+  window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+
+    t._e = [];
+    t.ready = function(f) {
+      t._e.push(f);
+    };
+
+    return t;
+  }(document, "script", "twitter-wjs"));
+
+  window.twttr.ready(function (twttr) {
+    window.twttr.events.bind('tweet', trackTweet);
+  });
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.12';
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+  /* eslint-enable */
 </script>
+
+<style scoped>
+  .share_image {
+    width: 100%;
+  }
+</style>
