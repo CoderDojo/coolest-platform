@@ -2,6 +2,7 @@ import userAuthNavGuard from 'inject-loader!@/router/userAuthNavGuard';
 
 describe('adminNavGuard', () => {
   let sandbox;
+  let MockVue;
   let MockAuthService;
   let userAuthNavGuardWithMocks;
   let nextStub;
@@ -18,10 +19,18 @@ describe('adminNavGuard', () => {
     fromStub = {
       path: '/',
     };
+    MockVue = {
+      http: {
+        headers: {
+          common: {},
+        },
+      },
+    };
     MockAuthService = {
       authToken: sandbox.stub(),
     };
     userAuthNavGuardWithMocks = userAuthNavGuard({
+      vue: MockVue,
       '@/auth/service': MockAuthService,
     }).default;
     nextStub = sandbox.stub();
@@ -83,6 +92,7 @@ describe('adminNavGuard', () => {
     expect(nextStub).to.have.been.calledOnce;
     expect(nextStub).to.have.been.calledWith(true);
     expect(toStub.params.userId).to.equal(userId);
+    expect(MockVue.http.headers.common.Authorization).to.equal('Bearer user_token');
     expect(localStorage.setItem).to.have.been.calledOnce;
     expect(localStorage.setItem).to.have.been.calledWith('authToken', 'user_token');
   });
@@ -101,6 +111,7 @@ describe('adminNavGuard', () => {
     expect(nextStub).to.have.been.calledOnce;
     expect(nextStub).to.have.been.calledWith(true);
     expect(toStub.params.userId).to.equal(userId);
+    expect(MockVue.http.headers.common.Authorization).to.equal('Bearer user_token');
     expect(localStorage.setItem).to.have.been.calledOnce;
     expect(localStorage.setItem).to.have.been.calledWith('authToken', 'user_token');
   });

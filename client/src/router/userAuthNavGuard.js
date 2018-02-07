@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import AuthService from '@/auth/service';
 
 export default async function (to, from, next) {
@@ -9,6 +10,7 @@ export default async function (to, from, next) {
       const authCheck = (await AuthService.authToken(authToken)).body;
       to.params.userId = authCheck.userId;
       isAuthorized = true;
+      Vue.http.headers.common.Authorization = `Bearer ${authToken}`;
       localStorage.setItem('authToken', authToken);
     } catch (e) {
       isAuthorized = false;
