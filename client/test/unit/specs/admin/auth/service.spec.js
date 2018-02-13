@@ -9,6 +9,39 @@ describe('Admin Auth service', () => {
     sandbox.restore();
   });
 
+  describe('checkToken', () => {
+    it('should set the Authorization header and return true if the request succeeds', async () => {
+      // ARRANGE
+      const token = 'admin_token';
+      sandbox.stub(Vue.http, 'post')
+        .withArgs('/api/v1/admin/auth/token', { token })
+        .resolves();
+
+      // ACT
+      const res = await AdminAuthService.checkToken(token);
+
+      // ASSERT
+      expect(res).to.equal(true);
+      expect(Vue.http.headers.common.Authorization).to.equal('Bearer admin_token');
+    });
+
+    it('should not set the Authorization header and return false if the request fails', async () => {
+      // ARRANGE
+      const token = 'admin_token';
+      sandbox.stub(Vue.http, 'post')
+        .withArgs('/api/v1/admin/auth/token', { token })
+        .rejects();
+      Vue.http.headers.common.Authorization = '';
+
+      // ACT
+      const res = await AdminAuthService.checkToken(token);
+
+      // ASSERT
+      expect(res).to.equal(false);
+      expect(Vue.http.headers.common.Authorization).to.equal('');
+    });
+  });
+
   describe('login()', () => {
     it('should return true for a valid login and set the authToken in localStorage and req headers', async () => {
       // ARRANGE

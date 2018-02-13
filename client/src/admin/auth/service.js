@@ -4,6 +4,7 @@ const AdminAuthService = {
   async checkToken(token) {
     try {
       await Vue.http.post('/api/v1/admin/auth/token', { token });
+      Vue.http.headers.common.Authorization = `Bearer ${token}`;
       return true;
     } catch (e) {
       return false;
