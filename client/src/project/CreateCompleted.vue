@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <div class="col text-center">
-        <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=I%E2%80%99m%20going%20to%20%40coolestprojects%20International%2C%20a%20world-leading%20showcase%20of%20creative%20tech%20projects%20developed%20by%20young%20people%20in%20the%20RDS%2C%20Dublin%20on%20May%2026th&hashtags=CPIntl18&url=https://pic.twitter.com/SAy3DC4nVK" data-size="large"></a>
+        <a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=I%E2%80%99m%20going%20to%20%40coolestprojects%20International%2C%20a%20world-leading%20showcase%20of%20creative%20tech%20projects%20developed%20by%20young%20people%20in%20the%20RDS%2C%20Dublin%20on%20May%2026th&hashtags=CoolestProjects&url=https://pic.twitter.com/SAy3DC4nVK" data-size="large"></a>
       </div>
       <div class="col text-center">
         <div class="fb-share-button" data-href="https://coolestprojects.org" data-layout="button" data-size="large" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcoolestprojects.org%2F&amp;src=sdkpreparse"></a></div>
