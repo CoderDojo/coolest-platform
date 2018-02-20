@@ -28,9 +28,9 @@ const events = [
   {
     id: eventId,
     slug: 'cp-2018',
-    name: 'Coolest Projects Dublin 2018',
-    location: 'RDS Dublin',
-    date: '2018-05-26T00:00:00.000Z',
+    name: 'Coolest Projects International 2018',
+    location: 'RDS Simmonscourt, Dublin',
+    date: '2018-05-26T10:00:00.000Z',
     categories,
     questions: ['social_project', 'educational_project', 'innovator_stage']
   },
