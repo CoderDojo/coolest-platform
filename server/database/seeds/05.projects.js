@@ -8,7 +8,8 @@ exports.seed = (knex, Promise) =>
   }).then((events) => {
     const eventId = events[0].id;
     const categories = events[0].categories;
-    const orgs = ['coderdojo', 'codeclub', 'raspberryjam', 'pioneers'];
+    const genders = ['male', 'female', 'undisclosed'];
+    const orgs = ['coderdojo', 'codeclub', 'raspberryjam', 'pioneers', 'other'];
 
     function createProject(i) {
       const ownerId = uuid();
@@ -29,6 +30,7 @@ exports.seed = (knex, Promise) =>
               last_name: `Member ${i + 1}`,
               email: `testmember${i + 1}@example.com`,
               dob: '2004-06-25T00:00:00.000Z',
+              gender: genders[Math.floor(Math.random() * 3)],
             },
             {
               id: supervisorId,
@@ -45,7 +47,7 @@ exports.seed = (knex, Promise) =>
             event_id: eventId,
             name: `Test Project ${i + 1}`,
             category: Object.keys(categories)[Math.floor(Math.random() * 2)],
-            org: orgs[Math.floor(Math.random() * 3)],
+            org: orgs[Math.floor(Math.random() * 5)],
             org_ref: uuid(),
           });
         })

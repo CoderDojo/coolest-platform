@@ -1,21 +1,18 @@
 <template>
   <div>
-    <nav class="navbar navbar-branding">
-      <router-link :to="{ name: 'Admin' }">Coolest Projects Admin</router-link>
-      <ul class="nav justify-content-end">
-        <li class="nav-item"><span class="nav-link">Per page:</span></li>
-        <li class="nav-item">
-          <select v-model="itemsPerPage" class="form-control">
-            <option>10</option>
-            <option>25</option>
-            <option>50</option>
-          </select>
-        </li>
-        <li class="nav-item">
-          <a :href="csvUrl" :download="`${eventSlug}-export.csv`" class="nav-link">Export CSV</a>
-        </li>
-      </ul>
-    </nav>
+    <navigation :eventSlug="eventSlug">
+      <li class="nav-item"><span class="nav-link">Per page:</span></li>
+      <li class="nav-item">
+        <select v-model="itemsPerPage" class="form-control">
+          <option>10</option>
+          <option>25</option>
+          <option>50</option>
+        </select>
+      </li>
+      <li class="nav-item">
+        <a :href="csvUrl" :download="`${eventSlug}-export.csv`" class="nav-link">Export CSV</a>
+      </li>
+    </navigation>
     <div class="container-fluid">
       <v-server-table ref="projectListTable" v-if="event.id" :url="tableUrl" :columns="columns" :options="options">
         <span slot="category" slot-scope="props">{{ event.categories[props.row.category] }}</span>
@@ -32,11 +29,15 @@
 </template>
 
 <script>
+  import Navigation from '@/admin/Navigation';
   import FetchEventMixin from '@/event/FetchEventMixin';
 
   export default {
     name: 'AdminProjects',
     mixins: [FetchEventMixin],
+    components: {
+      Navigation,
+    },
     data() {
       return {
         columns: [

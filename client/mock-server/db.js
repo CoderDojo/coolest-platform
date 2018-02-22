@@ -7,7 +7,7 @@ const categories = {
   evo: 'Evolution',
   hardware: 'Hardware',
 };
-const orgs = ['coderdojo', 'codeclub', 'raspberryjam', 'pioneers'];
+const orgs = ['coderdojo', 'codeclub', 'raspberryjam', 'pioneers', 'other'];
 
 const users = [
   {
@@ -20,9 +20,76 @@ const users = [
     phone: '353851234567',
     country: 'IE',
     parent: {},
-    type: 'supervisor',
+    membership: [{
+      type: 'supervisor',
+    }],
   },
 ];
+
+for (let i = 0; i < 100; i += 1) {
+  let gender = 'undisclosed';
+  const rand = Math.random();
+  if (rand > 0.6) {
+    gender = 'female';
+  } else if (rand > 0.1) {
+    gender = 'male';
+  }
+  users.push({
+    id: uuidv1(),
+    firstName: 'Test',
+    lastname: `Member ${i + 1}`,
+    dob: '2004-06-25T00:00:00.000Z',
+    gender,
+    membership: [{
+      type: 'member',
+    }],
+  });
+}
+
+for (let i = 0; i < 40; i += 1) {
+  users.push({
+    id: uuidv1(),
+    firstName: 'Test',
+    lastname: `Supervisor ${i + 1}`,
+    email: `testsupervisor${i + 1}@example.com`,
+    phone: '+3531234567',
+    membership: [{
+      type: 'supervisor',
+    }],
+  });
+}
+
+users.push({
+  id: uuidv1(),
+  firstName: 'Test',
+  lastname: 'Supervisor 10',
+  email: 'testsupervisor10@example.com',
+  phone: '+3531234567',
+  membership: [{
+    type: 'supervisor',
+  }],
+});
+
+users.push({
+  id: uuidv1(),
+  firstName: 'Test',
+  lastname: 'Supervisor 24',
+  email: 'testsupervisor24@example.com',
+  phone: '+3531234567',
+  membership: [{
+    type: 'supervisor',
+  }],
+});
+
+for (let i = 0; i < 30; i += 1) {
+  users.push({
+    id: uuidv1(),
+    email: `testowner${i + 1}@example.com`,
+    membership: [{
+      type: 'owner',
+    }],
+  });
+}
 
 const events = [
   {
@@ -143,7 +210,7 @@ for (let i = 0; i < 100; i += 1) {
     eventId,
     name: `Test Project ${i + 1}`,
     category: Object.keys(categories)[Math.floor(Math.random() * 3)],
-    org: orgs[Math.floor(Math.random() * 3)],
+    org: orgs[Math.floor(Math.random() * 5)],
     orgRef: uuidv1(),
     owner: {
       email: `testowner${i + 1}@example.com`,

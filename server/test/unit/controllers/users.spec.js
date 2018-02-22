@@ -175,4 +175,45 @@ describe('users controllers', () => {
       expect(res).to.deep.equal([]);
     });
   });
+  describe('getExtended', () => {
+    let controllers;
+    const userInstance = {};
+    // eslint-disable-next-line func-style
+    before(() => {
+      controllers = proxy('../../../controllers/users', {
+        '../models/auth': {},
+        '../models/user': userInstance,
+      });
+    });
+
+    it('should fetch Page with default params', async () => {
+      userInstance.orderBy = sinon.stub().returns(userInstance);
+      userInstance.fetchPage = sinon.stub().returns(userInstance);
+      userInstance.query = sinon.stub().returns(userInstance);
+      userInstance.andWhere = sinon.stub().returns(userInstance);
+      userInstance.query = sinon.stub()
+        .callsArgWith(0, userInstance)
+        .returns(userInstance);
+
+      await controllers.getExtended({ query: {} });
+      expect(userInstance.andWhere).to.not.have.been.called;
+      expect(userInstance.orderBy).to.have.been.calledWith('created_at', 'desc');
+      expect(userInstance.fetchPage).to.have.been.calledWith({ pageSize: 25, page: 1, withRelated: ['membership'] });
+    });
+    it('should accept params to customize the search', async () => {
+      userInstance.orderBy = sinon.stub().returns(userInstance);
+      userInstance.fetchPage = sinon.stub().returns(userInstance);
+      userInstance.query = sinon.stub().returns(userInstance);
+      userInstance.andWhere = sinon.stub().returns(userInstance);
+      userInstance.query = sinon.stub()
+        .callsArgWith(0, userInstance)
+        .returns(userInstance);
+
+      await controllers.getExtended({ query: { gender: 'snail' }, page: 2, limit: 50 });
+      expect(userInstance.andWhere).to.have.been.calledOnce;
+      expect(userInstance.andWhere).to.have.been.calledWith('gender', '=', 'snail');
+      expect(userInstance.orderBy).to.have.been.calledWith('created_at', 'desc');
+      expect(userInstance.fetchPage).to.have.been.calledWith({ pageSize: 50, page: 2, withRelated: ['membership'] });
+    });
+  });
 });
