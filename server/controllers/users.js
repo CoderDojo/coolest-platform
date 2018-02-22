@@ -1,5 +1,6 @@
 const UserModel = require('../models/user');
 const AuthModel = require('../models/auth');
+const snakeCase = require('decamelize');
 
 // curl -H 'Content-Type: application/json' -X POST --data-binary '{"email": "a"}' http://localhost:3000/api/v1/users
 // TODO : use req.body and apply endpoint validation
@@ -33,6 +34,21 @@ class User {
     return UserModel.where(identifier)
       .fetchAll({ withRelated })
       .then(users => Promise.resolve(users ? users.toJSON() : []));
+  }
+
+  static getExtended(query) {
+    const users = UserModel.query((qb) => {
+      Object.keys(query.query).forEach((field) => {
+        const value = query.query[field];
+        qb.andWhere(snakeCase(field), '=', value);
+      });
+    })
+      .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === '1' ? 'asc' : 'desc');
+    return users.fetchPage({
+      pageSize: query.limit || 25,
+      page: query.page || 1,
+      withRelated: ['membership'],
+    });
   }
 
   static removeUsers(ids) {

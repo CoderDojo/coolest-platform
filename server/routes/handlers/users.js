@@ -63,4 +63,15 @@ module.exports = {
       res.status(200).json(res.locals.user);
     },
   ],
+  getAll: [
+    (req, res) => {
+      req.query.query = req.query.query || {};
+      return userController
+        .getExtended(req.query)
+        .then(users => res.status(200).json({
+          data: users.models,
+          count: users.pagination.rowCount,
+        }));
+    },
+  ],
 };

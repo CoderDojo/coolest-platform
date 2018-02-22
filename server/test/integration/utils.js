@@ -63,6 +63,11 @@ module.exports = (app) => {
       });
   }
 
+  function getUser(token, params) {
+    return request(app)
+      .get(`/api/v1/users?token=${token}&${params}`);
+  }
+
   function getAuth(email) {
     return db.raw(`SELECT auth.* FROM auth JOIN user u ON u.id = auth.user_id WHERE u.email = '${email}'`);
   }
@@ -73,6 +78,7 @@ module.exports = (app) => {
     },
     user: {
       create: createUser,
+      get: getUser,
     },
     event: {
       get: getEvent,

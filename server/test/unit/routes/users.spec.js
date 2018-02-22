@@ -205,4 +205,58 @@ describe('router: user', () => {
       expect(nextMock).to.have.calledThrice;
     });
   });
+  describe('get', () => {
+    let sandbox;
+    let handler;
+    const userController = class {};
+    const authController = class {};
+    let statusStub;
+    let jsonStub;
+    let errorHandler;
+    before(() => {
+      sandbox = sinon.sandbox.create();
+      handlers = (proxy('../../../routes/handlers/users', {
+        '../../controllers/users': userController,
+        '../../controllers/auth': authController,
+      })).getAll;
+      jsonStub = sandbox.stub();
+      errorHandler = sandbox.stub();
+      handler = (req, res, next) => {
+        return handlers[0](req, res)
+          .catch(err => errorHandler(err));
+      };
+    });
+
+    beforeEach(() => {
+      sandbox.reset();
+      statusStub = sandbox.stub().returns({
+        json: jsonStub,
+      });
+    });
+
+    it('should format to json', async () => {
+      const getAllController = sandbox.stub();
+      const query = {
+        gender: 'female',
+      };
+      const mockReq = {
+        query,
+      };
+      const mockRes = {
+        status: statusStub,
+      };
+
+      userController.getExtended = getAllController.resolves({
+        models: [],
+        pagination: { rowCount: 0 },
+      });
+      await handler(mockReq, mockRes);
+      expect(userController.getExtended).to.have.been.calledWith(query);
+      expect(statusStub).to.have.been.calledWith(200);
+      expect(jsonStub).to.have.been.calledWith({
+        count: 0,
+        data: [],
+      });
+    });
+  });
 });

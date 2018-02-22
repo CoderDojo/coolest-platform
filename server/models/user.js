@@ -7,6 +7,9 @@ const User = bookshelf.Model.extend({
   project() {
     return this.belongsToMany('Project').through('ProjectUsers');
   },
+  membership() {
+    return this.hasMany('ProjectUsers');
+  },
   auth() {
     return this.hasOne('Auth');
   },

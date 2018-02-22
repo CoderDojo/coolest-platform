@@ -76,6 +76,36 @@ describe('integration: users', () => {
         });
     });
   });
+  describe('get', () => {
+    let adminToken;
+    before(async () => {
+      const reqUtils = utils(app);
+      adminToken = (await reqUtils.auth.get('hello@coolestprojects.org'))[0].token;
+    });
+    it('should reject if requesting user is not an admin', async () => {
+      const reqUtils = utils(app);
+      await reqUtils.user.get(refToken)
+        .expect(403);
+    });
+    it('should return a list of users', async () => {
+      const reqUtils = utils(app);
+      await reqUtils.user.get(adminToken)
+        .expect(200)
+        .then((res) => {
+          expect(res.body.count).to.equal(5);
+          expect(res.body.data.length).to.equal(5);
+          expect(Object.keys(res.body.data[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'membership']);
+        });
+    });
+    it('should accept some params', async () => {
+      const reqUtils = utils(app);
+      await reqUtils.user.get(adminToken, 'query[gender]=female')
+        .expect(200)
+        .then((res) => {
+          expect(res.body.count).to.equal(0);
+        });
+    });
+  });
   after(() => {
     app.close();
   });
