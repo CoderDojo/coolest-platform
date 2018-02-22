@@ -20,7 +20,7 @@ const users = [
     phone: '353851234567',
     country: 'IE',
     parent: {},
-    projectUsers: [{
+    membership: [{
       type: 'supervisor',
     }],
   },
@@ -40,7 +40,7 @@ for (let i = 0; i < 100; i += 1) {
     lastname: `Member ${i + 1}`,
     dob: '2004-06-25T00:00:00.000Z',
     gender,
-    projectUsers: [{
+    membership: [{
       type: 'member',
     }],
   });
@@ -53,7 +53,7 @@ for (let i = 0; i < 40; i += 1) {
     lastname: `Supervisor ${i + 1}`,
     email: `testsupervisor${i + 1}@example.com`,
     phone: '+3531234567',
-    projectUsers: [{
+    membership: [{
       type: 'supervisor',
     }],
   });
@@ -65,7 +65,7 @@ users.push({
   lastname: 'Supervisor 10',
   email: 'testsupervisor10@example.com',
   phone: '+3531234567',
-  projectUsers: [{
+  membership: [{
     type: 'supervisor',
   }],
 });
@@ -76,7 +76,7 @@ users.push({
   lastname: 'Supervisor 24',
   email: 'testsupervisor24@example.com',
   phone: '+3531234567',
-  projectUsers: [{
+  membership: [{
     type: 'supervisor',
   }],
 });
@@ -85,7 +85,7 @@ for (let i = 0; i < 30; i += 1) {
   users.push({
     id: uuidv1(),
     email: `testowner${i + 1}@example.com`,
-    projectUsers: [{
+    membership: [{
       type: 'owner',
     }],
   });
