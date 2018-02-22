@@ -17,6 +17,7 @@ const Admin = () => import(/* webpackChunkName: "admin" */ '@/admin/Base');
 const AdminLogin = () => import(/* webpackChunkName: "admin" */ '@/admin/auth/Login');
 const AdminProjectsList = () => import(/* webpackChunkName: "admin" */ '@/admin/projects/List');
 const AdminProjectsView = () => import(/* webpackChunkName: "admin" */ '@/admin/projects/View');
+const AdminProjectsStats = () => import(/* webpackChunkName: "admin" */ '@/admin/projects/Stats');
 
 Vue.use(Router);
 
@@ -127,6 +128,12 @@ export default new Router({
               path: 'projects/:projectId',
               name: 'AdminProjectsView',
               component: AdminProjectsView,
+              props: true,
+            },
+            {
+              path: 'stats',
+              name: 'AdminProjectsStats',
+              component: AdminProjectsStats,
               props: true,
             },
           ],
