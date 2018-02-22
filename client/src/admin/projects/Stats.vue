@@ -73,7 +73,7 @@
     },
     computed: {
       members() {
-        return this.users.filter(user => user.membership[0].type === 'member');
+        return this.users.filter(user => user.membership[0] && user.membership[0].type === 'member');
       },
       membersMale() {
         return this.members.filter(user => user.gender === 'male');
@@ -95,7 +95,7 @@
       },
       supervisors() {
         return uniqWith(
-          this.users.filter(user => user.membership[0].type === 'supervisor'),
+          this.users.filter(user => user.membership[0] && user.membership[0].type === 'supervisor'),
           (user1, user2) => user1.email === user2.email,
         );
       },
@@ -137,11 +137,11 @@
     },
     methods: {
       async fetchUsers() {
-        this.users = (await Vue.http.get('/api/v1/users')).body.data;
+        this.users = (await Vue.http.get(`/api/v1/users?limit=${Number.MAX_SAFE_INTEGER}`)).body.data;
       },
       async fetchProjects() {
         if (this.event.id) {
-          this.projects = (await Vue.http.get(`/api/v1/events/${this.event.id}/projects`)).body.data;
+          this.projects = (await Vue.http.get(`/api/v1/events/${this.event.id}/projects?limit=${Number.MAX_SAFE_INTEGER}`)).body.data;
         }
       },
     },
