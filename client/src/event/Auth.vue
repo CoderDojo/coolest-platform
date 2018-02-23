@@ -36,7 +36,10 @@
       </div>
       <div v-if="error" class="row error-message">
         <div class="col">
-          <p v-if="error && error.status !== 409">
+          <p v-if="error && error.status === 401">
+            Sorry! That link you clicked was out of date. If you just re-enter your email here you'll get a new link to edit your projects or add a new project.
+          </p>
+          <p v-else-if="error && error.status !== 409">
             Sorry. There was an problem registering your email, please contact <a href="email:hello@coolestprojects.org">hello@coolestprojects.org</a> so we can help you.
           </p>
         </div>
@@ -78,6 +81,11 @@
           }
         }
       },
+    },
+    created() {
+      if (this.$route.query.authFailed) {
+        this.error = { status: 401 };
+      }
     },
   };
 </script>

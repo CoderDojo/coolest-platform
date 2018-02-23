@@ -29,6 +29,15 @@ describe('Auth component', () => {
     sandbox.restore();
   });
 
+  describe('created', () => {
+    it('should set the error if authFailed is set', async () => {
+      // ARRANGE
+      vm.$route = { query: { authFailed: true } };
+      await vm.$lifecycleMethods.created();
+      expect(vm.error).to.eql({ status: 401 });
+    });
+  });
+
   describe('methods', () => {
     describe('onSubmit', () => {
       it('should create a user and navigate to create-project', async () => {
