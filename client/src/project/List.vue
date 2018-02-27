@@ -3,7 +3,8 @@
     <h2>Register for {{ event.name }}</h2>
     <div class="row">
       <div class="col">
-        <p>You have already registered a coolest project. Do you want to edit it or do you have another team you want to register?</p>
+        <p v-if="projects.length > 0">You have already registered a project. Do you want to edit it or do you have another team you want to register?</p>
+        <p v-else>You have not registered a project. Do you want to register one?</p>
       </div>
     </div>
     <div class="row row-no-margin" v-for="project in projects">
