@@ -36,7 +36,7 @@
       </div>
       <div v-if="error" class="row error-message">
         <div class="col">
-          <p v-if="error && error.status === 401">
+          <p v-if="$route.query.authFailed">
             Sorry! That link you clicked was out of date. If you just re-enter your email here you'll get a new link to edit your projects or add a new project.
           </p>
           <p v-else-if="error && error.status !== 409">
@@ -81,11 +81,6 @@
           }
         }
       },
-    },
-    created() {
-      if (this.$route.query.authFailed) {
-        this.error = { status: 401 };
-      }
     },
   };
 </script>
