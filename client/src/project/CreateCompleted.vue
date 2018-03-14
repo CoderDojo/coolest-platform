@@ -26,7 +26,7 @@ The next step, have fun and keep building your project!</p>
     </div>
     <div class="row">
       <div class="col">
-        <p>The project supervisor and participants do not need a ticket. For anyone else who wants to come on the day they need to <a href="https://ti.to/coderdojo-coolest-projects/coolest-projects-international-2018">book a ticket</a>. If you want to manage multiple projects you can add more by clicking the button below.</p>
+        <p>The project supervisor and participants do not need a ticket. For anyone else who wants to come on the day they need to <a href="https://tickets.coolestprojects.org">book a ticket</a>. If you want to manage multiple projects you can add more by clicking the button below.</p>
       </div>
     </div>
     <div class="row row-no-margin">
