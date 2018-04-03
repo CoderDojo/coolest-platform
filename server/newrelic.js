@@ -5,7 +5,6 @@
  * description of configuration variables and their potential values.
  */
 exports.config = {
-  app_name: ['coolest-platform'],
   license_key: '', // set via NEW_RELIC_LICENSE_KEY
   logging: {
     /**
