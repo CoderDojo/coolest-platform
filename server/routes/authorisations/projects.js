@@ -4,6 +4,13 @@ const utils = require('./utils');
 // eslint-disable-next-line new-cap
 const acl = new Acl(new Acl.memoryBackend());
 
+// Edition is available while the event isn't frozen
+const canEdit =
+  (req) => { return req.params.id && ['put', 'patch'].includes(req.method.toLowerCase()) ? !req.app.locals.event.isFrozen() : true; };
+// Creation is available while the event isn't frozen
+const canCreate =
+  (req) => { return req.method.toLowerCase() === 'post' ? req.app.locals.event.isOpen() : true; };
+
 module.exports.define = (apiPrefix, originalPrefix) => {
   acl.allow([
     {
@@ -39,10 +46,16 @@ module.exports.define = (apiPrefix, originalPrefix) => {
 
 module.exports.isAllowed = (req, res, next) => {
   if (req.params.id) {
-    if ((req.app.locals.project && req.app.locals.project.isOwner(req.user.userId)) || req.user.role === 'admin') {
+    if ((req.app.locals.project &&
+      req.app.locals.project.isOwner(req.user.userId) &&
+      canEdit(req)) ||
+      req.user.role === 'admin') {
       return next();
     }
     return utils.disallowed(next);
   }
-  return utils.isAllowed(acl)(req, res, next);
+  if (canCreate(req)) {
+    return utils.isAllowed(acl)(req, res, next);
+  }
+  return utils.disallowed(next);
 };
