@@ -134,21 +134,19 @@ describe('authorisations: project', () => {
       expect(isAllowedCb).to.have.been.calledOnce;
       expect(isAllowedCb).to.have.been.calledWith(req, {}, next);
     });
-    it('without id: should allow a creation when the event isnt frozen', () => {
+    it('without id: should allow a creation when the event registration is open', () => {
       const userId = '222';
       const project = {
         isOwner: sandbox.stub(),
       };
       const event = {
         isOpen: sandbox.stub(),
-        isFrozen: sandbox.stub(),
       };
       const isAllowedCb = sinon.stub();
       utils.isAllowed = sinon.stub().returns(isAllowedCb);
       utils.disallowed = sinon.stub();
       project.isOwner.returns(false);
       event.isOpen.returns(true);
-      event.isFrozen.returns(false);
       const req = {
         params: {},
         user: { userId },
@@ -165,28 +163,25 @@ describe('authorisations: project', () => {
       authorisations.isAllowed(req, {}, next);
       expect(project.isOwner).to.not.have.been.called;
       expect(event.isOpen).to.have.been.calledOnce;
-      expect(event.isFrozen).to.have.been.calledOnce;
       expect(utils.disallowed).to.not.have.been.called;
       expect(utils.isAllowed).to.have.been.calledOnce;
       expect(utils.isAllowed).to.have.been.calledWith(sinon.match.object);
       expect(isAllowedCb).to.have.been.calledOnce;
       expect(isAllowedCb).to.have.been.calledWith(req, {}, next);
     });
-    it('without id: should refuse a creation when the event is frozen', () => {
+    it('without id: should refuse a creation when the event registration is closed', () => {
       const userId = '222';
       const project = {
         isOwner: sandbox.stub(),
       };
       const event = {
         isOpen: sandbox.stub(),
-        isFrozen: sandbox.stub(),
       };
       const isAllowedCb = sinon.stub();
       utils.isAllowed = sinon.stub().returns(isAllowedCb);
       utils.disallowed = sinon.stub();
       project.isOwner.returns(false);
-      event.isOpen.returns(true);
-      event.isFrozen.returns(true);
+      event.isOpen.returns(false);
       const req = {
         params: {},
         user: { userId },
@@ -203,7 +198,6 @@ describe('authorisations: project', () => {
       authorisations.isAllowed(req, {}, next);
       expect(project.isOwner).to.not.have.been.called;
       expect(event.isOpen).to.have.been.calledOnce;
-      expect(event.isFrozen).to.have.been.calledOnce;
       expect(utils.disallowed).to.have.been.called;
       expect(utils.isAllowed).to.not.have.been.called;
       expect(isAllowedCb).to.not.have.been.called;
