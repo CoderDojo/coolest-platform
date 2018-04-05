@@ -256,14 +256,14 @@
         <label>Phone number of adult supervisor</label>
         <input
           type="text"
-          placeholder="e.g. +353851234567"
+          placeholder="e.g. 23 34567 890"
           v-model="supervisor.phone"
-          v-validate="{ required: true, regex: /^\+[0-9\ \.\-]+$/ }"
+          v-validate="{ required: true, regex: /^[0-9\ \.\-\(\)]+$/ }"
           data-vv-name="supervisor-phone"
           class="full-width-block"
           :class="{ error: errors.has('supervisor-phone') }" />
         <span class="error-message" v-show="errors.has('supervisor-phone:required')">* Supervisor's phone number is required</span>
-        <span class="error-message" v-show="errors.has('supervisor-phone:regex')">* Please include the country code. For example, a phone number in Ireland should begin +353</span>
+        <span class="error-message" v-show="errors.has('supervisor-phone:regex')">* Please enter a valid phone number. Only numbers, spaces, dashes, dots and brackets are valid.</span>
       </div>
     </div>
     <hr />
@@ -354,7 +354,7 @@
               firstName: this.supervisor.firstName,
               lastName: this.supervisor.lastName,
               email: this.supervisor.email,
-              phone: this.supervisor.phone.replace(/[ .-]/g, ''),
+              phone: this.supervisor.phone.replace(/[ .\-()]/g, ''),
               type: 'supervisor',
             },
           ];
