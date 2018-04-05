@@ -57,7 +57,7 @@ describe('ProjectForm component', () => {
           firstName: 'Adulty',
           lastName: 'McAdultface',
           email: 'adult@example.com',
-          phone: '0851234567',
+          phone: '(08) 512-34567',
         };
 
         // ASSERT
