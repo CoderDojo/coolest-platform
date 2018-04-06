@@ -4,16 +4,10 @@ import CreateProjectCompleted from '!!vue-loader?inject!@/project/CreateComplete
 describe('Create Project Completed component', () => {
   let sandbox;
   let vm;
-  let gaMock;
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    gaMock = {
-      event: sandbox.stub(),
-    };
-    vm = vueUnitHelper(CreateProjectCompleted({
-      vue: { $ga: gaMock },
-    }));
+    vm = vueUnitHelper(CreateProjectCompleted({}));
   });
 
   afterEach(() => {
@@ -30,22 +24,6 @@ describe('Create Project Completed component', () => {
 
         // ASSERT
         expect(vm.eventDateFormatted).to.equal('May 12th');
-      });
-    });
-  });
-
-  describe('methods', () => {
-    describe('trackTweet', () => {
-      it('should send a GA event for when people click the tweet button', () => {
-        // ACT
-        vm.trackTweet();
-
-        // ASSERT
-        expect(gaMock.event).to.have.been.calledOnce;
-        expect(gaMock.event).to.have.been.calledWithMatch({
-          eventCategory: 'CreateProjectCompleted',
-          eventAction: 'tweet',
-        });
       });
     });
   });
