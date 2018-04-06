@@ -23,7 +23,7 @@
           <input type="email" v-model="email" class="full-width-block" placeholder="you@email.com" required />
         </div>
       </div>
-      <div v-if="isOpen">
+      <div v-if="!isFrozen">
         <label class="row row-no-margin">
           <div class="col text-center">
             <input type="checkbox"
