@@ -76,6 +76,12 @@ describe('mailing controllers', () => {
             { type: 'supervisor', email: 'doubidou@example.com' },
           ],
         };
+        const mockEvent = {
+          name: 'cp 2018',
+          date: 'Friday 6th',
+          location: 'there',
+          homepage: 'cp.orgs/usa',
+        };
         // STUBS
         const Mailing = proxy('../../../controllers/mailing', {
           '@sendgrid/mail': {
@@ -86,7 +92,7 @@ describe('mailing controllers', () => {
         });
         // ACT
         const mailingController = new Mailing(configMock);
-        mailingController.sendWelcomeEmail(creatorMock, mockProject);
+        mailingController.sendWelcomeEmail(creatorMock, mockProject, mockEvent);
 
         // Build the request
         expect(mailingController.mailer.send).to.have.been.calledOnce;
@@ -103,6 +109,11 @@ describe('mailing controllers', () => {
           subject: 'Welcome on CP',
           substitutions: {
             projectName: 'myLittleProject',
+            eventName: mockEvent.name,
+            eventDate: mockEvent.date,
+            eventLocation: mockEvent.location,
+            eventWebsite: mockEvent.homepage,
+            eventManageLink: process.env.HOSTNAME,
           },
           categories: ['coolest-projects', 'cp-registration'],
           template_id: '6d20e65f-ae16-4b25-a17f-66d0398f474f',

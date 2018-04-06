@@ -16,11 +16,16 @@ module.exports = {
           req.app.locals.logger.error(err);
           return next(new Error('Error while saving your project.'));
         }),
-    (req, res, next) =>
+    (req, res, next) => {
       req.app.locals.mailing
-        .sendWelcomeEmail(req.user.user, res.locals.project)
+        .sendWelcomeEmail(
+          req.user.user,
+          res.locals.project,
+          { ...req.app.locals.event.attributes, date: req.app.locals.event.formattedDate() },
+        )
         .then(() => next())
-        .catch(next),
+        .catch(next);
+    },
     (req, res) => res.status(200).json(res.locals.project),
   ],
 
@@ -172,6 +177,7 @@ module.exports = {
         req.app.locals.project = param;
         next();
       }),
+
   eventParam: (req, res, next, id) =>
     eventController
       .get({ id })

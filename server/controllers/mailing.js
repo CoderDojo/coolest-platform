@@ -21,7 +21,7 @@ class Mailing {
     return Promise.resolve();
   }
 
-  sendWelcomeEmail(creator, project) {
+  sendWelcomeEmail(creator, project, event) {
     const to = creator.email;
     return this.send({
       to,
@@ -35,6 +35,11 @@ class Mailing {
       },
       subject: 'Welcome on CP',
       substitutions: {
+        eventName: event.name,
+        eventDate: event.date,
+        eventLocation: event.location,
+        eventWebsite: event.homepage,
+        eventManageLink: process.env.HOSTNAME,
         projectName: htmlEntities.encode(project.name),
       },
       categories: this.categories.concat(['cp-registration']),
