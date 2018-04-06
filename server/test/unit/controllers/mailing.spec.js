@@ -78,6 +78,7 @@ describe('mailing controllers', () => {
         };
         const mockEvent = {
           name: 'cp 2018',
+          slug: 'cp-2018',
           date: 'Friday 6th',
           location: 'there',
           homepage: 'cp.orgs/usa',
@@ -115,7 +116,7 @@ describe('mailing controllers', () => {
             eventWebsite: mockEvent.homepage,
             eventManageLink: process.env.HOSTNAME,
           },
-          categories: ['coolest-projects', 'cp-registration'],
+          categories: ['coolest-projects', 'cp-cp-2018-registration'],
           template_id: '6d20e65f-ae16-4b25-a17f-66d0398f474f',
         });
       });
@@ -158,7 +159,7 @@ describe('mailing controllers', () => {
             email,
             link: 'http://platform.local/events/cp-2018/my-projects?token=newtoken',
           },
-          categories: ['coolest-projects', 'cp-returning-auth'],
+          categories: ['coolest-projects', 'cp-cp-2018-returning-auth'],
           template_id: '9f9ecdb3-df2b-403a-9f79-c80f91adf0ca',
         });
       });
