@@ -21,7 +21,7 @@ You can run a seeding manually via:
 
 ### Full stack
 
-To start the sever run `docker-compose up`
+To start the sever run `docker-compose up platform`
 
 ### Vue app only
 
