@@ -21,7 +21,7 @@
           v-model="projectDetails.description"
           v-validate="'required|max:1000'"
           data-vv-name="projectDescription"
-          placeholder="A few sentences to describe what your project is about and what technology you are using to build it."
+          placeholder="A few sentences to describe what your project is about and what technology you are using to build it. This will be used on a project poster and on the website on the day of the event."
           class="full-width-block"
           rows="4"
           :class="{ error: errors.has('projectDescription') }"></textarea>
