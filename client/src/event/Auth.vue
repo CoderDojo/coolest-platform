@@ -15,7 +15,7 @@
             </ul>
           </div>
           <label v-if="!isOpen && !isFrozen">You can now only edit already registered projects for {{ event.name }}. Enter your email and you will get a link to edit your project.</label>
-          <label v-else-if="isFrozen">The registration for {{ event.name }} has now closed. Please contact {{ event.email }} if you have any questions.</label>
+          <label v-else-if="isFrozen">The registration for {{ event.name }} has now closed. Please contact {{ event.contact }} if you have any questions.</label>
         </div>
       </div>
       <div class="row" v-if="!isFrozen">

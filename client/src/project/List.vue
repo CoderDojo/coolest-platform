@@ -8,11 +8,11 @@
           <p v-else>You have not registered a project. Do you want to register one?</p>
         </div>
         <div v-else-if="!isOpen && !isFrozen">
-          <p v-if="projects.length < 1">It is too late to register a project and that email was not used to register a project before. Contact {{event.email}} if you have any questions</p>
+          <p v-if="projects.length < 1">It is too late to register a project and that email was not used to register a project before. Contact {{event.contact}} if you have any questions</p>
           <p v-else>You have already registered a project. You can still edit it, but registration of new projects is closed down.</p>
         </div>
         <div v-else-if="isFrozen">
-          <p>The registration for {{event.name}} has now closed. Please contact {{event.email}} if you have any questions.</p>
+          <p>The registration for {{event.name}} has now closed. Please contact {{event.contact}} if you have any questions.</p>
         </div>
       </div>
     </div>

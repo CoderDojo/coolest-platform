@@ -3,7 +3,7 @@ const moment = require('moment');
 
 exports.seed = (knex, Promise) =>
   knex.raw('TRUNCATE TABLE event CASCADE').then(() => {
-    const eventDate = moment.utc();
+    const eventDate = moment.utc().add(2, 'days');
     eventDate.set('hour', 23);
 
     return knex('event').insert({
@@ -11,7 +11,7 @@ exports.seed = (knex, Promise) =>
       date: eventDate,
       tz: 'Europe/Dublin',
       location: 'RDS Main Arena, Ballsbridge, Dublin 4',
-      email: 'help@coolestprojects.org',
+      contact: 'help@coolestprojects.org',
       name: 'CP-2018',
       slug: 'cp-2018',
       categories: { scratch: 'Scratch', web: 'Websites & Web Games', evolution: 'Evolution' },
