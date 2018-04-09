@@ -1,9 +1,12 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 export default {
   computed: {
     formattedDate() {
-      return moment(this.event.date).format('LLLL');
+      if (this.event.date) {
+        return moment(this.event.date).tz(this.event.tz).format('LLLL zz');
+      }
+      return '';
     },
   },
   methods: {

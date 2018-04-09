@@ -7,6 +7,7 @@ exports.seed = (knex, Promise) => {
   return knex('event').insert({
     id: uuid(),
     date: eventDate,
+    tz: 'America/Los_Angeles',
     location: 'SOMEWHERE I BELOOONG',
     name: 'CP North America 2018',
     slug: 'na-2018',
