@@ -7,7 +7,7 @@
     <form v-else-if="event" @submit.prevent="onSubmit">
       <div class="row">
         <div class="col">
-          <label>This form is to register or edit a project for Coolest Projects International 2018 which will be held on Saturday 26th May 2018 in RDS Simmonscourt, Dublin, Ireland. Just one person should register for each project.</label>
+          <label>This form is to register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}. Just one person should register for each project.</label>
         </div>
       </div>
       <div class="row">
