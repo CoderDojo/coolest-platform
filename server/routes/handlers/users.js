@@ -1,9 +1,16 @@
 const { find } = require('lodash');
 const userController = require('../../controllers/users');
 const authController = require('../../controllers/auth');
+const eventController = require('../../controllers/events');
 
 module.exports = {
   post: [
+    (req, res, next) =>
+      eventController.get({ slug: req.body.eventSlug })
+        .then((event) => {
+          res.locals.event = event;
+          next();
+        }),
     (req, res, next) =>
       /*  
        * bookshelf query system works into mostly individual queries
@@ -42,7 +49,7 @@ module.exports = {
           return authController.refresh(user.auth.id)
             .then((auth) => {
               return req.app.locals.mailing
-                .sendReturningAuthEmail(user.email, req.body.eventSlug, auth.token);
+                .sendReturningAuthEmail(user.email, res.locals.event.attributes, auth.token);
             })
             .then(() => next()) // 409 status is carried on
             .catch(() => {

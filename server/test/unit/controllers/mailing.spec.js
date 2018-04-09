@@ -129,6 +129,8 @@ describe('mailing controllers', () => {
         const configMock = { apiKey };
         const email = 'dada@da';
         const slug = 'cp-2018';
+        const contact = 'help@coolestprojects.org';
+        const event = { slug, contact };
         const token = 'newtoken';
         // STUBS
         const Mailing = proxy('../../../controllers/mailing', {
@@ -140,7 +142,7 @@ describe('mailing controllers', () => {
         });
         // ACT
         const mailingController = new Mailing(configMock);
-        mailingController.sendReturningAuthEmail(email, slug, token);
+        mailingController.sendReturningAuthEmail(email, event, token);
 
         // Build the request
         expect(mailingController.mailer.send).to.have.been.calledOnce;
@@ -156,8 +158,8 @@ describe('mailing controllers', () => {
           },
           subject: 'Welcome on CP',
           substitutions: {
-            email,
             link: 'http://platform.local/events/cp-2018/my-projects?token=newtoken',
+            contact,
           },
           categories: ['coolest-projects', 'cp-cp-2018-returning-auth'],
           template_id: '9f9ecdb3-df2b-403a-9f79-c80f91adf0ca',

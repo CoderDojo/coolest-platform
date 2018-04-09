@@ -47,7 +47,7 @@ class Mailing {
     });
   }
 
-  sendReturningAuthEmail(email, slug, token) {
+  sendReturningAuthEmail(email, { slug, contact }, token) {
     return this.send({
       to: email,
       from: {
@@ -60,8 +60,8 @@ class Mailing {
       },
       subject: 'Welcome on CP',
       substitutions: {
-        email,
         link: `${process.env.HOSTNAME}/events/${htmlEntities.encode(slug)}/my-projects?token=${token}`,
+        contact,
       },
       categories: this.categories.concat([`cp-${slug}-returning-auth`]),
       template_id: '9f9ecdb3-df2b-403a-9f79-c80f91adf0ca',
