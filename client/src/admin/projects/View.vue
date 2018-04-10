@@ -3,6 +3,9 @@
     <nav class="navbar navbar-branding">
       <router-link :to="{ name: 'Admin' }">Coolest Projects Admin</router-link>
     </nav>
+    <div class="alert alert-danger" role="alert" v-if="project.deletedAt">
+      <strong>This project has been deleted</strong>
+    </div>
     <div class="container-fluid">
       <h1>View Project</h1>
       <table class="table">
@@ -84,15 +87,32 @@
           <td>Member</td>
         </tr>
       </table>
+      <hr>
+      <h2>Admin Actions</h2>
+      <button class="btn btn-outline-danger" v-if="!project.deletedAt" v-on:click="confirmDeleteEvent()">Delete Project</button>
     </div>
   </div>
 </template>
 
 <script>
+  import moment from 'moment';
+  import ProjectService from '@/project/service';
   import FetchProjectMixin from '@/project/FetchProjectMixin';
 
   export default {
     name: 'AdminProjectsView',
     mixins: [FetchProjectMixin],
+    methods: {
+      confirmDeleteProject() {
+        if (confirm('Do you want to delete this project and its associated users (except the owner)?')) { // eslint-disable-line no-alert
+          this.deleteProject();
+        }
+      },
+      async deleteProject() {
+        await ProjectService.partialUpdate(this.event.id, this.projectId, {
+          deletedAt: moment().format(),
+        });
+      },
+    },
   };
 </script>
