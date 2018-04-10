@@ -1,6 +1,8 @@
 import EventService from '@/event/service';
+import EventUtilsMixin from '@/event/EventUtilsMixin';
 
 export default {
+  mixins: [EventUtilsMixin],
   props: {
     eventSlug: {
       required: true,
