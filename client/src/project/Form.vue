@@ -425,8 +425,9 @@
           }
           window.removeEventListener('beforeunload', this.onBeforeUnload);
           this.submitted = true;
+          const nextRouteNamePrefix = this.$route.path.startsWith('/admin/') ? 'Admin' : '';
           this.$router.push({
-            name: this.event.questions && this.event.questions.length > 0 ? 'ProjectExtraDetails' : 'CreateProjectCompleted',
+            name: this.event.questions && this.event.questions.length > 0 ? `${nextRouteNamePrefix}ProjectExtraDetails` : 'CreateProjectCompleted',
             params: {
               eventSlug: this.event.slug,
               projectId: project.id,
