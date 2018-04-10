@@ -31,6 +31,63 @@
     </div>
     <div class="row">
       <div class="col">
+        <div v-if="hasQuestion('require_power')" class="row row-v-center">
+          <div class="col">
+            <p>Does your project require power?</p>
+          </div>
+          <div>
+            <select v-model="answers.require_power" v-validate="'required'">
+              <option :value="false">No</option>
+              <option :value="true">Yes</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div v-if="hasQuestion('require_wifi')" class="row row-v-center">
+          <div class="col">
+            <p>Does your project require wifi?</p>
+          </div>
+          <div>
+            <select v-model="answers.require_wifi" v-validate="'required'">
+              <option :value="false">No</option>
+              <option :value="true">Yes</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div v-if="hasQuestion('is_hazardous')" class="row row-v-center">
+          <div class="col">
+            <p>Does your project use fire, chemicals, or hazardous materials?</p>
+          </div>
+          <div>
+            <select v-model="answers.is_hazardous" v-validate="'required'">
+              <option :value="false">No</option>
+              <option :value="true">Yes</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div v-if="hasQuestion('other_requirements')" class="row row-v-center">
+          <p class="col">Do you have any technical requests or requirements for your project?</p>
+        </div>
+        <div class="row">
+          <textarea v-model="answers.other_requirements" 
+            class="col full-width-block"
+            rows="4"/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
         <label>Project category</label>
         <p><small><a href="http://coolestprojects.org/registration-2018/project-categories/" target="_blank">You can read the category descriptions here</a></small></p>
         <select
@@ -297,9 +354,11 @@
   import { clone, pick } from 'lodash';
   import moment from 'moment';
   import ProjectService from '@/project/service';
+  import EventUtilsMixin from '@/event/EventUtilsMixin';
 
   export default {
     name: 'ProjectForm',
+    mixins: [EventUtilsMixin],
     props: {
       event: {
         required: true,
@@ -318,6 +377,8 @@
         dojos: [],
         numParticipants: 1,
         projectDetails: {},
+        projectQuestions: ['require_power', 'require_wifi', 'is_hazardous', 'other_requirements'],
+        answers: {},
         participants: [{ specialRequirementsProvided: false }],
         supervisor: {},
         org: undefined,
@@ -359,6 +420,7 @@
               type: 'supervisor',
             },
           ];
+          project.answers = this.answers;
 
           return project;
         },
@@ -376,6 +438,7 @@
           });
           this.numParticipants = this.participants.length;
           this.supervisor = project.supervisor;
+          this.answers = project.answers;
           delete this.supervisor.type;
         },
       },
@@ -476,7 +539,13 @@
       getAge: dob => moment().diff(dob, 'years'),
     },
     created() {
-      if (this.project) this.projectPayload = this.project;
+      if (this.project) {
+        this.projectPayload = this.project;
+      } else {
+        this.answers = this.projectQuestions
+          .filter(question => question !== 'other_requirements')
+          .reduce((acc, key, value) => { acc[key] = false; return acc; }, {});
+      }
       window.addEventListener('beforeunload', this.onBeforeUnload);
       this.fetchDojos();
     },
