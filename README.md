@@ -26,3 +26,7 @@ To start the sever run `docker-compose up platform`
 ### Vue app only
 
 To start the vue dev server with a mock API run `yarn start-with-mocks`
+
+### Defaults accounts
+Admin: hello@coolestprojects.org:banana
+Owners: testowner[1..110]@example.com:request an email && get the token from the db

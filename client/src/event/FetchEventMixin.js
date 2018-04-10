@@ -1,5 +1,6 @@
 import EventService from '@/event/service';
 import EventUtilsMixin from '@/event/EventUtilsMixin';
+import moment from 'moment';
 
 export default {
   mixins: [EventUtilsMixin],
@@ -16,6 +17,14 @@ export default {
     return {
       event: {},
     };
+  },
+  computed: {
+    isOpen() {
+      return moment.utc() < moment.utc(this.event.registrationEnd);
+    },
+    isFrozen() {
+      return moment.utc() > moment.utc(this.event.freezeDate);
+    },
   },
   methods: {
     async fetchEvent() {

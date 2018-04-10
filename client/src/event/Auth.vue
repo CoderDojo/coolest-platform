@@ -7,33 +7,39 @@
     <form v-else-if="event" @submit.prevent="onSubmit">
       <div class="row">
         <div class="col">
-          <label>This form is to register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}.</label>
-          <ul class="list">
-            <li>Only one person should register per project.</li>
-            <li>If you have already registered a project please fill in your email below to receive a unique link to edit or add a new project.</li>
-          </ul>
+          <div v-if="isOpen">
+            <label>This form is to register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}.</label>
+            <ul class="list">
+              <li>Only one person should register per project.</li>
+              <li>If you have already registered a project please fill in your email below to receive a unique link to edit or add a new project.</li>
+            </ul>
+          </div>
+          <label v-if="!isOpen && !isFrozen">You can now only edit already registered projects for {{ event.name }}. Enter your email and you will get a link to edit your project.</label>
+          <label v-else-if="isFrozen">The registration for {{ event.name }} has now closed. Please contact {{ event.contact }} if you have any questions.</label>
         </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="!isFrozen">
         <div class="col">
           <input type="email" v-model="email" class="full-width-block" placeholder="you@email.com" required />
         </div>
       </div>
-      <label class="row row-no-margin">
-        <div class="col text-center">
-          <input type="checkbox"
-            v-model="approval"
-            data-vv-name="approval"
-            v-validate="'required'"
-            :class="{ error: errors.has('approval') }"
-            name="approval"/>
-        </div>
-        <div class="col-6fr">
-          <p for="approval">By selecting this you are agreeing that you are 13 or over, and are happy to be contacted about this project, Coolest Projects information and related news.</p>
-          <span class="error-message" v-show="errors.has('approval:required')">* We need your permission to contact you. Please accept the terms and conditions.</span>
-        </div>
-      </label>
-      <div class="row row-double-margin">
+      <div v-if="!isFrozen">
+        <label class="row row-no-margin">
+          <div class="col text-center">
+            <input type="checkbox"
+              v-model="approval"
+              data-vv-name="approval"
+              v-validate="'required'"
+              :class="{ error: errors.has('approval') }"
+              name="approval"/>
+          </div>
+          <div class="col-6fr">
+            <p for="approval">By selecting this you are agreeing that you are 13 or over, and are happy to be contacted about this project, Coolest Projects information and related news.</p>
+            <span class="error-message" v-show="errors.has('approval:required')">* We need your permission to contact you. Please accept the terms and conditions.</span>
+          </div>
+        </label>
+      </div>
+      <div class="row row-double-margin" v-if="!isFrozen">
         <div class="col text-center">
           <button type="submit" class="btn btn-primary" :class="{ disabled: !approval }">Next step – project details</button>
         </div>

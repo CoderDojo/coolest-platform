@@ -1,4 +1,5 @@
 import vueUnitHelper from 'vue-unit-helper';
+import moment from 'moment';
 import FetchEventMixin from 'inject-loader!@/event/FetchEventMixin';
 
 describe('Fetch Event mixin', () => {
@@ -61,6 +62,32 @@ describe('Fetch Event mixin', () => {
       // ASSERT
       expect(vm.fetchEvent).to.not.have.been.called;
       expect(vm.event).to.deep.equal(event);
+    });
+  });
+  describe('computed', () => {
+    it('should return that the registration is closed', () => {
+      vm.event = {
+        registrationEnd: moment.utc().subtract(1, 'day'),
+      };
+      expect(vm.isOpen).to.be.false;
+    });
+    it('should return that the registration is opened', () => {
+      vm.event = {
+        registrationEnd: moment.utc().add(1, 'day'),
+      };
+      expect(vm.isOpen).to.be.true;
+    });
+    it('should return that the registration is restricted', () => {
+      vm.event = {
+        freezeDate: moment.utc().add(1, 'day'),
+      };
+      expect(vm.isFrozen).to.be.false;
+    });
+    it('should return that the registration is frozen', () => {
+      vm.event = {
+        freezeDate: moment.utc().subtract(1, 'day'),
+      };
+      expect(vm.isFrozen).to.be.true;
     });
   });
 });
