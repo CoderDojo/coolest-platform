@@ -11,7 +11,7 @@ class Project {
     // TODO : split into handler 
     const projectPayload = Object.assign(
       {},
-      pick(project, ['name', 'category', 'description', 'org', 'orgRef']),
+      pick(project, ['name', 'category', 'description', 'org', 'orgRef', 'answers']),
       { eventId },
     );
     const newProject = new ProjectModel(projectPayload);

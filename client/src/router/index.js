@@ -31,7 +31,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/events/cp-2018',
+      redirect: '/events/na-2018',
       component: Index,
       name: 'Index',
       children: [
@@ -106,7 +106,7 @@ export default new Router({
         {
           path: '',
           name: 'Admin',
-          redirect: 'events/cp-2018',
+          redirect: 'events/na-2018',
           beforeEnter: adminNavGuard,
         },
         {
