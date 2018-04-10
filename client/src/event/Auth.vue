@@ -7,7 +7,11 @@
     <form v-else-if="event" @submit.prevent="onSubmit">
       <div class="row">
         <div class="col">
-          <label>This form is to register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}. Just one person should register for each project.</label>
+          <label>This form is to register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}.</label>
+          <ul class="list">
+            <li>Only one person should register per project.</li>
+            <li>If you have already registered a project please fill in your email below to receive a unique link to edit or add a new project.</li>
+          </ul>
         </div>
       </div>
       <div class="row">
@@ -84,3 +88,11 @@
     },
   };
 </script>
+<style lang="scss" scoped>
+  .list {
+    padding-left: 16px;
+    &> li {
+      margin-top: 8px;
+    }
+  }
+</style>
