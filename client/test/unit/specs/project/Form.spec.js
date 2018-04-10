@@ -59,6 +59,7 @@ describe('ProjectForm component', () => {
           email: 'adult@example.com',
           phone: '(08) 512-34567',
         };
+        vm.answers = {};
 
         // ASSERT
         expect(vm.projectPayload).to.deep.equal({
@@ -96,6 +97,7 @@ describe('ProjectForm component', () => {
               type: 'supervisor',
             },
           ],
+          answers: {},
         });
       });
 
