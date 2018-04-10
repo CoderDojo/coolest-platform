@@ -23,6 +23,8 @@ describe('projects controllers', () => {
       const description = 'MyLittleProject is awesome';
       const org = 'Code Club';
       const orgRef = 'Cambridge';
+      const state = 'CA';
+      const city = 'Los Angeles';
       const member = {
         firstName: 'member',
         lastName: 'one',
@@ -70,6 +72,8 @@ describe('projects controllers', () => {
         description,
         org,
         orgRef,
+        state,
+        city,
         users: [member, supervisor],
       };
 
@@ -85,6 +89,8 @@ describe('projects controllers', () => {
         description,
         org,
         orgRef,
+        state,
+        city,
       });
       expect(mockProjectSave).to.have.been.calledOnce;
 
