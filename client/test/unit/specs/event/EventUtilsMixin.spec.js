@@ -19,8 +19,9 @@ describe('Event mixin', () => {
       it('should return a human readable date', () => {
         vm.event = {
           date: '2018-04-04T16:00:00',
+          tz: 'Europe/Dublin',
         };
-        expect(vm.formattedDate).to.equal('Wednesday, April 4, 2018 4:00 PM');
+        expect(vm.formattedDate).to.equal('Wednesday, April 4, 2018 4:00 PM IST');
       });
     });
   });
