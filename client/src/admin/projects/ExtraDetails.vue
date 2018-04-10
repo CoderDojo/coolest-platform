@@ -5,7 +5,7 @@
         <div class="error-message-warning">
           You are an admin editing a live project
         </div>
-        <extra-details :eventSlug='this.event.slug' :projectId='project.id' :_event='this.event' :_project='project'></extra-details>
+        <extra-details :eventSlug='event.slug' :projectId='project.id' :_event='event' :_project='project'></extra-details>
       </div>
     </div>
   </div>
