@@ -8,6 +8,7 @@ exports.seed = (knex, Promise) =>
     return knex('event').insert({
       id: uuid(),
       date: eventDate,
+      tz: 'Europe/Dublin',
       location: 'RDS Main Arena, Ballsbridge, Dublin 4',
       name: 'CP-2018',
       slug: 'cp-2018',
