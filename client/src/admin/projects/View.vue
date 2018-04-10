@@ -4,7 +4,11 @@
       <router-link :to="{ name: 'Admin' }">Coolest Projects Admin</router-link>
     </nav>
     <div class="alert alert-danger" role="alert" v-if="project.deletedAt">
-      <strong>This project has been deleted</strong>
+      <p><strong>This project has been deleted (at {{ project.deletedAt }})</strong></p>
+    </div>
+    <div class="alert alert-warning" role="alert" v-if="error">
+      <p><strong>There was an error modifying the project:</strong></p>
+      <p>{{ error.message }}</p>
     </div>
     <div class="container-fluid">
       <h1>View Project</h1>
@@ -89,7 +93,8 @@
       </table>
       <hr>
       <h2>Admin Actions</h2>
-      <button class="btn btn-outline-danger" v-if="!project.deletedAt" v-on:click="confirmDeleteEvent()">Delete Project</button>
+      <button class="btn btn-outline-danger" v-if="!project.deletedAt" v-on:click="confirmDeleteProject()">Delete Project</button>
+      <p v-else>No actions available</p>
     </div>
   </div>
 </template>
@@ -102,6 +107,11 @@
   export default {
     name: 'AdminProjectsView',
     mixins: [FetchProjectMixin],
+    data() {
+      return {
+        error: null,
+      };
+    },
     methods: {
       confirmDeleteProject() {
         if (confirm('Do you want to delete this project and its associated users (except the owner)?')) { // eslint-disable-line no-alert
@@ -109,9 +119,14 @@
         }
       },
       async deleteProject() {
-        await ProjectService.partialUpdate(this.event.id, this.projectId, {
-          deletedAt: moment().format(),
-        });
+        try {
+          await ProjectService.partialUpdate(this.event.id, this.projectId, {
+            deletedAt: moment().format(),
+          });
+          this.$router.go();
+        } catch (err) {
+          this.error = err;
+        }
       },
     },
   };
