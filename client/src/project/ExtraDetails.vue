@@ -6,48 +6,16 @@
         <p>These questions are additional information about your project which we might use for some special judging on the day.</p>
       </div>
     </div>
-    <div v-if="hasQuestion('social_project')" class="row row-v-center">
+    <div v-if="hasQuestion('travel_stipend')" class="row row-v-center">
       <div class="col">
-        <p>Do you think your project tries to tackle a social problem?</p>
+        <p>For participants traveling from afar, a travel stipend may be available. Would you like to receive more information about applying for it?</p>
       </div>
       <div>
-        <select v-model="answers.social_project">
+        <select v-model="answers.travel_stipend">
           <option value="undefined" disabled></option>
           <option :value="true">Yes</option>
           <option :value="false">No</option>
         </select>
-      </div>
-    </div>
-    <div v-if="hasQuestion('educational_project')" class="row row-v-center">
-      <div class="col">
-        <p>Do you think your project topic is around Education?</p>
-      </div>
-      <div>
-        <select v-model="answers.educational_project">
-          <option value="undefined" disabled></option>
-          <option :value="true">Yes</option>
-          <option :value="false">No</option>
-        </select>
-      </div>
-    </div>
-    <div v-if="hasQuestion('innovator_stage')">
-      <div class="row">
-        <div class="col">
-          <h2>Innovator Stage</h2>
-          <p>The Openet Innovator Stage provides an opportunity for young people participating in Coolest Projects to get on the stage in the Main Hall to pitch and be interviewed about their projects and ideas./nParticipants do not have to present a business plan! The idea behind the Openet Innovator Stage is to give participants the opportunity to further enhance their presentation skills which are vital for the future innovators of the world.</p>
-        </div>
-      </div>
-      <div class="row row-v-center">
-        <div class="col">
-          <p>Would you or your team want to present your project on the Innovator Stage? (This does not guarantee a place as spaces are limited on the day)</p>
-        </div>
-        <div>
-          <select v-model="answers.innovator_stage">
-            <option value="undefined" disabled></option>
-            <option :value="true">Yes</option>
-            <option :value="false">No</option>
-          </select>
-        </div>
       </div>
     </div>
     <div class="row">
