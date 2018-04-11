@@ -94,7 +94,7 @@ describe('integration: users', () => {
         .then((res) => {
           expect(res.body.count).to.equal(5);
           expect(res.body.data.length).to.equal(5);
-          expect(Object.keys(res.body.data[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'membership']);
+          expect(res.body.data[0]).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt', 'membership']);
         });
     });
     it('should accept some params', async () => {

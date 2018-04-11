@@ -239,10 +239,10 @@ describe('integration: projects with open event by default', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .then((res) => {
-          expect(res.body).to.have.all.keys(['name', 'category', 'org', 'orgRef', 'description', 'answers', 'id', 'createdAt', 'updatedAt', 'eventId', 'users']);
+          expect(res.body).to.have.all.keys(['name', 'category', 'org', 'orgRef', 'description', 'answers', 'id', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'users']);
           expect(res.body.name).to.be.equal('Self-updated');
           expect(res.body.users.length).to.eql(3);
-          expect(res.body.users[0]).to.have.all.keys(['createdAt', 'updatedAt', 'id', 'firstName', 'lastName', 'email', 'phone', 'country', 'specialRequirements', 'dob', 'gender']);
+          expect(res.body.users[0]).to.have.all.keys(['createdAt', 'updatedAt', 'deletedAt', 'id', 'firstName', 'lastName', 'email', 'phone', 'country', 'specialRequirements', 'dob', 'gender']);
           expect(res.body.users[0].firstName).to.be.equal('replaced');
           expect(res.body.users[0].gender).to.be.equal('female');
           expect(res.body.users[0].id).to.be.equal(payload.users[0].id);
@@ -250,7 +250,7 @@ describe('integration: projects with open event by default', () => {
         });
     });
 
-    it('should be requiering a valid auth (owner)', async () => {
+    it('should be requiring a valid auth (owner)', async () => {
       const payload = project;
       project.id = refProject.id;
       payload.users[0].id = refProject.members[0].id;
@@ -422,10 +422,10 @@ describe('integration: projects with open event by default', () => {
           expect(res.body.data.length).to.equal(1);
           expect(res.body.count).to.equal(1);
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
-          expect(Object.keys(res.body.data[0])).to.eql(['id', 'name', 'category', 'createdAt', 'updatedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
-          expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-          expect(Object.keys(res.body.data[0].supervisor)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-          expect(Object.keys(res.body.data[0].members[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
+          expect(res.body.data[0]).to.have.all.keys(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
+          expect(res.body.data[0].owner).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+          expect(res.body.data[0].supervisor).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+          expect(res.body.data[0].members[0]).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
           expect(refProject.id).to.equal(res.body.data[0].id);
           expect(res.body.data[0].owner.id).to.be.equal(userId);
         });
@@ -440,10 +440,10 @@ describe('integration: projects with open event by default', () => {
               expect(res.body.data.length).to.equal(2);
               expect(res.body.count).to.equal(2);
               expect(Object.keys(res.body)).to.eql(['data', 'count']);
-              expect(Object.keys(res.body.data[0])).to.eql(['id', 'name', 'category', 'createdAt', 'updatedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
-              expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-              expect(Object.keys(res.body.data[0].supervisor)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-              expect(Object.keys(res.body.data[0].members[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
+              expect(res.body.data[0]).to.have.keys(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
+              expect(res.body.data[0].owner).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+              expect(res.body.data[0].supervisor).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+              expect(res.body.data[0].members[0]).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
               expect(res.body.data[0].owner.id).to.be.equal(userId);
               expect(res.body.data[1].owner.id).to.be.equal(userId);
               expect(res.body.data[1].id).to.not.be.equal(res.body.data[0].id);
@@ -517,10 +517,10 @@ describe('integration: projects with open event by default', () => {
           // Content
           expect(res.body.count).to.equal(count);
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
-          expect(Object.keys(res.body.data[0])).to.eql(['id', 'name', 'category', 'createdAt', 'updatedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
-          expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-          expect(Object.keys(res.body.data[0].supervisor)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-          expect(Object.keys(res.body.data[0].members[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
+          expect(res.body.data[0]).to.have.all.keys(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
+          expect(res.body.data[0].owner).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+          expect(res.body.data[0].supervisor).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+          expect(res.body.data[0].members[0]).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
           // Ordering
           expect(res.body.data.length).to.equal(25);
           expect(res.body.data[0].name).to.eql('MyPoneyProject49');
@@ -570,7 +570,7 @@ describe('integration: projects with open event by default', () => {
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
           expect(res.body.count).to.equal(count);
-          // TODO : better define a project just for this one 
+          // TODO : better define a project just for this one
           // which starts with '0aaaa' to ensure the test always passes
           expect(res.body.data[0].owner.email).to.be.eql('listuserprojects@example.com');
           expect(res.body.data[0].name).to.be.eql('MyPoneyProject');
