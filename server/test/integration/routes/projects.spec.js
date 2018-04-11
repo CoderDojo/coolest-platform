@@ -37,7 +37,7 @@ describe('integration: projects with open event by default', () => {
     return request(app)
       .post('/api/v1/users')
       .set('Accept', 'application/json')
-      .send({ email })
+      .send({ email, eventSlug: 'cp-2018' })
       .then((res) => {
         return Promise.resolve(res.body.auth.token);
       });

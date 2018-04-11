@@ -50,6 +50,12 @@ describe('router: project', () => {
             mailing: {
               sendWelcomeEmail: mailingStub,
             },
+            event: {
+              attributes: {
+                name: 'cp int 2018',
+              },
+              formattedDate: sandbox.stub().returns('Friday the 6th'),
+            },
           },
         },
         user: { userId: 'userX', user: { id: 'userX' } },
@@ -60,6 +66,10 @@ describe('router: project', () => {
         status: statusStub,
         locals: {},
       };
+      const mockEvent = {
+        name: 'cp int 2018',
+        date: 'Friday the 6th',
+      };
       projectController.post = postController.resolves(mockProject);
       await handler(mockReq, mockRes, nextMock);
       expect(postController).to.have.been.calledWith(
@@ -68,7 +78,7 @@ describe('router: project', () => {
         mockReq.params.eventId,
       );
       expect(mailingStub).to.have.been.calledOnce;
-      expect(mailingStub).to.have.been.calledWith(mockReq.user.user, mockProject);
+      expect(mailingStub).to.have.been.calledWith(mockReq.user.user, mockProject, mockEvent);
       expect(nextMock).to.have.been.calledTwice;
     });
 
@@ -80,6 +90,12 @@ describe('router: project', () => {
           locals: {
             mailing: {
               sendWelcomeEmail: mailingStub,
+            },
+            event: {
+              attributes: {
+                name: 'cp int 2018',
+              },
+              formattedDate: sandbox.stub().returns('Friday the 6th'),
             },
           },
         },

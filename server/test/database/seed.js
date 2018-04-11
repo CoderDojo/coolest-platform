@@ -32,6 +32,7 @@ module.exports = (bookshelf) => {
       location: 'RDS Main Arena, Ballsbridge, Dublin 4',
       name: 'CP-2018',
       slug: 'cp-2018',
+      tz: 'Europe/Dublin',
       categories: { scratch: 'Scratch', web: 'Websites & Web Games', evolution: 'Evolution' },
       questions: ['social_project', 'educational_project', 'innovator_stage'],
       registration_start: eventDate.clone().subtract(3, 'days').toDate(),
