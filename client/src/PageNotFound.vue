@@ -3,9 +3,14 @@
     <div class="center-grid__content">
       <div class="text-center">
         <img class="logo" src="./assets/CoolestProjectsLogo.png" />
-        <h1 class="not-found">
-          404 <br> PAGE NOT FOUND
-        </h1>
+        <div class="not-found">
+          <h1>
+            It looks like you tried to go to a page that does not exist!
+          </h1>
+          <h1>
+            <a href="/">Please go to our homepage and try again</a>
+          </h1>
+        </div>
       </div>
     </div>
   </div>
