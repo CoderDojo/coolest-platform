@@ -316,6 +316,9 @@ describe('ProjectForm component', () => {
         vm.$router = {
           push: sandbox.stub(),
         };
+        vm.$route = {
+          path: '',
+        };
 
         // ACT
         await vm.onSubmit();
@@ -362,6 +365,9 @@ describe('ProjectForm component', () => {
         vm.submitted = false;
         vm.$router = {
           push: sandbox.stub(),
+        };
+        vm.$route = {
+          path: '',
         };
 
         // ACT
@@ -425,6 +431,9 @@ describe('ProjectForm component', () => {
         vm.$validator = {
           validateAll: sandbox.stub().resolves(true),
         };
+        vm.$route = {
+          path: '',
+        };
 
         // ACT
         await vm.onSubmit();
@@ -433,6 +442,52 @@ describe('ProjectForm component', () => {
         expect(vm.$router.push).to.have.been.calledOnce;
         expect(vm.$router.push).to.have.been.calledWith({
           name: 'ProjectExtraDetails',
+          params: {
+            eventSlug: 'foo',
+            projectId: 'baz',
+            _event: event,
+            _project: createdProject,
+          },
+        });
+      });
+
+      it('should go to the admin extra details page if the route is admin', async () => {
+        // ARRANGE
+        const event = {
+          slug: 'foo',
+          questions: ['a', 'b'],
+        };
+        const project = {
+          name: 'bar',
+          supervisor: { type: 'supervisor' },
+          members: [
+            {
+              type: 'member',
+            },
+          ],
+        };
+        const createdProject = { id: 'baz' };
+        vm.event = event;
+        vm.projectPayload = project;
+        sandbox.stub(vm, 'register').resolves(createdProject);
+        sandbox.stub(window, 'removeEventListener');
+        vm.$router = {
+          push: sandbox.stub(),
+        };
+        vm.$validator = {
+          validateAll: sandbox.stub().resolves(true),
+        };
+        vm.$route = {
+          path: '/admin/',
+        };
+
+        // ACT
+        await vm.onSubmit();
+
+        // ASSERT
+        expect(vm.$router.push).to.have.been.calledOnce;
+        expect(vm.$router.push).to.have.been.calledWith({
+          name: 'AdminProjectExtraDetails',
           params: {
             eventSlug: 'foo',
             projectId: 'baz',

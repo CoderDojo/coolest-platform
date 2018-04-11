@@ -7,7 +7,7 @@ const utils = require('../utils');
 
 dbConfig['@global'] = true;
 dbConfig['@noCallThru'] = true;
-describe.only('integration: projects with open event by default', () => {
+describe('integration: projects with open event by default', () => {
   let app;
   let token;
   let eventId;

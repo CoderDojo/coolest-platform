@@ -10,6 +10,7 @@
 
 <style lang="scss">
   @import '../assets/scss/_colors.scss';
+  @import '../assets/scss/main.scss';
   @import '~bootstrap/dist/css/bootstrap.min.css';
 
   .navbar-branding {
