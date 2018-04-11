@@ -8,7 +8,7 @@
             It looks like you tried to go to a page that does not exist!
           </h1>
           <h1>
-            <a href="/">Please go to our homepage and try again</a>
+            <router-link to="/">Please go to our homepage and try again</router-link>
           </h1>
         </div>
       </div>
