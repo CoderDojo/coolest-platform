@@ -1,4 +1,5 @@
 const request = require('supertest');
+const moment = require('moment');
 const proxy = require('proxyquire');
 const dbConfig = require('../../config/db.js');
 const seeder = require('../../database/seed');
@@ -6,7 +7,7 @@ const utils = require('../utils');
 
 dbConfig['@global'] = true;
 dbConfig['@noCallThru'] = true;
-describe('integration: projects', () => {
+describe('integration: projects with open event by default', () => {
   let app;
   let token;
   let eventId;
@@ -36,7 +37,7 @@ describe('integration: projects', () => {
     return request(app)
       .post('/api/v1/users')
       .set('Accept', 'application/json')
-      .send({ email })
+      .send({ email, eventSlug: 'cp-2018' })
       .then((res) => {
         return Promise.resolve(res.body.auth.token);
       });
@@ -116,10 +117,10 @@ describe('integration: projects', () => {
         .post(`/api/v1/events/aaa/projects?token=${token}`)
         .send(payload)
         .expect('Content-Type', /json/)
-        .expect(500)
+        .expect(404)
         .then((res) => {
-          expect(res.body.msg).to.equal('Error while saving your project.');
-          expect(res.body.status).to.equal(500);
+          expect(res.body.msg).to.equal('Event not found');
+          expect(res.body.status).to.equal(404);
         });
     });
 
@@ -307,6 +308,46 @@ describe('integration: projects', () => {
           expect(res.body.users.length).to.equal(3);
         });
     });
+    it('should be disallowed any change if the event is frozen', async () => {
+      const payload = project;
+      project.id = refProject.id;
+      payload.users[0].id = refProject.members[0].id;
+      payload.users[1].id = refProject.supervisor.id;
+      payload.users[1].email = 'updated@example.com';
+      const clock = sinon.useFakeTimers({
+        now: moment.utc().add(2, 'day').toDate(),
+      });
+
+      return util.user.create('updater@example.com')
+        .catch(() => {
+          return util.auth.get('updater@example.com')
+            .then((res) => {
+              return util.project.update(res[0].token, eventId, refProject.id, payload)
+                .expect(403)
+                .then(() => {
+                  clock.restore();
+                });
+            });
+        });
+    });
+    it('should be allow any change if the event is open', async () => {
+      const payload = project;
+      project.id = refProject.id;
+      const clock = sinon.useFakeTimers({
+        now: moment.utc().add(1, 'day').set('hours', 0).toDate(),
+      });
+      return util.user.create('updater@example.com')
+        .catch(() => {
+          return util.auth.get('updater@example.com')
+            .then((res) => {
+              return util.project.update(res[0].token, eventId, refProject.id, payload)
+                .expect(200)
+                .then(() => {
+                  clock.restore();
+                });
+            });
+        });
+    });
   });
 
   describe('/:id patch', () => {
@@ -333,6 +374,28 @@ describe('integration: projects', () => {
             .expect(403)
             .then((res) => {
               expect(res.body.msg).to.equal('Forbidden');
+            });
+        });
+    });
+    it('should fail if event is frozen', async () => {
+      const payload = {
+        name: 'MyPoneyProject',
+        answers: { social_project: true },
+      };
+      const clock = sinon.useFakeTimers({
+        now: moment.utc().add(1, 'day').toDate(),
+      });
+      return util.user.create('updater@example.com')
+        .catch(() => {
+          return util.auth.get('updater@example.com')
+            .then((res) => {
+              return request(app)
+                .patch(`/api/v1/events/${eventId}/projects/${projectId}?token=${res[0].token}`)
+                .send(payload)
+                .expect(403)
+                .then(() => {
+                  clock.restore();
+                });
             });
         });
     });

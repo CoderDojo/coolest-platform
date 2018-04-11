@@ -54,63 +54,87 @@ describe('Project ExtraDetails component', () => {
   });
 
   describe('methods', () => {
-    describe('hasQuestion', () => {
-      it('should return true if the provided question is in the questions array', () => {
-        // ARRANGE
-        vm.event = {
-          questions: ['foo', 'bar'],
-        };
-
-        // ASSERT
-        expect(vm.hasQuestion('bar')).to.equal(true);
-      });
-
-      it('should return false if the provided question is not in the questions array', () => {
-        // ARRANGE
-        vm.event = {
-          questions: ['foo', 'bar'],
-        };
-
-        // ASSERT
-        expect(vm.hasQuestion('baz')).to.equal(false);
-      });
-    });
-
     describe('onSubmit', async () => {
-      // ARRANGE
-      const answers = { baz: true };
-      vm.answers = answers;
-      vm.eventSlug = 'slug';
-      vm.event = { id: 'foo' };
-      vm.projectId = 'bar';
-      vm.project = { id: 'bar' };
-      ProjectServiceMock.partialUpdate.withArgs('foo', 'bar', { answers }).resolves();
-      vm.$ga = {
-        event: sandbox.stub(),
-      };
-      vm.$router = {
-        push: sandbox.stub(),
-      };
+      it('should go to the create project completed page', async () => {
+        // ARRANGE
+        const answers = { baz: true };
+        vm.answers = answers;
+        vm.eventSlug = 'slug';
+        vm.event = { id: 'foo' };
+        vm.projectId = 'bar';
+        vm.project = { id: 'bar' };
+        ProjectServiceMock.partialUpdate.withArgs('foo', 'bar', { answers }).resolves();
+        vm.$ga = {
+          event: sandbox.stub(),
+        };
+        vm.$router = {
+          push: sandbox.stub(),
+        };
+        vm.$route = {
+          path: '',
+        };
 
-      // ACT
-      await vm.onSubmit();
+        // ACT
+        await vm.onSubmit();
 
-      // ASSERT
-      expect(this.$ga.event).to.have.been.calledOnce;
-      expect(this.$ga.event).to.have.been.calledWith({
-        eventCategory: 'ProjectRegistration',
-        eventAction: 'ExtraDetailsProvided',
-        eventLabel: 'foo',
+        // ASSERT
+        expect(vm.$ga.event).to.have.been.calledOnce;
+        expect(vm.$ga.event).to.have.been.calledWith({
+          eventCategory: 'ProjectRegistration',
+          eventAction: 'ExtraDetailsProvided',
+          eventLabel: 'foo',
+        });
+        expect(vm.$router.push).to.have.been.calledOnce;
+        expect(vm.$router.push).to.have.been.calledWith({
+          name: 'CreateProjectCompleted',
+          params: {
+            eventSlug: 'slug',
+            projectId: 'bar',
+            _event: { id: 'foo' },
+            _project: { id: 'bar' },
+          },
+        });
       });
-      expect(this.$router.push).to.have.been.calledOnce;
-      expect(this.$router.push).to.have.been.calledWith({
-        name: 'CreateProjectCompleted',
-        params: {
-          eventSlug: 'slug',
-          projectId: 'bar',
-          _event: { id: 'foo' },
-          _project: { id: 'bar' },
-        },
+
+      it('should go to the admin project list view if the route is admin', async () => {
+        // ARRANGE;
+        const answers = { baz: true };
+        vm.answers = answers;
+        vm.eventSlug = 'slug';
+        vm.event = { id: 'foo' };
+        vm.projectId = 'bar';
+        vm.project = { id: 'bar' };
+        ProjectServiceMock.partialUpdate.withArgs('foo', 'bar', { answers }).resolves();
+        vm.$ga = {
+          event: sandbox.stub(),
+        };
+        vm.$router = {
+          push: sandbox.stub(),
+        };
+        vm.$route = {
+          path: '/admin/...',
+        };
+
+        // ACT
+        await vm.onSubmit();
+
+        // ASSERT
+        expect(vm.$ga.event).to.have.been.calledOnce;
+        expect(vm.$ga.event).to.have.been.calledWith({
+          eventCategory: 'ProjectRegistration',
+          eventAction: 'ExtraDetailsProvided',
+          eventLabel: 'foo',
+        });
+        expect(vm.$router.push).to.have.been.calledOnce;
+        expect(vm.$router.push).to.have.been.calledWith({
+          name: 'AdminProjects',
+          params: {
+            eventSlug: 'slug',
+            projectId: 'bar',
+            _event: { id: 'foo' },
+            _project: { id: 'bar' },
+          },
+        });
       });
     });
   });

@@ -22,5 +22,6 @@ module.exports = (router, prefix) => {
   // Scoped requests
   router.get(`${prefix}/events/:eventId/users/:userId/projects`, passport.authenticate('jwt', { session: false }), acls.isAllowed, handlers.getUserProjects);
 
+  router.param('eventId', handlers.eventParam);
   router.param('id', handlers.param);
 };

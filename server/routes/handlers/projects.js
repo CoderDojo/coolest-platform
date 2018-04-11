@@ -1,5 +1,6 @@
 const projectController = require('../../controllers/projects');
 const userController = require('../../controllers/users');
+const eventController = require('../../controllers/events');
 const json2csv = require('json2csv');
 
 module.exports = {
@@ -15,11 +16,16 @@ module.exports = {
           req.app.locals.logger.error(err);
           return next(new Error('Error while saving your project.'));
         }),
-    (req, res, next) =>
+    (req, res, next) => {
       req.app.locals.mailing
-        .sendWelcomeEmail(req.user.user, res.locals.project)
+        .sendWelcomeEmail(
+          req.user.user,
+          res.locals.project,
+          { ...req.app.locals.event.attributes, date: req.app.locals.event.formattedDate() },
+        )
         .then(() => next())
-        .catch(next),
+        .catch(next);
+    },
     (req, res) => res.status(200).json(res.locals.project),
   ],
 
@@ -170,5 +176,18 @@ module.exports = {
       .then((param) => {
         req.app.locals.project = param;
         next();
+      }),
+
+  eventParam: (req, res, next, id) =>
+    eventController
+      .get({ id })
+      .then((param) => {
+        if (param) {
+          req.app.locals.event = param;
+          return next();
+        }
+        const err = new Error('Event not found');
+        err.status = 404;
+        return next(err);
       }),
 };

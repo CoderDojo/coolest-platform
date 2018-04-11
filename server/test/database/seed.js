@@ -2,12 +2,13 @@ const uuid = require('uuid/v4');
 const config = require('../../config/auth');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const moment = require('moment');
 
 
 module.exports = (bookshelf) => {
   const knex = bookshelf.knex;
-  const eventDate = new Date();
-  eventDate.setHours(23);
+  const eventDate = moment.utc().add(2, 'days');
+  eventDate.set('hours', 23);
 
   function createUser(email, password, withAuth) {
     const userId = uuid();
@@ -27,12 +28,16 @@ module.exports = (bookshelf) => {
   return knex('event')
     .insert({
       id: uuid(),
-      date: eventDate,
+      date: eventDate.toDate(),
       location: 'RDS Main Arena, Ballsbridge, Dublin 4',
       name: 'CP-2018',
       slug: 'cp-2018',
+      tz: 'Europe/Dublin',
       categories: { scratch: 'Scratch', web: 'Websites & Web Games', evolution: 'Evolution' },
       questions: ['social_project', 'educational_project', 'innovator_stage'],
+      registration_start: eventDate.clone().subtract(3, 'days').toDate(),
+      registration_end: eventDate.clone().subtract(2, 'days').toDate(),
+      freeze_date: eventDate.clone().subtract(1, 'days').toDate(),
     })
     .then(() => createUser('hello@coolestprojects.org', 'banana'))
     .then(() => createUser('me@example.com'));

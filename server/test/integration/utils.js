@@ -54,7 +54,7 @@ module.exports = (app) => {
     return request(app)
       .post('/api/v1/users')
       .set('Accept', 'application/json')
-      .send({ email })
+      .send({ email, eventSlug: 'cp-2018' })
       .then((res) => {
         if (!full) {
           return Promise.resolve(res.body.auth.token);

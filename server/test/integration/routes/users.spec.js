@@ -24,7 +24,7 @@ describe('integration: users', () => {
 
   describe('post', () => {
     it('should create a user', async () => {
-      const payload = { email: 'me@example.com' };
+      const payload = { email: 'me@example.com', eventSlug: 'cp-2018' };
       await request(app)
         .post('/api/v1/users')
         .set('Accept', 'application/json')
@@ -62,7 +62,7 @@ describe('integration: users', () => {
     });
 
     it('should not create a user when the email exists (case insensitive)', async () => {
-      const payload = { email: 'Me@example.com' };
+      const payload = { email: 'Me@example.com', eventSlug: 'cp-2018' };
       const reqUtils = utils(app);
       return reqUtils.event.get('cp-2018')
         .then(res => reqUtils.project.create(refToken, res.body.id))

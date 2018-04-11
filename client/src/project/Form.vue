@@ -21,7 +21,7 @@
           v-model="projectDetails.description"
           v-validate="'required|max:1000'"
           data-vv-name="projectDescription"
-          placeholder="A few sentences to describe what your project is about and what technology you are using to build it."
+          placeholder="A few sentences to describe what your project is about and what technology you are using to build it. This will be used on a project poster and on the website on the day of the event."
           class="full-width-block"
           rows="4"
           :class="{ error: errors.has('projectDescription') }"></textarea>
@@ -425,8 +425,9 @@
           }
           window.removeEventListener('beforeunload', this.onBeforeUnload);
           this.submitted = true;
+          const nextRouteNamePrefix = this.$route.path.startsWith('/admin/') ? 'Admin' : '';
           this.$router.push({
-            name: this.event.questions && this.event.questions.length > 0 ? 'ProjectExtraDetails' : 'CreateProjectCompleted',
+            name: this.event.questions && this.event.questions.length > 0 ? `${nextRouteNamePrefix}ProjectExtraDetails` : 'CreateProjectCompleted',
             params: {
               eventSlug: this.event.slug,
               projectId: project.id,

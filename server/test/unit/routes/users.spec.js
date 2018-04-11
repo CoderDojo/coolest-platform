@@ -7,9 +7,15 @@ describe('router: user', () => {
     let handler;
     const userController = class {};
     const authController = class {};
+    const eventController = class {};
+    const event = {
+      slug: 'cp-2018',
+      contact: 'hello@coolestprojects.org',
+    };
     let loggerStub;
     let statusStub;
     let jsonStub;
+    let getController;
     let nextMock;
     let errorHandler;
     before(() => {
@@ -17,6 +23,7 @@ describe('router: user', () => {
       handlers = (proxy('../../../routes/handlers/users', {
         '../../controllers/users': userController,
         '../../controllers/auth': authController,
+        '../../controllers/events': eventController,
       })).post;
       loggerStub = sandbox.stub();
       jsonStub = sandbox.stub();
@@ -26,6 +33,7 @@ describe('router: user', () => {
           .then(() => handlers[1](req, res, next))
           .then(() => handlers[2](req, res, next))
           .then(() => handlers[3](req, res, next))
+          .then(() => handlers[4](req, res, next))
           .catch(err => errorHandler(err));
       };
     });
@@ -39,6 +47,8 @@ describe('router: user', () => {
         if (err) return Promise.reject(err);
         return Promise.resolve(data);
       });
+      getController = sandbox.stub();
+      eventController.get = getController.resolves({ attributes: event });
     });
 
     it('should format to json', async () => {
@@ -63,7 +73,7 @@ describe('router: user', () => {
       expect(statusStub).to.have.been.calledWith(200);
       expect(jsonStub).to.have.been.calledOnce;
       expect(jsonStub).to.have.been.calledWith(mockAnswer);
-      expect(nextMock).to.have.calledThrice;
+      expect(nextMock).to.have.callCount(4);
     });
 
     it('should reauth an existing user', async () => {
@@ -88,7 +98,9 @@ describe('router: user', () => {
       };
       const mockRes = {
         status: statusStub,
-        locals: {},
+        locals: {
+          user: mockUser,
+        },
       };
       userController.post = postController;
       userController.getAll = getAllController.resolves(mockAnswer);
@@ -103,12 +115,12 @@ describe('router: user', () => {
       expect(refreshController).to.have.been.calledOnce;
       expect(refreshController).to.have.been.calledWith('111');
       expect(sendReturningAuthEmail).to.have.been.calledOnce;
-      expect(sendReturningAuthEmail).to.have.been.calledWith(mockUser.email, 'cp-2018', 'new');
+      expect(sendReturningAuthEmail).to.have.been.calledWith(mockUser.email, event, 'new');
       expect(loggerStub).to.have.been.calledOnce;
       expect(loggerStub.getCall(0).args[0].message).to.equal('Error while saving a user.');
       expect(loggerStub.getCall(0).args[0].status).to.equal(409);
       expect(jsonStub).to.not.have.been.called;
-      expect(nextMock).to.have.callCount(4);
+      expect(nextMock).to.have.callCount(5);
     });
 
     it('should disallow login for admins', async () => {
@@ -147,7 +159,7 @@ describe('router: user', () => {
       expect(loggerStub.getCall(0).args[0].message).to.equal('Error while saving a user.');
       expect(loggerStub.getCall(0).args[0].status).to.equal(401);
       expect(jsonStub).to.not.have.been.called;
-      expect(nextMock).to.have.callCount(4);
+      expect(nextMock).to.have.callCount(5);
     });
 
     it('should log generic error triggered by the controller', async () => {
@@ -176,8 +188,8 @@ describe('router: user', () => {
       expect(postController).to.have.been.calledWith({ email: mockReq.body.email });
       expect(loggerStub).to.have.been.calledOnce;
       expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
-      expect(nextMock).to.have.callCount(4);
-      expect(nextMock.getCall(3).args[0].message).to.have.equal('Error while saving a user.');
+      expect(nextMock).to.have.callCount(5);
+      expect(nextMock.getCall(4).args[0].message).to.have.equal('Error while saving a user.');
     });
 
     it('should create a new user if a user with the email exists, but without an auth', async () => {
@@ -202,7 +214,7 @@ describe('router: user', () => {
       expect(statusStub).to.have.been.calledWith(200);
       expect(jsonStub).to.have.been.calledOnce;
       expect(jsonStub).to.have.been.calledWith(mockAnswer);
-      expect(nextMock).to.have.calledThrice;
+      expect(nextMock).to.have.callCount(4);
     });
   });
   describe('get', () => {
