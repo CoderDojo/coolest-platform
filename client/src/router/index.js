@@ -4,6 +4,7 @@ import scrollBehavior from '@/router/scrollBehaviour';
 import adminNavGuard from '@/router/adminNavGuard';
 import userAuthNavGuard from '@/router/userAuthNavGuard';
 import Index from '@/Index';
+import PageNotFound from '@/PageNotFound';
 import Auth from '@/event/Auth';
 import ProjectList from '@/project/List';
 import ViewProject from '@/project/View';
@@ -140,5 +141,6 @@ export default new Router({
         },
       ],
     },
+    { path: '*', component: PageNotFound },
   ],
 });
