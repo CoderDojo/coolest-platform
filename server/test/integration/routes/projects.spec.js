@@ -241,7 +241,7 @@ describe('integration: projects', () => {
           expect(res.body).to.have.all.keys(['name', 'category', 'org', 'orgRef', 'description', 'answers', 'id', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'users']);
           expect(res.body.name).to.be.equal('Self-updated');
           expect(res.body.users.length).to.eql(3);
-          expect(res.body.users[0]).to.have.all.keys(['createdAt', 'updatedAt', 'id', 'firstName', 'lastName', 'email', 'phone', 'country', 'specialRequirements', 'dob', 'gender']);
+          expect(res.body.users[0]).to.have.all.keys(['createdAt', 'updatedAt', 'deletedAt', 'id', 'firstName', 'lastName', 'email', 'phone', 'country', 'specialRequirements', 'dob', 'gender']);
           expect(res.body.users[0].firstName).to.be.equal('replaced');
           expect(res.body.users[0].gender).to.be.equal('female');
           expect(res.body.users[0].id).to.be.equal(payload.users[0].id);
@@ -360,9 +360,9 @@ describe('integration: projects', () => {
           expect(res.body.count).to.equal(1);
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
           expect(Object.keys(res.body.data[0])).to.eql(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
-          expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-          expect(Object.keys(res.body.data[0].supervisor)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-          expect(Object.keys(res.body.data[0].members[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
+          expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+          expect(Object.keys(res.body.data[0].supervisor)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+          expect(Object.keys(res.body.data[0].members[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
           expect(refProject.id).to.equal(res.body.data[0].id);
           expect(res.body.data[0].owner.id).to.be.equal(userId);
         });
@@ -378,9 +378,9 @@ describe('integration: projects', () => {
               expect(res.body.count).to.equal(2);
               expect(Object.keys(res.body)).to.eql(['data', 'count']);
               expect(Object.keys(res.body.data[0])).to.eql(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
-              expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-              expect(Object.keys(res.body.data[0].supervisor)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-              expect(Object.keys(res.body.data[0].members[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
+              expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+              expect(Object.keys(res.body.data[0].supervisor)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+              expect(Object.keys(res.body.data[0].members[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
               expect(res.body.data[0].owner.id).to.be.equal(userId);
               expect(res.body.data[1].owner.id).to.be.equal(userId);
               expect(res.body.data[1].id).to.not.be.equal(res.body.data[0].id);
@@ -455,9 +455,9 @@ describe('integration: projects', () => {
           expect(res.body.count).to.equal(count);
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
           expect(Object.keys(res.body.data[0])).to.eql(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members']);
-          expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-          expect(Object.keys(res.body.data[0].supervisor)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
-          expect(Object.keys(res.body.data[0].members[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt']);
+          expect(Object.keys(res.body.data[0].owner)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+          expect(Object.keys(res.body.data[0].supervisor)).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
+          expect(Object.keys(res.body.data[0].members[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
           // Ordering
           expect(res.body.data.length).to.equal(25);
           expect(res.body.data[0].name).to.eql('MyPoneyProject49');
