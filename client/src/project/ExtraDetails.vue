@@ -88,8 +88,9 @@
           eventAction: 'ExtraDetailsProvided',
           eventLabel: this.event.id,
         });
+        const isAdmin = this.$route.path.startsWith('/admin/');
         this.$router.push({
-          name: 'CreateProjectCompleted',
+          name: isAdmin ? 'AdminProjects' : 'CreateProjectCompleted',
           params: {
             eventSlug: this.eventSlug,
             projectId: this.projectId,
