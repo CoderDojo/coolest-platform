@@ -23,6 +23,7 @@
         <a v-if="props.row.owner" slot="owner.email" slot-scope="props" :href="`mailto:${props.row.owner.email}`">{{ props.row.owner.email }}</a>
         <a v-if="props.row.supervisor" slot="supervisor.email" slot-scope="props" :href="`mailto:${props.row.supervisor.email}`">{{ props.row.supervisor.email }}</a>
         <router-link class="fa fa-eye" slot="view" slot-scope="props" :to="{ name: 'AdminProjectsView', params: { projectId: props.row.id, eventSlug, _project: props.row, _event: event } }"></router-link>
+        <router-link class="fa fa-pencil" slot="edit" slot-scope="props" :to="{ name: 'AdminProjectsEdit', params: { eventSlug, projectId: props.row.id, _event: event, _project: props.row } }"></router-link>
       </v-server-table>
     </div>
   </div>
@@ -49,6 +50,7 @@
           'owner.email',
           'supervisor.email',
           'view',
+          'edit',
         ],
         tableState: {},
         itemsPerPage: 50,
@@ -90,6 +92,7 @@
             'owner.email': 'Owner Email',
             'supervisor.email': 'Supervisor Email',
             view: '',
+            edit: '',
           },
           highlightMatches: true,
           orderBy: {
