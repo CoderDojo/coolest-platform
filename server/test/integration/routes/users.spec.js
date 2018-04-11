@@ -34,7 +34,7 @@ describe('integration: users', () => {
         .then((res) => {
           expect(res.body.user).to.have.all.keys(['email', 'created_at', 'updated_at', 'id']);
           // eslint-disable-next-line max-len
-          expect(res.body.auth).to.have.all.keys(['userId', 'createdAt', 'updatedAt', 'id', 'token', 'role']);
+          expect(res.body.auth).to.have.all.keys(['userId', 'createdAt', 'updatedAt', 'deletedAt', 'id', 'token', 'role']);
           expect(res.body.user.email).to.equal(payload.email);
           expect(res.body.user.id).to.equal(res.body.auth.userId);
           refToken = res.body.auth.token;
@@ -94,7 +94,7 @@ describe('integration: users', () => {
         .then((res) => {
           expect(res.body.count).to.equal(5);
           expect(res.body.data.length).to.equal(5);
-          expect(Object.keys(res.body.data[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'membership']);
+          expect(Object.keys(res.body.data[0])).to.eql(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt', 'membership']);
         });
     });
     it('should accept some params', async () => {
