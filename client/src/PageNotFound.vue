@@ -29,4 +29,10 @@
     max-width: 180px;
     margin: 20px;
   }
+
+  .not-found {
+    h1 {
+      padding: 10px;
+    }
+  }
 </style>
