@@ -35,6 +35,8 @@ describe('ProjectForm component', () => {
           category: 'scratch',
           org: 'codeclub',
           orgRef: 'That one!',
+          state: 'CA',
+          city: 'Los Angeles',
         };
         vm.participants = [{
           id: 'user1',
@@ -69,6 +71,8 @@ describe('ProjectForm component', () => {
           category: 'scratch',
           org: 'codeclub',
           orgRef: 'That one!',
+          state: 'CA',
+          city: 'Los Angeles',
           users: [
             {
               id: 'user1',
@@ -110,6 +114,8 @@ describe('ProjectForm component', () => {
           category: 'scratch',
           org: 'coderdojo',
           orgRef: 'foo',
+          state: 'CA',
+          city: 'Los Angeles',
           members: [
             {
               id: 'user1',
@@ -151,6 +157,8 @@ describe('ProjectForm component', () => {
           category: 'scratch',
           org: 'coderdojo',
           orgRef: 'foo',
+          state: 'CA',
+          city: 'Los Angeles',
         });
         expect(vm.participants).to.deep.equal([
           {
