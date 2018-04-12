@@ -92,6 +92,7 @@ class Project {
           const value = query.scopes[field];
           qb.andWhere(snakeCase(field), '=', value);
         });
+        qb.andWhere('project.deleted_at', 'IS', null);
       })
       .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === '1' ? 'asc' : 'desc');
     if (paginated) {
