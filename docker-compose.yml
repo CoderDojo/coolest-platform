@@ -7,8 +7,6 @@ services:
       POSTGRES_PASSWORD: cool-password
       POSTGRES_USER: cool-user
       POSTGRES_DB: cool-database
-    ports:
-      - 5432:5432
   platform:
     image: node:carbon
     command: yarn start-dev
