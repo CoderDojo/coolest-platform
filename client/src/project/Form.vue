@@ -138,6 +138,24 @@
         <span class="error-message" v-show="org === 'coderdojo' && errors.has('orgRef:required')">* If you attend a Dojo, you must select which Dojo</span>
       </div>
     </div>
+    <div class="row">
+      <div class="col">
+        <label>State</label>
+        <state-selection v-model="projectDetails.state" v-validate="'required'" data-vv-name="state" data-vv-value-path="value" :has-error="errors.has('state:required')"></state-selection>
+        <span class="error-message" v-show="errors.has('state:required')">* State is required.</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>City</label>
+        <div class="row row-no-margin">
+          <div class="col">
+            <input type="text" v-model="projectDetails.city" v-validate="'required'" data-vv-name="city" class="full-width-block" :class="{ error: errors.has('city:required') }" />
+            <span class="error-message" v-show="errors.has('city:required')">* City is required.</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
         <label>Please tell us which Code Club or Raspberry Jam you attend or let us know when you participated in Pioneers.</label>
@@ -352,6 +370,7 @@
   import { ModelListSelect } from 'vue-search-select';
   import { clone, pick } from 'lodash';
   import moment from 'moment';
+  import StateSelection from '@/project/StateSelection';
   import ProjectService from '@/project/service';
   import EventUtilsMixin from '@/event/EventUtilsMixin';
 
@@ -370,6 +389,7 @@
     components: {
       VueDobPicker,
       ModelListSelect,
+      StateSelection,
     },
     data() {
       return {
@@ -395,6 +415,8 @@
             'category',
             'org',
             'orgRef',
+            'state',
+            'city',
           ]);
           project.users = this.participants.map((participant) => {
             const _participant = pick(participant, [
@@ -425,7 +447,8 @@
         },
         set(project) {
           this.projectDetails = pick(project, [
-            'id', 'name', 'description', 'category', 'org', 'orgRef',
+            'id', 'name', 'description', 'category',
+            'org', 'orgRef', 'state', 'city',
           ]);
           this.org = project.org;
           this.participants = project.members.map((user) => {
