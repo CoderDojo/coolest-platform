@@ -138,6 +138,7 @@ module.exports = {
             { label: 'Description', value: 'description' },
             { label: 'Category', value: 'category' },
             { label: 'Owner Email', value: 'owner.email' },
+            { label: 'Status', value: 'status' },
             { label: 'Created At', value: row => dateFormat(row.createdAt) },
             { label: 'Updated At', value: row => dateFormat(row.updatedAt) },
             { label: 'Supervisor First Name', value: 'supervisor.firstName' },
