@@ -58,6 +58,10 @@
     margin: 40px auto 0;
   }
 
+  h2 {
+    border-bottom: none;
+  }
+
   .path {
     stroke-dasharray: 1000;
     stroke-dashoffset: 0;
