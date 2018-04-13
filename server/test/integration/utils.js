@@ -1,3 +1,4 @@
+const moment = require('moment');
 const request = require('supertest');
 
 module.exports = (app) => {
@@ -41,8 +42,16 @@ module.exports = (app) => {
   }
 
   function getProject(token, eventId, projectId) {
+    return request(app).get(`/api/v1/events/${eventId}/projects/${projectId}?token=${token}`);
+  }
+
+  function deleteProject(token, eventId, project) {
     return request(app)
-      .get(`/api/v1/events/${eventId}/projects/${projectId}?token=${token}`);
+      .put(`/api/v1/events/${eventId}/projects/${project.id}?token=${token}`)
+      .send({
+        deletedAt: moment().format(),
+        users: project.members.concat(project.supervisor),
+      });
   }
 
   function getEvent(slug) {
@@ -87,6 +96,7 @@ module.exports = (app) => {
       create: createProject,
       update: updateProject,
       get: getProject,
+      delete: deleteProject,
     },
   };
 };

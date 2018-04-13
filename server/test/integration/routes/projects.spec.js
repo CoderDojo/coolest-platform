@@ -649,6 +649,22 @@ describe('integration: projects with open event by default', () => {
         .expect(403);
     });
 
+    it("shouldn't include deleted projects", async () => {
+      await request(app)
+        .get(`/api/v1/events/${eventId}/projects?limit=1&token=${refAuth.token}`)
+        .expect(200)
+        .then(async (res) => {
+          const lastProject = res.body.data[0];
+          await util.project.delete(refAuth.token, eventId, lastProject);
+          await request(app)
+            .get(`/api/v1/events/${eventId}/projects?limit=1&token=${refAuth.token}`)
+            .expect(200)
+            .then((r) => {
+              expect(r.body.data[0].id).to.not.equal(lastProject.id);
+            });
+        });
+    });
+
     describe('with csv format', () => {
       it('should return a csv', async () => {
         await request(app)

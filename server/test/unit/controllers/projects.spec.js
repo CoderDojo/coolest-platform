@@ -327,8 +327,8 @@ describe('projects controllers', () => {
       await controllers.getExtended({ scopes: { event_id: 'event1' } }, true);
       expect(projectInstance.joinView).to.have.been.calledOnce;
       expect(projectInstance.joinView).to.have.been.calledWith(undefined);
-      expect(projectInstance.andWhere).to.have.been.calledOnce;
-      expect(projectInstance.andWhere).to.have.been.calledWith('event_id', '=', 'event1');
+      expect(projectInstance.andWhere).to.have.been.calledTwice;
+      expect(projectInstance.andWhere.firstCall).to.have.been.calledWith('event_id', '=', 'event1');
       expect(projectInstance.orderBy).to.have.been.calledWith('created_at', 'desc');
       expect(projectInstance.fetchPage).to.have.been.calledWith({ pageSize: 25, page: 1, withRelated: ['owner', 'supervisor', 'members'] });
     });
@@ -357,8 +357,12 @@ describe('projects controllers', () => {
       }, true);
       expect(projectInstance.joinView).to.have.been.calledOnce;
       expect(projectInstance.joinView).to.have.been.calledWith({ name: 'aa' });
-      expect(projectInstance.andWhere).to.have.been.calledTwice;
-      expect(projectInstance.andWhere.getCall(0)).to.have.been.calledWith('event_id', '=', 'event1');
+      expect(projectInstance.andWhere).to.have.been.calledThrice;
+      expect(projectInstance.andWhere.getCall(0)).to.have.been.calledWith(
+        'event_id',
+        '=',
+        'event1',
+      );
       expect(projectInstance.andWhere.getCall(1)).to.have.been.calledWith('owner.id', '=', 'user1');
       expect(projectInstance.orderBy).to.have.been.calledWith('banana_split', 'asc');
       expect(projectInstance.fetchPage).to.have.been.calledWith({ pageSize: 30, page: 2, withRelated: ['owner', 'supervisor', 'members'] });
