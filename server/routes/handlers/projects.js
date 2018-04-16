@@ -144,6 +144,9 @@ module.exports = {
             { label: 'Supervisor Last Name', value: 'supervisor.lastName' },
             { label: 'Supervisor Email', value: 'supervisor.email' },
             { label: 'Supervisor Phone', value: 'supervisor.phone' },
+            { label: 'Social project?', value: 'answers.social_project' },
+            { label: 'Education Project?', value: 'answers.educational_project' },
+            { label: 'Innovator Stage?', value: 'answers.innovator_stage' },
           ];
 
           const maxParticipants = Math.max(...data.map(x => x.members).map(x => x.length)) || 1;

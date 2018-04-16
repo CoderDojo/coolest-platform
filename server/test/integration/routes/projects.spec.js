@@ -677,6 +677,9 @@ describe('integration: projects with open event by default', () => {
         '"Supervisor Last Name"',
         '"Supervisor Email"',
         '"Supervisor Phone"',
+        '"Social project?"',
+        '"Education Project?"',
+        '"Innovator Stage?"',
       ];
 
       const csvColumnsWithParticipant = csvColumns.concat([
@@ -699,7 +702,7 @@ describe('integration: projects with open event by default', () => {
             const columns = lines[0].split(',');
             const row = lines[1].split(',');
             expect(columns).to.eql(csvColumnsWithParticipant);
-            expect(row[row.length - 10]).to.eql(`"${new Date(Date.now()).toLocaleDateString()}"`);
+            expect(row[row.length - 13]).to.eql(`"${new Date(Date.now()).toLocaleDateString()}"`);
           });
       });
       it('should return an empty csv with headers', async () => {
