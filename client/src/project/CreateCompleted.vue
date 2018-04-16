@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <p>Congratulations, you've succesfully registered "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For any more information on the event check out <a href="https://www.coolestprojects.org">www.coolestprojects.org</a>.
+        <p>Thanks for submitting "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For any more information on the event check out <a href="https://www.coolestprojects.org">www.coolestprojects.org</a>.
 The next step, have fun and keep building your project!</p>
       </div>
     </div>
