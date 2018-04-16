@@ -57,7 +57,7 @@ module.exports = {
         // Save by ensuring the payload contains the proper id which is used for perms
         .update(req.app.locals.project, Object.assign({}, req.body, { id: req.params.id }))
         // Pull the original list of users so we can diff in next step
-        // User_association helps us retrieve the users's roles in the project based on user_id 
+        // User_association helps us retrieve the users's roles in the project based on user_id
         .then(p => p.refresh({ withRelated: ['users', 'userAssociations'] }))
         .then((project) => {
           res.locals.project = project;
@@ -144,10 +144,21 @@ module.exports = {
             { label: 'Supervisor Last Name', value: 'supervisor.lastName' },
             { label: 'Supervisor Email', value: 'supervisor.email' },
             { label: 'Supervisor Phone', value: 'supervisor.phone' },
-            { label: 'Social project?', value: 'answers.social_project' },
-            { label: 'Education Project?', value: 'answers.educational_project' },
-            { label: 'Innovator Stage?', value: 'answers.innovator_stage' },
           ];
+
+          const answers = data.map(x => x.answers || {});
+          const answerKeys = [
+            ...new Set((answers || []).reduce((acc, val) => {
+              return acc.concat(Object.keys(val));
+            }, [])),
+          ];
+
+          const answerFields = answerKeys.map((answer) => {
+            return {
+              label: `${answer[0].toUpperCase()}${answer.slice(1)}`.replace(/(_)/g, ' '),
+              value: `answers.${answer}`,
+            };
+          });
 
           const maxParticipants = Math.max(...data.map(x => x.members).map(x => x.length)) || 1;
           for (let i = 0; i < maxParticipants; i += 1) {
@@ -161,7 +172,7 @@ module.exports = {
                 value: `members[${i}].specialRequirements`,
               },
             ];
-            fields = fields.concat(member);
+            fields = fields.concat(answerFields).concat(member);
           }
           return res.status(200).send(json2csv({
             data,
