@@ -11,6 +11,7 @@ const projectCSVHeader = (questions, nbParticipants) => {
     { label: 'Description', value: 'description' },
     { label: 'Category', value: 'category' },
     { label: 'Owner Email', value: 'owner.email' },
+    { label: 'Seat', value: 'seat.seat' },
     { label: 'Status', value: 'status' },
     { label: 'Created At', value: row => dateFormat(row.createdAt) },
     { label: 'Updated At', value: row => dateFormat(row.updatedAt) },

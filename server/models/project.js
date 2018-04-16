@@ -25,6 +25,21 @@ const Project = bookshelf.Model.extend({
   supervisor() {
     return this.belongsToMany('User').through('ProjectUsers').query(q => q.where('type', 'supervisor'));
   },
+  seat() {
+    return this.hasOne('Seat');
+  },
+  ageGroup() {
+    const db = bookshelf.knex;
+    return this.query((qb) => {
+      qb.joinRaw(db.raw(`INNER JOIN 
+        (SELECT pu.project_id, max(extract('years' from age(dob))) age 
+          FROM "public".user u
+          INNER JOIN project_users pu ON pu.user_id = u.id 
+          WHERE type= 'member' 
+          GROUP BY project_id
+        ) groupAge ON groupAge.project_id = project.id`));
+    });
+  },
   joinView(filters) {
     // NOTE: if this monstruosity doesn't work, fallback to 
     // a view + custom Model (knex join) + serializer (field into object => https://www.npmjs.com/package/treeize)

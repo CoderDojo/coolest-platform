@@ -389,7 +389,7 @@ describe('projects controllers', () => {
       expect(projectInstance.joinView).to.have.been.calledOnce;
       expect(projectInstance.joinView).to.have.been.calledWith({ name: 'aa' });
       expect(projectInstance.orderBy).to.have.been.calledWith('banana', 'asc');
-      expect(projectInstance.fetchAll).to.have.been.calledWith({ withRelated: ['owner', 'supervisor', 'members'] });
+      expect(projectInstance.fetchAll).to.have.been.calledWith({ withRelated: ['owner', 'supervisor', 'members', 'seat'] });
     });
   });
 });
