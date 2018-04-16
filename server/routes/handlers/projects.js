@@ -146,7 +146,8 @@ module.exports = {
             { label: 'Supervisor Phone', value: 'supervisor.phone' },
           ];
 
-          [0, 1, 2, 3, 4].forEach((i) => {
+          const maxParticipants = Math.max(...data.map(x => x.members).map(x => x.length)) || 1;
+          for (let i = 0; i < maxParticipants; i += 1) {
             const member = [
               { label: `Participant ${i + 1} First Name`, value: `members[${i}].firstName` },
               { label: `Participant ${i + 1} Last Name`, value: `members[${i}].lastName` },
@@ -158,7 +159,7 @@ module.exports = {
               },
             ];
             fields = fields.concat(member);
-          });
+          }
           return res.status(200).send(json2csv({
             data,
             fields,

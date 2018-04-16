@@ -677,35 +677,20 @@ describe('integration: projects with open event by default', () => {
         '"Supervisor Last Name"',
         '"Supervisor Email"',
         '"Supervisor Phone"',
+      ];
+
+      const csvColumnsWithParticipant = csvColumns.concat([
         '"Participant 1 First Name"',
         '"Participant 1 Last Name"',
         '"Participant 1 Dob"',
         '"Participant 1 Gender"',
         '"Participant 1 Special requirements"',
-        '"Participant 2 First Name"',
-        '"Participant 2 Last Name"',
-        '"Participant 2 Dob"',
-        '"Participant 2 Gender"',
-        '"Participant 2 Special requirements"',
-        '"Participant 3 First Name"',
-        '"Participant 3 Last Name"',
-        '"Participant 3 Dob"',
-        '"Participant 3 Gender"',
-        '"Participant 3 Special requirements"',
-        '"Participant 4 First Name"',
-        '"Participant 4 Last Name"',
-        '"Participant 4 Dob"',
-        '"Participant 4 Gender"',
-        '"Participant 4 Special requirements"',
-        '"Participant 5 First Name"',
-        '"Participant 5 Last Name"',
-        '"Participant 5 Dob"',
-        '"Participant 5 Gender"',
-        '"Participant 5 Special requirements"',
-      ];
+      ]);
       it('should return a csv', async () => {
         await request(app)
-          .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[supervisor.email]=test1&format=csv&ascending=false&token=${refAuth.token}`)
+          .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[supervisor.email]=test1&format=csv&ascending=false&token=${
+            refAuth.token
+          }`)
           .expect(200)
           .then((res) => {
             expect(res.text).not.to.be.empty;
@@ -713,13 +698,15 @@ describe('integration: projects with open event by default', () => {
             expect(lines.length).to.equal(12); // 10-19 + 1 + headers
             const columns = lines[0].split(',');
             const row = lines[1].split(',');
-            expect(columns).to.eql(csvColumns);
-            expect(row[row.length - 30]).to.eql(`"${new Date(Date.now()).toLocaleDateString()}"`);
+            expect(columns).to.eql(csvColumnsWithParticipant);
+            expect(row[row.length - 10]).to.eql(`"${new Date(Date.now()).toLocaleDateString()}"`);
           });
       });
       it('should return an empty csv with headers', async () => {
         await request(app)
-          .get(`/api/v1/events/${eventId}/projects?limit=50&query[supervisor.email]=doubidou&format=csv&ascending=false&token=${refAuth.token}`)
+          .get(`/api/v1/events/${eventId}/projects?limit=50&query[supervisor.email]=doubidou&format=csv&ascending=false&token=${
+            refAuth.token
+          }`)
           .expect(200)
           .then((res) => {
             expect(res.text).not.to.be.empty;
