@@ -133,7 +133,7 @@
               <span class="error-message" v-show="errors.has(`participant-${n}-firstName:required`)">* Participant's first name is required</span>
             </div>
             <div class="col-1fr">
-              <label>Surname</label>
+              <label>Last name</label>
               <input
                 type="text"
                 placeholder="e.g. Smith"
@@ -142,7 +142,7 @@
                 :data-vv-name="`participant-${n}-lastName`"
                 class="full-width-block"
                 :class="{ error: errors.has(`participant-${n}-lastName`) }" />
-              <span class="error-message" v-show="errors.has(`participant-${n}-lastName:required`)">* Participant's surname is required</span>
+              <span class="error-message" v-show="errors.has(`participant-${n}-lastName:required`)">* Participant's last name is required</span>
             </div>
           </div>
         </div>
@@ -222,7 +222,7 @@
             <span class="error-message" v-show="errors.has('supervisor-firstName')">* Supervisor's first name is required</span>
           </div>
           <div class="col">
-            <label>Surname of adult supervisor</label>
+            <label>Last name of adult supervisor</label>
             <input
               type="text"
               v-model="supervisor.lastName"
@@ -231,7 +231,7 @@
               class="full-width-block"
               :class="{ error: errors.has('supervisor-lastName') }"
               placeholder="e.g. Smith" />
-            <span class="error-message" v-show="errors.has('supervisor-lastName')">* Supervisor's surname is required</span>
+            <span class="error-message" v-show="errors.has('supervisor-lastName')">* Supervisor's last name is required</span>
           </div>
         </div>
       </div>
