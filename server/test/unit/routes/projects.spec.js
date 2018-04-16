@@ -338,14 +338,11 @@ describe('router: project', () => {
       expect(mockRes.status).to.have.been.calledOnce;
       expect(mockRes.status).to.have.been.calledWith(200);
       expect(projectController.getExtended).to.have.been.calledOnce;
-      expect(projectController.getExtended).to.have.been.calledWith(
-        mockQuery,
-        false,
-      );
+      expect(projectController.getExtended).to.have.been.calledWith(mockQuery, false);
       expect(mockRes.setHeader).to.have.been.calledOnce;
       expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
       expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"Name","Description","Category","Supervisor Email","Owner Email","Created At","Updated At"');
+      expect(send).to.have.been.calledWith('"Name","Description","Category","Owner Email","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Participant 1 First Name","Participant 1 Last Name","Participant 1 Dob","Participant 1 Gender","Participant 1 Special requirements","Participant 2 First Name","Participant 2 Last Name","Participant 2 Dob","Participant 2 Gender","Participant 2 Special requirements","Participant 3 First Name","Participant 3 Last Name","Participant 3 Dob","Participant 3 Gender","Participant 3 Special requirements","Participant 4 First Name","Participant 4 Last Name","Participant 4 Dob","Participant 4 Gender","Participant 4 Special requirements","Participant 5 First Name","Participant 5 Last Name","Participant 5 Dob","Participant 5 Gender","Participant 5 Special requirements"');
     });
 
     it('should format data for csv', async () => {
@@ -361,18 +358,33 @@ describe('router: project', () => {
         status: sandbox.stub().returns({ send }),
       };
       const res = {
-        models: [{
-          name: 'Desu',
-          category: 'HTML',
-          owner: {
-            email: 'test@test.com',
+        models: [
+          {
+            name: 'Desu',
+            description: 'Blah blah blah',
+            category: 'HTML',
+            owner: {
+              email: 'test@test.com',
+            },
+            supervisor: {
+              email: 'sup@sup.com',
+              firstName: 'Sup first',
+              lastName: 'Sup last',
+              phone: '1234',
+            },
+            members: [1, 2, 3, 4, 5].map((i) => {
+              return {
+                firstName: `Foo ${i}`,
+                lastName: `Bar ${i}`,
+                dob: `DOB ${i}`,
+                gender: `Gender ${i}`,
+                specialRequirements: `sr ${i}`,
+              };
+            }),
+            createdAt: 1516358474342,
+            updatedAt: 1516358474342,
           },
-          supervisor: {
-            email: 'sup@sup.com',
-          },
-          createdAt: 1516358474342,
-          updatedAt: 1516358474342,
-        }],
+        ],
         pagination: {
           rowCount: 0,
         },
@@ -387,14 +399,11 @@ describe('router: project', () => {
       expect(mockRes.status).to.have.been.calledOnce;
       expect(mockRes.status).to.have.been.calledWith(200);
       expect(projectController.getExtended).to.have.been.calledOnce;
-      expect(projectController.getExtended).to.have.been.calledWith(
-        mockQuery,
-        false,
-      );
+      expect(projectController.getExtended).to.have.been.calledWith(mockQuery, false);
       expect(mockRes.setHeader).to.have.been.calledOnce;
       expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
       expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"Name","Description","Category","Supervisor Email","Owner Email","Created At","Updated At"\n"Desu",,"HTML","sup@sup.com","test@test.com","2018-1-19","2018-1-19"');
+      expect(send).to.have.been.calledWith('"Name","Description","Category","Owner Email","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Participant 1 First Name","Participant 1 Last Name","Participant 1 Dob","Participant 1 Gender","Participant 1 Special requirements","Participant 2 First Name","Participant 2 Last Name","Participant 2 Dob","Participant 2 Gender","Participant 2 Special requirements","Participant 3 First Name","Participant 3 Last Name","Participant 3 Dob","Participant 3 Gender","Participant 3 Special requirements","Participant 4 First Name","Participant 4 Last Name","Participant 4 Dob","Participant 4 Gender","Participant 4 Special requirements","Participant 5 First Name","Participant 5 Last Name","Participant 5 Dob","Participant 5 Gender","Participant 5 Special requirements"\n"Desu","Blah blah blah","HTML","test@test.com","2018-1-19","2018-1-19","Sup first","Sup last","sup@sup.com","1234","Foo 1","Bar 1","DOB 1","Gender 1","sr 1","Foo 2","Bar 2","DOB 2","Gender 2","sr 2","Foo 3","Bar 3","DOB 3","Gender 3","sr 3","Foo 4","Bar 4","DOB 4","Gender 4","sr 4","Foo 5","Bar 5","DOB 5","Gender 5","sr 5"');
     });
   });
 
