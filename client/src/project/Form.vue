@@ -194,7 +194,7 @@
             :class="{ error: errors.has(`participant-${n}-gender`) }">
               <option value="male">Male</option>
               <option value="female">Female</option>
-              <option value="undisclosed">Other/Rather not say</option>
+              <option value="undisclosed">Rather not say</option>
           </select>
           <span class="error-message" v-show="errors.has(`participant-${n}-gender:required`)">* We want everyone to enjoy Coolest Projects equally. Gathering this information helps us check how well we’re doing.</span>
         </div>
