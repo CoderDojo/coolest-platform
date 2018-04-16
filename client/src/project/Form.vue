@@ -83,7 +83,8 @@
     </div>
     <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
-        <label>Please tell us which Code Club or Raspberry Jam you attend or let us know when you participated in Pioneers.</label>
+        <label v-if="org === 'other'">Please describe.</label>
+        <label v-else>Please tell us which Code Club or Raspberry Jam you attend or let us know when you participated in Pioneers.</label>
         <div class="row row-no-margin">
           <div class="col">
             <input type="text"
