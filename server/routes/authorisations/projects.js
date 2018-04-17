@@ -55,7 +55,7 @@ module.exports.isAllowed = (req, res, next) => {
   if (req.params.id) {
     if (
       (req.app.locals.project &&
-        (!req.app.locals.public ? req.app.locals.project.isOwner(req.user.userId) : true) &&
+        (req.app.locals.public || req.app.locals.project.isOwner(req.user.userId)) &&
         canEdit(req)) ||
       (req.user ? req.user.role === 'admin' : false)) {
       return next();
