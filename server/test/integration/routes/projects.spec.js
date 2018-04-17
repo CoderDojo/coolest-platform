@@ -671,6 +671,7 @@ describe('integration: projects with open event by default', () => {
         '"Description"',
         '"Category"',
         '"Owner Email"',
+        '"Status"',
         '"Created At"',
         '"Updated At"',
         '"Supervisor First Name"',
@@ -698,13 +699,8 @@ describe('integration: projects with open event by default', () => {
             expect(lines.length).to.equal(12); // 10-19 + 1 + headers
             const columns = lines[0].split(',');
             const row = lines[1].split(',');
-<<<<<<< HEAD
             expect(columns).to.eql(csvColumnsWithParticipant);
             expect(row[row.length - 10]).to.eql(`"${new Date(Date.now()).toLocaleDateString()}"`);
-=======
-            expect(columns).to.eql(['"Name"', '"Description"', '"Category"', '"Supervisor Email"', '"Owner Email"', '"Status"', '"Created At"', '"Updated At"']);
-            expect(row[row.length - 1]).to.eql(`"${new Date(Date.now()).toLocaleDateString()}"`);
->>>>>>> Add status to CSV export and table display
           });
       });
       it('should return an empty csv with headers', async () => {
@@ -718,11 +714,7 @@ describe('integration: projects with open event by default', () => {
             const lines = res.text.split('\n');
             expect(lines.length).to.equal(1); // headers
             const columns = lines[0].split(',');
-<<<<<<< HEAD
             expect(columns).to.eql(csvColumns);
-=======
-            expect(columns).to.eql(['"Name"', '"Description"', '"Category"', '"Supervisor Email"', '"Owner Email"', '"Status"', '"Created At"', '"Updated At"']);
->>>>>>> Add status to CSV export and table display
           });
       });
     });
