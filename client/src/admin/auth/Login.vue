@@ -3,9 +3,7 @@
     <div class="center-grid__content">
       <div class="row">
         <div class="col">
-          <div class="text-center">
-            <img class="logo" src="../../assets/CoolestProjectsLogo.png" />
-          </div>
+          <Header />
           <p v-if="$route.query.redirect" class="error-message text-center">You must be logged in to view this page.</p>
           <input type="email" v-model="email" class="full-width-block" placeholder="Email" />
           <input type="password" v-model="password" class="full-width-block" placeholder="Password" />
@@ -19,6 +17,7 @@
 </template>
 
 <script>
+  import Header from '@/Header';
   import AdminAuthService from './service';
 
   export default {
@@ -40,14 +39,12 @@
         }
       },
     },
+    components: {
+      Header,
+    },
   };
 </script>
 
 <style lang="scss" scoped>
   @import '../../assets/scss/main.scss';
-
-  .logo {
-    max-width: 180px;
-    margin: 20px;
-  }
 </style>

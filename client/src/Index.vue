@@ -1,9 +1,7 @@
 <template>
   <div class="center-grid">
     <div class="center-grid__content">
-      <div class="text-center">
-        <img class="logo" src="./assets/CoolestProjectsLogo.png" />
-      </div>
+      <Header />
       <div v-if="isIE">
         <h2>Sorry, Internet Explorer is not supported</h2>
         <div class="row">
@@ -16,6 +14,8 @@
 </template>
 
 <script>
+  import Header from '@/Header';
+
   export default {
     name: 'Index',
     computed: {
@@ -23,14 +23,15 @@
         return window.navigator.userAgent.indexOf('Trident') >= 0;
       },
     },
+    components: {
+      Header,
+    },
   };
 </script>
 
 <style lang="scss">
   @import './assets/scss/main.scss';
-
-  .logo {
-    max-width: 180px;
-    margin: 20px;
+  .logo-cc {
+    height: 80px;
   }
 </style>
