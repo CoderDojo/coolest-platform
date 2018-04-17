@@ -80,7 +80,7 @@
           <p class="col">Do you have any technical requests or requirements for your project?</p>
         </div>
         <div class="row">
-          <textarea v-model="answers.other_requirements" 
+          <textarea v-model="answers.other_requirements"
             class="col full-width-block"
             rows="4"/>
         </div>
@@ -137,6 +137,23 @@
         <span class="error-message" v-show="org === 'coderdojo' && errors.has('orgRef:required')">* If you attend a Dojo, you must select which Dojo</span>
       </div>
     </div>
+    <div v-show="org && org !== 'coderdojo'" class="row">
+      <div class="col">
+        <label v-if="org === 'other'">Please describe.</label>
+        <label v-else>Please tell us which Code Club or Raspberry Jam you attend or let us know when you participated in Pioneers.</label>
+        <div class="row row-no-margin">
+          <div class="col">
+            <input type="text"
+            v-model="projectDetails.orgRef"
+            v-validate="org && org !== 'coderdojo' ? 'required' : ''"
+            data-vv-name="orgRef"
+            class="full-width-block"
+            :class="{ error: errors.has('orgRef') }" />
+            <span class="error-message" v-show="errors.has('orgRef:required')">* It helps us to know where our attendees came from, please tell us how you came to Coolest Projects.</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col">
         <label>State</label>
@@ -151,23 +168,6 @@
           <div class="col">
             <input type="text" v-model="projectDetails.city" v-validate="'required'" data-vv-name="city" class="full-width-block" :class="{ error: errors.has('city:required') }" />
             <span class="error-message" v-show="errors.has('city:required')">* City is required.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-show="org && org !== 'coderdojo'" class="row">
-      <div class="col">
-        <label v-if="org === 'other'">Please describe.</label>
-        <label v-else>Please tell us which Code Club or Raspberry Jam you attend.</label>
-        <div class="row row-no-margin">
-          <div class="col">
-            <input type="text"
-              v-model="projectDetails.orgRef"
-              v-validate="org && org !== 'coderdojo' ? 'required' : ''"
-              data-vv-name="orgRef"
-              class="full-width-block"
-              :class="{ error: errors.has('orgRef') }" />
-            <span class="error-message" v-show="errors.has('orgRef:required')">* It helps us to know where our attendees came from. Please tell us how you came to Coolest Projects.</span>
           </div>
         </div>
       </div>
