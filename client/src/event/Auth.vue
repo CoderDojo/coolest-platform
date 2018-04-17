@@ -8,7 +8,13 @@
       <div class="row">
         <div class="col">
           <div v-if="isOpen">
-            <label>This form is to register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}.</label>
+            <label>
+              This form is to register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}.
+            </label>
+            <br>
+            <label v-if="event.requiresApproval">
+              You will be contacted by the Coolest Projects team if your project is accepted.
+            </label>
             <ul class="list">
               <li>Only one person should register per project.</li>
               <li>If you have already registered a project please fill in your email below to receive a unique link to edit or add a new project.</li>

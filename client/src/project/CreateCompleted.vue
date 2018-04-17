@@ -16,6 +16,11 @@ The next step, have fun and keep building your project!</p>
         <p>We've sent you a confirmation email and we'll be in contact soon with further details.</p>
       </div>
     </div>
+    <div v-if="event.requiresApproval" class="row">
+      <div class="col">
+        <p>You will be contacted by the Coolest Projects team if your project is accepted.</p>
+      </div>
+    </div>
     <div class="row">
       <div class="col">
         <p>The project supervisor and participants do not need a ticket.
