@@ -8,11 +8,11 @@
     </div>
     <div class="row">
       <div class="col">
-        <div v-if="status === 'verified'" >
+        <div v-if="status === 'confirmed'" >
           <h1>Your project has been confirmed.</h1>
           <h2 class="text-center">See you on {{formattedDate}}!</h2>
         </div>
-        <div v-else>
+        <div v-else-if="status === 'canceled'">
           <h1>Your project has been canceled.</h1>
           <h2 class="text-center">That's a shame, see you next year maybe?</h2>
         </div>
