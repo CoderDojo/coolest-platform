@@ -31,7 +31,7 @@ describe('integration: projects with open event by default', () => {
   describe('/:id/status patch', () => {
     it('should allow update of a status of a project', async () => {
       const payload = {
-        status: 'verified',
+        status: 'confirmed',
       };
       return request(app)
         .patch(`/api/v1/events/${eventId}/projects/${projectId}/status`)
@@ -44,7 +44,7 @@ describe('integration: projects with open event by default', () => {
     });
     it('should fail if event is frozen', async () => {
       const payload = {
-        status: 'verified',
+        status: 'confirmed',
       };
       const clock = sinon.useFakeTimers({
         now: moment.utc().add(3, 'day').toDate(),

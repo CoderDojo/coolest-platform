@@ -24,7 +24,7 @@ describe('router: project', () => {
       const id = 'faaa';
       const res = { id, name: 'proj' };
       const originalProject = { id, name: 'oldproj' };
-      const body = { status: 'verified', banana: true };
+      const body = { status: 'confirmed', banana: true };
       projectController.update = updateController.resolves(res);
       const nextMock = sandbox.stub();
       const mockReq = {
@@ -43,7 +43,7 @@ describe('router: project', () => {
       };
       await handler(mockReq, mockRes, nextMock);
       expect(updateController).to.have.been.calledOnce;
-      expect(updateController).to.have.been.calledWith(originalProject, { status: 'verified' });
+      expect(updateController).to.have.been.calledWith(originalProject, { status: 'confirmed' });
       expect(mockRes.status).to.have.been.calledOnce;
       expect(mockRes.status).to.have.been.calledWith(200);
       expect(send).to.have.been.calledOnce;
@@ -54,7 +54,7 @@ describe('router: project', () => {
       const updateController = sandbox.stub();
       const id = 'faaa';
       const originalProject = { id, name: 'oldproj' };
-      const body = { status: 'verified', banana: true };
+      const body = { status: 'confirmed', banana: true };
       const err = new Error('Fake err');
       projectController.update = updateController.rejects(err);
       const nextMock = sandbox.stub();
@@ -74,7 +74,7 @@ describe('router: project', () => {
       };
       await handler(mockReq, mockRes, nextMock);
       expect(updateController).to.have.been.calledOnce;
-      expect(updateController).to.have.been.calledWith(originalProject, { status: 'verified' });
+      expect(updateController).to.have.been.calledWith(originalProject, { status: 'confirmed' });
       expect(nextMock).to.have.been.calledOnce;
       expect(nextMock.getCall(0).args[0].message).to.equal('Error while saving your project.');
     });
