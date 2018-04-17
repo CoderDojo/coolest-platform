@@ -65,6 +65,7 @@
             'name',
             'category',
             'org',
+            'status',
             'owner.email',
             'supervisor.email',
           ],
@@ -123,6 +124,20 @@
               {
                 id: 'other',
                 text: 'Other',
+              },
+            ],
+            status: [
+              {
+                id: 'pending',
+                text: 'Pending',
+              },
+              {
+                id: 'canceled',
+                text: 'Canceled',
+              },
+              {
+                id: 'confirmed',
+                text: 'Confirmed',
               },
             ],
           },
