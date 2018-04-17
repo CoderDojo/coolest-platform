@@ -128,8 +128,15 @@ module.exports = {
     (req, res) => {
       const paginated = !(req.query.format && req.query.format === 'csv');
       req.query.scopes = { event_id: req.params.eventId };
+
       return projectController.getExtended(req.query, paginated).then((projects) => {
         const dateFormat = date => new Date(date).toLocaleDateString();
+        const questionFields = (req.app.locals.event.attributes.questions || []).map((question) => {
+          return {
+            label: `${question[0].toUpperCase()}${question.slice(1)}`.replace(/(_)/g, ' '),
+            value: `answers.${question}`,
+          };
+        });
         if (!paginated) {
           res.setHeader('Content-Type', 'text/csv');
           const data = projects.toJSON();
@@ -146,20 +153,6 @@ module.exports = {
             { label: 'Supervisor Phone', value: 'supervisor.phone' },
           ];
 
-          const answers = data.map(x => x.answers || {});
-          const answerKeys = [
-            ...new Set((answers || []).reduce((acc, val) => {
-              return acc.concat(Object.keys(val));
-            }, [])),
-          ];
-
-          const answerFields = answerKeys.map((answer) => {
-            return {
-              label: `${answer[0].toUpperCase()}${answer.slice(1)}`.replace(/(_)/g, ' '),
-              value: `answers.${answer}`,
-            };
-          });
-
           const maxParticipants = Math.max(...data.map(x => x.members).map(x => x.length)) || 1;
           for (let i = 0; i < maxParticipants; i += 1) {
             const member = [
@@ -172,7 +165,7 @@ module.exports = {
                 value: `members[${i}].specialRequirements`,
               },
             ];
-            fields = fields.concat(answerFields).concat(member);
+            fields = fields.concat(questionFields).concat(member);
           }
           return res.status(200).send(json2csv({
             data,
