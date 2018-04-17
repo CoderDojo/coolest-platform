@@ -671,6 +671,7 @@ describe('integration: projects with open event by default', () => {
         '"Description"',
         '"Category"',
         '"Owner Email"',
+        '"Status"',
         '"Created At"',
         '"Updated At"',
         '"Supervisor First Name"',
