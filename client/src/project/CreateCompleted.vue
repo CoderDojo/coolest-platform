@@ -2,12 +2,12 @@
   <div v-if="event && project">
     <div class="row">
       <div class="col">
-        <img :alt="`I'm going to ${event.name}!`" class="share_image" src="../assets/share_image.png" />
+        <h1>You're coming to {{ event.name }}!</h1>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <p>Congratulations, you've succesfully registered "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For any more information on the event check out <a href="https://www.coolestprojects.org">www.coolestprojects.org</a>.
+        <p>Congratulations, you've succesfully registered "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For any more information on the event check out <a :href="`https://${event.homepage}`">{{ event.homepage }}</a>.
 The next step, have fun and keep building your project!</p>
       </div>
     </div>
@@ -18,7 +18,9 @@ The next step, have fun and keep building your project!</p>
     </div>
     <div class="row">
       <div class="col">
-        <p>The project supervisor and participants do not need a ticket. For anyone else who wants to come on the day they need to <a href="https://tickets.coolestprojects.org">book a ticket</a>. If you want to manage multiple projects you can add more by clicking the button below.</p>
+        <p>The project supervisor and participants do not need a ticket.
+          <span v-if="event.externalTicketingUri">For anyone else who wants to come on the day they need to <a :href="event.externalTicketingUri">book a ticket</a>.</span>
+        If you want to manage multiple projects you can add more by clicking the button below.</p>
       </div>
     </div>
     <div class="row row-no-margin">
