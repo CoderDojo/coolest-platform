@@ -35,6 +35,13 @@ module.exports.define = (apiPrefix, originalPrefix) => {
       }],
     },
     {
+      roles: [],
+      allows: [{
+        resources: `${apiPrefix}/:id/status`,
+        permissions: ['patch'],
+      }],
+    },
+    {
       roles: ['basic'],
       allows: [{
         resources: `${originalPrefix}/events/:eventId/users/:userId/projects`,
@@ -46,10 +53,11 @@ module.exports.define = (apiPrefix, originalPrefix) => {
 
 module.exports.isAllowed = (req, res, next) => {
   if (req.params.id) {
-    if ((req.app.locals.project &&
-      req.app.locals.project.isOwner(req.user.userId) &&
-      canEdit(req)) ||
-      req.user.role === 'admin') {
+    if (
+      (req.app.locals.project &&
+        (req.app.locals.public || req.app.locals.project.isOwner(req.user.userId)) &&
+        canEdit(req)) ||
+      (req.user ? req.user.role === 'admin' : false)) {
       return next();
     }
     return utils.disallowed(next);
