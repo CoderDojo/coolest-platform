@@ -3,7 +3,6 @@
     <div class="row">
       <div class="col">
         <h2>Extra details</h2>
-        <p>These questions are additional information about your project which we might use for some special judging on the day.</p>
       </div>
     </div>
     <div v-if="hasQuestion('travel_stipend')" class="row row-v-center">

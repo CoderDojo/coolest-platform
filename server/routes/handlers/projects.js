@@ -49,6 +49,19 @@ module.exports = {
     (req, res) => res.status(200).json(res.locals.project),
   ],
 
+  patchStatus: [
+    (req, res, next) =>
+      projectController
+        // Save by ensuring the payload contains the proper id which is used for perms
+        .update(req.app.locals.project, { status: req.body.status }, { id: req.params.id })
+        .then(() => next())
+        .catch((err) => {
+          req.app.locals.logger.error(err);
+          return next(new Error('Error while saving your project.'));
+        }),
+    (req, res) => res.status(200).send(),
+  ],
+
   put: [
     (req, res, next) => {
       req.app.locals.users = req.body.users;
@@ -128,32 +141,50 @@ module.exports = {
     (req, res) => {
       const paginated = !(req.query.format && req.query.format === 'csv');
       req.query.scopes = { event_id: req.params.eventId };
-      return projectController
-        .getExtended(req.query, paginated)
-        .then((projects) => {
-          const dateFormat = date => new Date(date).toLocaleDateString();
-          if (!paginated) {
-            res.setHeader('Content-Type', 'text/csv');
-            const data = projects.toJSON();
-            const fields = [
-              { label: 'Name', value: 'name' },
-              { label: 'Description', value: 'description' },
-              { label: 'Category', value: 'category' },
-              { label: 'Supervisor Email', value: 'supervisor.email' },
-              { label: 'Owner Email', value: 'owner.email' },
-              { label: 'Created At', value: row => dateFormat(row.createdAt) },
-              { label: 'Updated At', value: row => dateFormat(row.updatedAt) },
+      return projectController.getExtended(req.query, paginated).then((projects) => {
+        const dateFormat = date => new Date(date).toLocaleDateString();
+        if (!paginated) {
+          res.setHeader('Content-Type', 'text/csv');
+          const data = projects.toJSON();
+          let fields = [
+            { label: 'Name', value: 'name' },
+            { label: 'Description', value: 'description' },
+            { label: 'Category', value: 'category' },
+            { label: 'Owner Email', value: 'owner.email' },
+            { label: 'Status', value: 'status' },
+            { label: 'Created At', value: row => dateFormat(row.createdAt) },
+            { label: 'Updated At', value: row => dateFormat(row.updatedAt) },
+            { label: 'Supervisor First Name', value: 'supervisor.firstName' },
+            { label: 'Supervisor Last Name', value: 'supervisor.lastName' },
+            { label: 'Supervisor Email', value: 'supervisor.email' },
+            { label: 'Supervisor Phone', value: 'supervisor.phone' },
+          ];
+
+          const maxParticipants = Math.max(...data.map(x => x.members).map(x => x.length)) || 1;
+          for (let i = 0; i < maxParticipants; i += 1) {
+            const member = [
+              { label: `Participant ${i + 1} First Name`, value: `members[${i}].firstName` },
+              { label: `Participant ${i + 1} Last Name`, value: `members[${i}].lastName` },
+              { label: `Participant ${i + 1} Dob`, value: `members[${i}].dob` },
+              { label: `Participant ${i + 1} Gender`, value: `members[${i}].gender` },
+              {
+                label: `Participant ${i + 1} Special requirements`,
+                value: `members[${i}].specialRequirements`,
+              },
             ];
-            return res.status(200).send(json2csv({
-              data,
-              fields,
-            }));
+            fields = fields.concat(member);
           }
-          return res.status(200).json({
-            data: projects.models,
-            count: projects.pagination.rowCount,
-          });
+          return res.status(200).send(json2csv({
+            data,
+            fields,
+          }));
+        }
+
+        return res.status(200).json({
+          data: projects.models,
+          count: projects.pagination.rowCount,
         });
+      });
     },
   ],
 

@@ -80,7 +80,7 @@
           <p class="col">Do you have any technical requests or requirements for your project?</p>
         </div>
         <div class="row">
-          <textarea v-model="answers.other_requirements" 
+          <textarea v-model="answers.other_requirements"
             class="col full-width-block"
             rows="4"/>
         </div>
@@ -158,16 +158,35 @@
     </div>
     <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
-        <label>Please tell us which Code Club or Raspberry Jam you attend or let us know when you participated in Pioneers.</label>
+        <label v-if="org === 'other'">Please describe.</label>
+        <label v-else>Please tell us which Code Club or Raspberry Jam you attend or let us know when you participated in Pioneers.</label>
         <div class="row row-no-margin">
           <div class="col">
             <input type="text"
-              v-model="projectDetails.orgRef"
-              v-validate="org && org !== 'coderdojo' ? 'required' : ''"
-              data-vv-name="orgRef"
-              class="full-width-block"
-              :class="{ error: errors.has('orgRef') }" />
+            v-model="projectDetails.orgRef"
+            v-validate="org && org !== 'coderdojo' ? 'required' : ''"
+            data-vv-name="orgRef"
+            class="full-width-block"
+            :class="{ error: errors.has('orgRef') }" />
             <span class="error-message" v-show="errors.has('orgRef:required')">* It helps us to know where our attendees came from, please tell us how you came to Coolest Projects.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>State</label>
+        <state-selection v-model="projectDetails.state" v-validate="'required'" data-vv-name="state" data-vv-value-path="value" :has-error="errors.has('state:required')"></state-selection>
+        <span class="error-message" v-show="errors.has('state:required')">* State is required.</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>City</label>
+        <div class="row row-no-margin">
+          <div class="col">
+            <input type="text" v-model="projectDetails.city" v-validate="'required'" data-vv-name="city" class="full-width-block" :class="{ error: errors.has('city:required') }" />
+            <span class="error-message" v-show="errors.has('city:required')">* City is required.</span>
           </div>
         </div>
       </div>
@@ -208,7 +227,7 @@
               <span class="error-message" v-show="errors.has(`participant-${n}-firstName:required`)">* Participant's first name is required</span>
             </div>
             <div class="col-1fr">
-              <label>Surname</label>
+              <label>Last name</label>
               <input
                 type="text"
                 placeholder="e.g. Smith"
@@ -217,7 +236,7 @@
                 :data-vv-name="`participant-${n}-lastName`"
                 class="full-width-block"
                 :class="{ error: errors.has(`participant-${n}-lastName`) }" />
-              <span class="error-message" v-show="errors.has(`participant-${n}-lastName:required`)">* Participant's surname is required</span>
+              <span class="error-message" v-show="errors.has(`participant-${n}-lastName:required`)">* Participant's last name is required</span>
             </div>
           </div>
         </div>
@@ -269,7 +288,7 @@
             :class="{ error: errors.has(`participant-${n}-gender`) }">
               <option value="male">Male</option>
               <option value="female">Female</option>
-              <option value="undisclosed">Other/Rather not say</option>
+              <option value="undisclosed">Rather not say</option>
           </select>
           <span class="error-message" v-show="errors.has(`participant-${n}-gender:required`)">* We want everyone to enjoy Coolest Projects equally. Gathering this information helps us check how well we’re doing.</span>
         </div>
@@ -297,7 +316,7 @@
             <span class="error-message" v-show="errors.has('supervisor-firstName')">* Supervisor's first name is required</span>
           </div>
           <div class="col">
-            <label>Surname of adult supervisor</label>
+            <label>Last name of adult supervisor</label>
             <input
               type="text"
               v-model="supervisor.lastName"
@@ -306,7 +325,7 @@
               class="full-width-block"
               :class="{ error: errors.has('supervisor-lastName') }"
               placeholder="e.g. Smith" />
-            <span class="error-message" v-show="errors.has('supervisor-lastName')">* Supervisor's surname is required</span>
+            <span class="error-message" v-show="errors.has('supervisor-lastName')">* Supervisor's last name is required</span>
           </div>
         </div>
       </div>

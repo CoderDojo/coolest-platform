@@ -11,6 +11,7 @@ import ViewProject from '@/project/View';
 import CreateProject from '@/project/Create';
 import ProjectExtraDetails from '@/project/ExtraDetails';
 import CreateProjectCompleted from '@/project/CreateCompleted';
+import ProjectStatus from '@/project/ProjectStatus';
 import EditProject from '@/project/Edit';
 
 // ADMIN
@@ -94,6 +95,12 @@ export default new Router({
                   props: true,
                 },
               ],
+            },
+            {
+              path: 'projects/:projectId/status/:status',
+              name: 'setProjectStatus',
+              component: ProjectStatus,
+              props: true,
             },
           ],
         },

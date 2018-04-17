@@ -105,12 +105,70 @@ describe('authorisations: project', () => {
       expect(utils.disallowed).to.have.been.called;
     });
 
+    it('with id: should allow if the endpoint is public and the event is not frozen', () => {
+      const id = '111';
+      const project = {
+        isOwner: sandbox.stub(),
+      };
+      const event = {
+        isFrozen: sandbox.stub(),
+      };
+      utils.disallowed = sinon.stub();
+      event.isFrozen.returns(false);
+      const req = {
+        params: { id },
+        app: {
+          locals: {
+            public: true,
+            project,
+            event,
+          },
+        },
+        method: 'PATCH',
+      };
+      const next = sandbox.stub();
+
+      authorisations.isAllowed(req, {}, next);
+      expect(project.isOwner).not.to.have.been.called;
+      expect(event.isFrozen).to.have.been.calledOnce;
+      expect(next).to.have.been.calledOnce;
+    });
+
+    it('with id: should disallow if the endpoint is public and the event is frozen', () => {
+      const id = '111';
+      const project = {
+        isOwner: sandbox.stub(),
+      };
+      const event = {
+        isFrozen: sandbox.stub(),
+      };
+      utils.disallowed = sinon.stub();
+      event.isFrozen.returns(true);
+      const req = {
+        params: { id },
+        app: {
+          locals: {
+            public: true,
+            project,
+            event,
+          },
+        },
+        method: 'PATCH',
+      };
+      const next = sandbox.stub();
+
+      authorisations.isAllowed(req, {}, next);
+      expect(project.isOwner).not.to.have.been.called;
+      expect(event.isFrozen).to.have.been.calledOnce;
+      expect(utils.disallowed).to.have.been.calledOnce;
+    });
+
     it('without id: should check roles', () => {
       const userId = '222';
       const project = {
         isOwner: sandbox.stub(),
       };
-      const isAllowedCb = sinon.stub();
+      const isAllowedCb = sandbox.stub();
       utils.isAllowed = sinon.stub().returns(isAllowedCb);
       utils.disallowed = sinon.stub();
       project.isOwner.returns(false);
