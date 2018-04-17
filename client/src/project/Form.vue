@@ -138,6 +138,24 @@
         <span class="error-message" v-show="org === 'coderdojo' && errors.has('orgRef:required')">* If you attend a Dojo, you must select which Dojo</span>
       </div>
     </div>
+    <div class="row">
+      <div class="col">
+        <label>State</label>
+        <state-selection v-model="projectDetails.state" v-validate="'required'" data-vv-name="state" data-vv-value-path="value" :has-error="errors.has('state:required')"></state-selection>
+        <span class="error-message" v-show="errors.has('state:required')">* State is required.</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>City</label>
+        <div class="row row-no-margin">
+          <div class="col">
+            <input type="text" v-model="projectDetails.city" v-validate="'required'" data-vv-name="city" class="full-width-block" :class="{ error: errors.has('city:required') }" />
+            <span class="error-message" v-show="errors.has('city:required')">* City is required.</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
         <label v-if="org === 'other'">Please describe.</label>
