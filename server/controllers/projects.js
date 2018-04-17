@@ -106,19 +106,28 @@ class Project {
     return projects.fetchAll({ withRelated: ['owner', 'supervisor', 'members', 'seat'] });
   }
 
-  static setSeating(cat) {
+  static async setSeatingPerCategory(cat) {
+    if (cat === 'SC') {
+      const projects = await this.setSeating(cat, ['age', '<', 13], 0);
+      const index = projects.length;
+      return this.setSeating(cat, ['age', '>', 12], index + 100);
+    }
+    return this.setSeating(cat, null, 100);
+  }
+
+  static setSeating(cat, filter, index) {
     const query = new ProjectModel()
       .ageGroup()
       .where('deleted_at', null)
       .where('category', cat);
-    if (cat === 'SC') {
-      query.orderBy('age', 'DESC');
+    if (filter) {
+      query.where(...filter);
     }
     return query.orderBy('org_ref', 'DESC')
       .fetchAll({ withRelated: ['seat'] })
       .then((projects) => {
         return Promise.all(projects.models.map((p, i) => {
-          return new ProjectSeat({ project_id: p.attributes.id, seat: `${cat}-${i + 100}` }).save();
+          return new ProjectSeat({ project_id: p.attributes.id, seat: `${cat}-${i + index}` }).save();
         }));
       });
   }

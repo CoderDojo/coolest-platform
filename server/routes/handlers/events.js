@@ -62,9 +62,9 @@ module.exports = {
         categories = JSON.parse(categories);
       }
       return Promise.all(Object.keys(categories)
-        .map(cat => projectController.setSeating(cat)))
+        .map(cat => projectController.setSeatingPerCategory(cat)))
         .then(() => next())
-        .catch(() => next(new Error('Error while generating seating')));
+        .catch(err => next(new Error('Error while generating seating')));
     },
     (req, res, next) =>
       eventController.update(res.app.locals.event, { seatingPrepared: true })
