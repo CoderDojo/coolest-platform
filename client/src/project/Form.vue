@@ -29,61 +29,12 @@
         <span class="error-message" v-show="errors.has('projectDescription:max')">A project description cannot be longer than 1000 characters</span>
       </div>
     </div>
-    <div class="row">
+    <div v-if="hasQuestion('other_requirements')" class="row">
       <div class="col">
-        <div v-if="hasQuestion('require_power')" class="row row-v-center">
-          <div class="col">
-            <p>Does your project require power?</p>
-          </div>
-          <div>
-            <select v-model="answers.require_power" v-validate="'required'">
-              <option :value="false">No</option>
-              <option :value="true">Yes</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div v-if="hasQuestion('require_wifi')" class="row row-v-center">
-          <div class="col">
-            <p>Does your project require wifi?</p>
-          </div>
-          <div>
-            <select v-model="answers.require_wifi" v-validate="'required'">
-              <option :value="false">No</option>
-              <option :value="true">Yes</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div v-if="hasQuestion('is_hazardous')" class="row row-v-center">
-          <div class="col">
-            <p>Does your project use fire, chemicals, or hazardous materials?</p>
-          </div>
-          <div>
-            <select v-model="answers.is_hazardous" v-validate="'required'">
-              <option :value="false">No</option>
-              <option :value="true">Yes</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div v-if="hasQuestion('other_requirements')" class="row row-v-center">
-          <p class="col">Do you have any technical requests or requirements for your project?</p>
-        </div>
-        <div class="row">
-          <textarea v-model="answers.other_requirements"
-            class="col full-width-block"
-            rows="4"/>
-        </div>
+        <label>Do you have any technical requests or requirements for your project?</label>
+        <textarea v-model="answers.other_requirements"
+          class="full-width-block"
+          rows="4"/>
       </div>
     </div>
     <div class="row">
@@ -397,7 +348,7 @@
         dojos: [],
         numParticipants: 1,
         projectDetails: {},
-        projectQuestions: ['require_power', 'require_wifi', 'is_hazardous', 'other_requirements'],
+        projectQuestions: ['other_requirements'],
         answers: {},
         participants: [{ specialRequirementsProvided: false }],
         supervisor: {},
