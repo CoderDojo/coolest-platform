@@ -59,7 +59,6 @@
               <option :value="undefined" disabled></option>
               <option value="coderdojo">CoderDojo</option>
               <option value="codeclub">Code Club</option>
-              <option value="pioneers">Pioneers</option>
               <option value="raspberryjam">Raspberry Jam</option>
               <option value="other">Other</option>
             </select>
@@ -84,7 +83,7 @@
     <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
         <label v-if="org === 'other'">Please describe.</label>
-        <label v-else>Please tell us which Code Club or Raspberry Jam you attend or let us know when you participated in Pioneers.</label>
+        <label v-else>Please tell us which Code Club or Raspberry Jam you attend.</label>
         <div class="row row-no-margin">
           <div class="col">
             <input type="text"
