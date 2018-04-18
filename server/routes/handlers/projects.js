@@ -70,7 +70,7 @@ module.exports = {
         // Save by ensuring the payload contains the proper id which is used for perms
         .update(req.app.locals.project, Object.assign({}, req.body, { id: req.params.id }))
         // Pull the original list of users so we can diff in next step
-        // User_association helps us retrieve the users's roles in the project based on user_id 
+        // User_association helps us retrieve the users's roles in the project based on user_id
         .then(p => p.refresh({ withRelated: ['users', 'userAssociations'] }))
         .then((project) => {
           res.locals.project = project;
@@ -141,8 +141,15 @@ module.exports = {
     (req, res) => {
       const paginated = !(req.query.format && req.query.format === 'csv');
       req.query.scopes = { event_id: req.params.eventId };
+
       return projectController.getExtended(req.query, paginated).then((projects) => {
         const dateFormat = date => new Date(date).toLocaleDateString();
+        const questionFields = (req.app.locals.event.attributes.questions || []).map((question) => {
+          return {
+            label: `${question[0].toUpperCase()}${question.slice(1)}`.replace(/(_)/g, ' '),
+            value: `answers.${question}`,
+          };
+        });
         if (!paginated) {
           res.setHeader('Content-Type', 'text/csv');
           const data = projects.toJSON();
@@ -172,7 +179,7 @@ module.exports = {
                 value: `members[${i}].specialRequirements`,
               },
             ];
-            fields = fields.concat(member);
+            fields = fields.concat(questionFields).concat(member);
           }
           return res.status(200).send(json2csv({
             data,
