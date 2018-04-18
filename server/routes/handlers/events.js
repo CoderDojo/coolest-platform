@@ -48,9 +48,13 @@ module.exports = {
   generateSeating: [
     (req, res, next) =>
       eventController.get({ id: req.params.eventId })
-        .then((event) => { res.app.locals.event = event; next(); }),
+        .then((event) => { res.app.locals.event = event; next(); })
+        .catch((err) => {
+          req.app.locals.logger.error(err);
+          return next(new Error('Error while searching for an event.'));
+        }),
     (req, res, next) => {
-      if (res.app.locals.event.seatingPrepared) {
+      if (res.app.locals.event.attributes.seatingPrepared) {
         return next(new Error('Cannot regenerate the seating'));
       }
       return next();
@@ -64,7 +68,10 @@ module.exports = {
       return Promise.all(Object.keys(categories)
         .map(cat => projectController.setSeatingPerCategory(cat)))
         .then(() => next())
-        .catch(err => next(new Error('Error while generating seating')));
+        .catch((err) => {
+          req.app.locals.logger.error(err);
+          return next(new Error('Error while generating seating'));
+        });
     },
     (req, res, next) =>
       eventController.update(res.app.locals.event, { seatingPrepared: true })
@@ -72,7 +79,10 @@ module.exports = {
           res.app.locals.event.refresh();
           return next();
         })
-        .catch(err => next(new Error('Error saving event status'))),
+        .catch((err) => {
+          req.app.locals.logger.error(err);
+          return next(new Error('Error saving event status'));
+        }),
     (req, res, next) =>
       res.status(200).send(res.app.locals.event),
   ],
