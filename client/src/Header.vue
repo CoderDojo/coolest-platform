@@ -28,5 +28,11 @@
     &-cc {
       height: 80px;
     }
+    @media screen and (max-width: 768px) {
+      max-width: 120px;
+      &-small {
+        max-width: 60px;
+      }
+    }
   }
 </style>
