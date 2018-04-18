@@ -2,7 +2,7 @@
   <div v-if="event && project">
     <div class="row">
       <div class="col">
-        <h1>You're coming to {{ event.name }}!</h1>
+        <h1>{{ titleCopy }} {{ event.name }}!</h1>
       </div>
     </div>
     <div class="row">
@@ -50,6 +50,9 @@
       },
       successCopy() {
         return this.event.requiresApproval ? 'Thanks for submitting' : "Congratulations, you've succesfully registered";
+      },
+      titleCopy() {
+        return this.event.requiresApproval ? 'You\'ve applied for' : 'You\'re coming to';
       },
     },
   };
