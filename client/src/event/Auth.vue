@@ -9,7 +9,7 @@
         <div class="col">
           <div v-if="isOpen">
             <p>
-              Register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}.
+              Register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} at the {{ event.location }}.
             </p>
             <p v-if="event.requiresApproval">
               You will be contacted by the Coolest Projects team if your project is accepted.
