@@ -35,6 +35,7 @@ class Mailing {
       },
       subject: 'Welcome on CP',
       substitutions: {
+        verificationSentence: event.requiresApproval ? 'You will be contacted by the Coolest Projects team if your project is accepted.' : '',
         eventName: event.name,
         eventDate: event.date,
         eventLocation: event.location,
