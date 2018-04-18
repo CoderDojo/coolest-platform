@@ -49,6 +49,7 @@
           'org',
           'owner.email',
           'supervisor.email',
+          'status',
           'view',
           'edit',
         ],
@@ -64,6 +65,7 @@
             'name',
             'category',
             'org',
+            'status',
             'owner.email',
             'supervisor.email',
           ],
@@ -74,6 +76,7 @@
             'updatedAt',
             'org',
             'owner.email',
+            'status',
             'supervisor.email',
           ],
           perPage: this.itemsPerPage,
@@ -121,6 +124,20 @@
               {
                 id: 'other',
                 text: 'Other',
+              },
+            ],
+            status: [
+              {
+                id: 'pending',
+                text: 'Pending',
+              },
+              {
+                id: 'canceled',
+                text: 'Canceled',
+              },
+              {
+                id: 'confirmed',
+                text: 'Confirmed',
               },
             ],
           },

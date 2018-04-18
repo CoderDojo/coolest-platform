@@ -3,7 +3,6 @@
     <div class="row">
       <div class="col">
         <h2>Extra details</h2>
-        <p>These questions are additional information about your project which we might use for some special judging on the day.</p>
       </div>
     </div>
     <div v-if="hasQuestion('social_project')" class="row row-v-center">
@@ -52,7 +51,7 @@
     </div>
     <div class="row">
       <div class="col text-center">
-        <button type="submit" class="btn btn-primary">Finish Registration</button>
+        <button type="submit" class="btn btn-primary">Finish registration</button>
       </div>
     </div>
   </form>

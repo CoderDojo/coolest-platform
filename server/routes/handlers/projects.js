@@ -49,6 +49,19 @@ module.exports = {
     (req, res) => res.status(200).json(res.locals.project),
   ],
 
+  patchStatus: [
+    (req, res, next) =>
+      projectController
+        // Save by ensuring the payload contains the proper id which is used for perms
+        .update(req.app.locals.project, { status: req.body.status }, { id: req.params.id })
+        .then(() => next())
+        .catch((err) => {
+          req.app.locals.logger.error(err);
+          return next(new Error('Error while saving your project.'));
+        }),
+    (req, res) => res.status(200).send(),
+  ],
+
   put: [
     (req, res, next) => {
       req.app.locals.users = req.body.users;
@@ -145,6 +158,7 @@ module.exports = {
             { label: 'Description', value: 'description' },
             { label: 'Category', value: 'category' },
             { label: 'Owner Email', value: 'owner.email' },
+            { label: 'Status', value: 'status' },
             { label: 'Created At', value: row => dateFormat(row.createdAt) },
             { label: 'Updated At', value: row => dateFormat(row.updatedAt) },
             { label: 'Supervisor First Name', value: 'supervisor.firstName' },

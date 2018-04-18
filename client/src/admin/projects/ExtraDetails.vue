@@ -23,10 +23,3 @@
     },
   };
 </script>
-
-<style lang="scss">
-  .logo {
-    max-width: 180px;
-    margin: 20px;
-  }
-</style>

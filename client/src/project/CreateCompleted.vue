@@ -2,23 +2,29 @@
   <div v-if="event && project">
     <div class="row">
       <div class="col">
-        <img :alt="`I'm going to ${event.name}!`" class="share_image" src="../assets/share_image.png" />
+        <h1>You're coming to {{ event.name }}!</h1>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <p>Congratulations, you've succesfully registered "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For any more information on the event check out <a href="https://www.coolestprojects.org">www.coolestprojects.org</a>.
-The next step, have fun and keep building your project!</p>
+        <p>{{ successCopy }} "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For more information on the event check out <a :href="`https://${event.homepage}`">{{ event.homepage }}</a>. The next step: have fun and keep building your project!</p>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <p>We've sent you a confirmation email and we'll be in contact soon with further details.</p>
+        <p>We've sent you a confirmation email, and we'll be in contact soon with further details.</p>
+      </div>
+    </div>
+    <div v-if="event.requiresApproval" class="row">
+      <div class="col">
+        <p>You will be contacted by the Coolest Projects team if your project is accepted.</p>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <p>The project supervisor and participants do not need a ticket. For anyone else who wants to come on the day they need to <a href="https://tickets.coolestprojects.org">book a ticket</a>. If you want to manage multiple projects you can add more by clicking the button below.</p>
+        <p>The project supervisor and participants do not need a ticket.
+          <span v-if="event.externalTicketingUri">Anyone else who wants to come to the event needs to <a :href="event.externalTicketingUri">book a ticket</a>.</span>
+        If you want to manage multiple projects you can add more by clicking the button below.</p>
       </div>
     </div>
     <div class="row row-no-margin">
@@ -41,6 +47,9 @@ The next step, have fun and keep building your project!</p>
     computed: {
       eventDateFormatted() {
         return moment.utc(this.event.date).format('MMM Do');
+      },
+      successCopy() {
+        return this.event.requiresApproval ? 'Thanks for submitting' : "Congratulations, you've succesfully registered";
       },
     },
   };

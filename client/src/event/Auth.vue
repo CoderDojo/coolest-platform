@@ -8,11 +8,18 @@
       <div class="row">
         <div class="col">
           <div v-if="isOpen">
-            <label>This form is to register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}.</label>
-            <ul class="list">
-              <li>Only one person should register per project.</li>
-              <li>If you have already registered a project please fill in your email below to receive a unique link to edit or add a new project.</li>
-            </ul>
+            <p>
+              Register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}.
+            </p>
+            <p v-if="event.requiresApproval">
+              You will be contacted by the Coolest Projects team if your project is accepted.
+            </p>
+            <p>
+              <ul class="list">
+                <li>Only one person should register per project.</li>
+                <li>If you have already registered a project please fill in your email below to receive a unique link to edit or add a new project.</li>
+              </ul>
+            </p>
           </div>
           <label v-if="!isOpen && !isFrozen">You can now only edit already registered projects for {{ event.name }}. Enter your email and you will get a link to edit your project.</label>
           <label v-else-if="isFrozen">The registration for {{ event.name }} has now closed. Please contact {{ event.contact }} if you have any questions.</label>
@@ -50,7 +57,7 @@
             Sorry! That link you clicked was out of date. If you just re-enter your email here you'll get a new link to edit your projects or add a new project.
           </p>
           <p v-else-if="error && error.status !== 409">
-            Sorry. There was an problem registering your email, please contact <a href="email:hello@coolestprojects.org">hello@coolestprojects.org</a> so we can help you.
+            Sorry. There was an problem registering your email, please contact <a :href="`mailto:${event.contact}`">{{ event.contact }}</a> so we can help you.
           </p>
         </div>
       </div>
@@ -95,6 +102,10 @@
   };
 </script>
 <style lang="scss" scoped>
+  p {
+    margin: 16px 0;
+  }
+
   .list {
     padding-left: 16px;
     &> li {

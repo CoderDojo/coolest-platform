@@ -6,4 +6,7 @@ export default {
   create: (eventId, project) => Vue.http.post(`/api/v1/events/${eventId}/projects`, project),
   update: (eventId, projectId, project) => Vue.http.put(`/api/v1/events/${eventId}/projects/${projectId}`, project),
   partialUpdate: (eventId, projectId, project) => Vue.http.patch(`/api/v1/events/${eventId}/projects/${projectId}`, project),
+  status: {
+    update: (eventId, projectId, status) => Vue.http.patch(`/api/v1/events/${eventId}/projects/${projectId}/status`, status),
+  },
 };

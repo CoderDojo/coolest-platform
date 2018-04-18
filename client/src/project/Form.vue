@@ -83,7 +83,8 @@
     </div>
     <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
-        <label>Please tell us which Code Club or Raspberry Jam you attend or let us know when you participated in Pioneers.</label>
+        <label v-if="org === 'other'">Please describe.</label>
+        <label v-else>Please tell us which Code Club or Raspberry Jam you attend or let us know when you participated in Pioneers.</label>
         <div class="row row-no-margin">
           <div class="col">
             <input type="text"
@@ -92,7 +93,7 @@
               data-vv-name="orgRef"
               class="full-width-block"
               :class="{ error: errors.has('orgRef') }" />
-            <span class="error-message" v-show="errors.has('orgRef:required')">* It helps us to know where our attendees came from, please tell us how you came to Coolest Projects.</span>
+            <span class="error-message" v-show="errors.has('orgRef:required')">* It helps us to know where our attendees came from. Please tell us how you came to Coolest Projects.</span>
           </div>
         </div>
       </div>
@@ -133,7 +134,7 @@
               <span class="error-message" v-show="errors.has(`participant-${n}-firstName:required`)">* Participant's first name is required</span>
             </div>
             <div class="col-1fr">
-              <label>Surname</label>
+              <label>Last name</label>
               <input
                 type="text"
                 placeholder="e.g. Smith"
@@ -142,7 +143,7 @@
                 :data-vv-name="`participant-${n}-lastName`"
                 class="full-width-block"
                 :class="{ error: errors.has(`participant-${n}-lastName`) }" />
-              <span class="error-message" v-show="errors.has(`participant-${n}-lastName:required`)">* Participant's surname is required</span>
+              <span class="error-message" v-show="errors.has(`participant-${n}-lastName:required`)">* Participant's last name is required</span>
             </div>
           </div>
         </div>
@@ -194,7 +195,7 @@
             :class="{ error: errors.has(`participant-${n}-gender`) }">
               <option value="male">Male</option>
               <option value="female">Female</option>
-              <option value="undisclosed">Other/Rather not say</option>
+              <option value="undisclosed">Rather not say</option>
           </select>
           <span class="error-message" v-show="errors.has(`participant-${n}-gender:required`)">* We want everyone to enjoy Coolest Projects equally. Gathering this information helps us check how well we’re doing.</span>
         </div>
@@ -222,7 +223,7 @@
             <span class="error-message" v-show="errors.has('supervisor-firstName')">* Supervisor's first name is required</span>
           </div>
           <div class="col">
-            <label>Surname of adult supervisor</label>
+            <label>Last name of adult supervisor</label>
             <input
               type="text"
               v-model="supervisor.lastName"
@@ -231,7 +232,7 @@
               class="full-width-block"
               :class="{ error: errors.has('supervisor-lastName') }"
               placeholder="e.g. Smith" />
-            <span class="error-message" v-show="errors.has('supervisor-lastName')">* Supervisor's surname is required</span>
+            <span class="error-message" v-show="errors.has('supervisor-lastName')">* Supervisor's last name is required</span>
           </div>
         </div>
       </div>
@@ -269,7 +270,7 @@
     <hr />
     <div class="row">
       <div class="col">
-        <p>If you have any questions about Coolest Projects please check out <a href="http://www.coolestprojects.org">www.coolestprojects.org</a> or contact us at <a href="mailto:hello@coolestprojects.org">hello@coolestprojects.org</a>.</p>
+        <p>If you have any questions about Coolest Projects please check out <a :href="`http://${event.homepage}`">{{ event.homepage }}</a> or contact us at <a :href="`mailto:${event.contact}`">{{ event.contact }}</a>.</p>
       </div>
     </div>
     <div class="row">
@@ -282,7 +283,7 @@
         <span class="error-message">* You cannot finish registration until all the fields on this form are filled out correctly.</span>
       </div>
       <div class="col" v-if="error">
-        <span class="error-message">Sorry. There was an problem registering your project, please contact <a href="email:hello@coolestprojects.org">hello@coolestprojects.org</a> so we can help you.</span>
+        <span class="error-message">Sorry. There was an problem registering your project, please contact <a :href="`mailto:${event.contact}`">{{ event.contact }}</a> so we can help you.</span>
       </div>
     </div>
     </div>
@@ -379,7 +380,10 @@
         },
       },
       submitButtonText() {
-        return this.projectDetails.id ? 'Update project' : 'Register project';
+        if (this.projectDetails.id) {
+          return 'Update project';
+        }
+        return this.event.requiresApproval ? 'Submit project' : 'Register project';
       },
     },
     watch: {
