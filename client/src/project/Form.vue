@@ -282,7 +282,7 @@
         <label>Phone number of adult supervisor</label>
         <input
           type="text"
-          placeholder="e.g. 23 34567 890"
+          placeholder="e.g. 233 456 7890"
           v-model="supervisor.phone"
           v-validate="{ required: true, regex: /^[0-9\ \.\-\(\)]+$/ }"
           data-vv-name="supervisor-phone"
