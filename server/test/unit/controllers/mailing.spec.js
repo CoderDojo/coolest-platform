@@ -83,6 +83,7 @@ describe('mailing controllers', () => {
           location: 'there',
           homepage: 'cp.orgs/usa',
           requiresApproval: false,
+          contact: 'help@coolestprojects.org',
         };
         // STUBS
         const Mailing = proxy('../../../controllers/mailing', {
@@ -101,11 +102,11 @@ describe('mailing controllers', () => {
         expect(mailingController.mailer.send).to.have.been.calledWith({
           to: 'doubidou@example.com',
           from: {
-            email: 'enquiries+bot@coderdojo.org',
+            email: 'help@coolestprojects.org',
             name: 'Coolest Projects',
           },
           reply_to: {
-            email: 'enquiries+bot@coderdojo.org',
+            email: 'help@coolestprojects.org',
             name: 'Coolest Projects Support',
           },
           subject: 'Welcome on CP',
@@ -207,11 +208,11 @@ describe('mailing controllers', () => {
         expect(mailingController.mailer.send).to.have.been.calledWith({
           to: 'dada@da',
           from: {
-            email: 'enquiries+bot@coderdojo.org',
+            email: 'help@coolestprojects.org',
             name: 'Coolest Projects',
           },
           reply_to: {
-            email: 'enquiries+bot@coderdojo.org',
+            email: 'help@coolestprojects.org',
             name: 'Coolest Projects Support',
           },
           subject: 'Welcome on CP',
@@ -247,8 +248,8 @@ describe('mailing controllers', () => {
             to: `owner${i}@example.com`,
             substitutions: {
               projectName: `Sample Project ${i}`,
-              attendingUrl: `${process.env.HOSTNAME}/events/${eventSlug}/projects/${i}/confirm-attendance?attending=true`,
-              notAttendingUrl: `${process.env.HOSTNAME}/events/${eventSlug}/projects/${i}/confirm-attendance?attending=false`,
+              attendingUrl: `${process.env.HOSTNAME}/events/${eventSlug}/projects/${i}/status/confirmed`,
+              notAttendingUrl: `${process.env.HOSTNAME}/events/${eventSlug}/projects/${i}/status/canceled`,
             },
           });
         }
@@ -280,14 +281,16 @@ describe('mailing controllers', () => {
 
         // ASSERT
         expect(sendStub).to.have.been.calledThrice;
+        expect(sendStub.getCall(0).args[0].personalizations[0].to).to.equal('owner0@example.com');
+        expect(sendStub.getCall(0).args[0].personalizations[999].to).to.equal('owner999@example.com');
         expect(sendStub).to.have.been.calledWith({
           personalizations: generateEmailPersonalizations(1000, 'intl'),
           from: {
-            email: 'enquiries+bot@coderdojo.org',
+            email: 'hello@coolestprojects.org',
             name: 'Coolest Projects',
           },
           reply_to: {
-            email: 'enquiries+bot@coderdojo.org',
+            email: 'hello@coolestprojects.org',
             name: 'Coolest Projects Support',
           },
           substitutions: {
@@ -300,14 +303,16 @@ describe('mailing controllers', () => {
           categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
           template_id: '3578d5f1-0212-4c98-94f3-8ab0b6735b22',
         });
+        expect(sendStub.getCall(1).args[0].personalizations[0].to).to.equal('owner1000@example.com');
+        expect(sendStub.getCall(1).args[0].personalizations[999].to).to.equal('owner1999@example.com');
         expect(sendStub).to.have.been.calledWith({
           personalizations: generateEmailPersonalizations(1000, 'intl', 1000),
           from: {
-            email: 'enquiries+bot@coderdojo.org',
+            email: 'hello@coolestprojects.org',
             name: 'Coolest Projects',
           },
           reply_to: {
-            email: 'enquiries+bot@coderdojo.org',
+            email: 'hello@coolestprojects.org',
             name: 'Coolest Projects Support',
           },
           substitutions: {
@@ -320,14 +325,16 @@ describe('mailing controllers', () => {
           categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
           template_id: '3578d5f1-0212-4c98-94f3-8ab0b6735b22',
         });
+        expect(sendStub.getCall(2).args[0].personalizations[0].to).to.equal('owner2000@example.com');
+        expect(sendStub.getCall(2).args[0].personalizations[399].to).to.equal('owner2399@example.com');
         expect(sendStub).to.have.been.calledWith({
           personalizations: generateEmailPersonalizations(400, 'intl', 2000),
           from: {
-            email: 'enquiries+bot@coderdojo.org',
+            email: 'hello@coolestprojects.org',
             name: 'Coolest Projects',
           },
           reply_to: {
-            email: 'enquiries+bot@coderdojo.org',
+            email: 'hello@coolestprojects.org',
             name: 'Coolest Projects Support',
           },
           substitutions: {

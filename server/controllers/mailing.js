@@ -26,11 +26,11 @@ class Mailing {
     return this.send({
       to,
       from: {
-        email: 'enquiries+bot@coderdojo.org',
+        email: event.contact,
         name: 'Coolest Projects',
       },
       reply_to: {
-        email: 'enquiries+bot@coderdojo.org',
+        email: event.contact,
         name: 'Coolest Projects Support',
       },
       subject: 'Welcome on CP',
@@ -52,11 +52,11 @@ class Mailing {
     return this.send({
       to: email,
       from: {
-        email: 'enquiries+bot@coderdojo.org',
+        email: contact,
         name: 'Coolest Projects',
       },
       reply_to: {
-        email: 'enquiries+bot@coderdojo.org',
+        email: contact,
         name: 'Coolest Projects Support',
       },
       subject: 'Welcome on CP',
@@ -79,17 +79,17 @@ class Mailing {
             to: project.owner.email,
             substitutions: {
               projectName: htmlEntities.encode(project.name),
-              attendingUrl: `${process.env.HOSTNAME}/events/${htmlEntities.encode(event.slug)}/projects/${project.id}/confirm-attendance?attending=true`,
-              notAttendingUrl: `${process.env.HOSTNAME}/events/${htmlEntities.encode(event.slug)}/projects/${project.id}/confirm-attendance?attending=false`,
+              attendingUrl: `${process.env.HOSTNAME}/events/${event.slug}/projects/${project.id}/status/confirmed`,
+              notAttendingUrl: `${process.env.HOSTNAME}/events/${event.slug}/projects/${project.id}/status/canceled`,
             },
           };
         }),
         from: {
-          email: 'enquiries+bot@coderdojo.org',
+          email: event.contact,
           name: 'Coolest Projects',
         },
         reply_to: {
-          email: 'enquiries+bot@coderdojo.org',
+          email: event.contact,
           name: 'Coolest Projects Support',
         },
         substitutions: {
