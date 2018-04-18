@@ -2,7 +2,7 @@
   <div class="center-grid">
     <div class="center-grid__content">
       <div class="text-center">
-        <img class="logo" src="./assets/CoolestProjectsLogo.png" />
+        <Header />
         <div class="not-found">
           <h1>
             It looks like you tried to go to a page that does not exist!
@@ -17,18 +17,18 @@
 </template>
 
 <script>
+  import Header from '@/Header';
+
   export default {
     name: 'PageNotFound',
+    components: {
+      Header,
+    },
   };
 </script>
 
 <style lang="scss">
   @import './assets/scss/main.scss';
-
-  .logo {
-    max-width: 180px;
-    margin: 20px;
-  }
 
   .not-found {
     h1 {
