@@ -22,7 +22,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <p>The project supervisor and participants do not need a ticket.
+        <p>The project participants and supervisor will receive free tickets for the event.
           <span v-if="event.externalTicketingUri">Anyone else who wants to come to the event needs to <a :href="event.externalTicketingUri">book a ticket</a>.</span>
         If you want to manage multiple projects you can add more by clicking the button below.</p>
       </div>
