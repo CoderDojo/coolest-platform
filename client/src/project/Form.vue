@@ -380,7 +380,10 @@
         },
       },
       submitButtonText() {
-        return this.projectDetails.id ? 'Update project' : 'Register project';
+        if (this.projectDetails.id) {
+          return 'Update project';
+        }
+        return this.event.requiresApproval ? 'Submit project' : 'Register project';
       },
     },
     watch: {

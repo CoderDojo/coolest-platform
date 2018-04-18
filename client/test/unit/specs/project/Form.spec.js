@@ -180,6 +180,40 @@ describe('ProjectForm component', () => {
         expect(vm.org).to.equal('coderdojo');
       });
     });
+    describe('submitButtonText', () => {
+      it("should return 'Update project' if the project is saved", () => {
+        // ARRANGE
+        vm.projectDetails = { id: '1234' };
+
+        // ACT
+        const text = vm.submitButtonText;
+
+        // ASSERT
+        expect(text).to.equal('Update project');
+      });
+      it("should return 'Register project' if the project isn't saved and it doesn't require approval", () => {
+        // ARRANGE
+        vm.event = { requiresApproval: false };
+        vm.projectDetails = { id: null };
+
+        // ACT
+        const text = vm.submitButtonText;
+
+        // ASSERT
+        expect(text).to.equal('Register project');
+      });
+      it("should return 'Submit project' if the project isn't saved and it requires approval", () => {
+        // ARRANGE
+        vm.event = { requiresApproval: true };
+        vm.projectDetails = { id: null };
+
+        // ACT
+        const text = vm.submitButtonText;
+
+        // ASSERT
+        expect(text).to.equal('Submit project');
+      });
+    });
   });
 
   describe('watchers', () => {
@@ -290,7 +324,6 @@ describe('ProjectForm component', () => {
         expect(vm.dojos).to.equal('bar');
       });
     });
-
     describe('onSubmit', () => {
       it('should create the project with ProjectService then go to a confirmation page if form is valid and no project id is defined', async () => {
         // ARRANGE
