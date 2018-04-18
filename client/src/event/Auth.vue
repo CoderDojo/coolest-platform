@@ -8,17 +8,18 @@
       <div class="row">
         <div class="col">
           <div v-if="isOpen">
-            <label>
-              This form is to register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}.
-            </label>
-            <br>
-            <label v-if="event.requiresApproval">
+            <p>
+              Register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} in {{ event.location }}.
+            </p>
+            <p v-if="event.requiresApproval">
               You will be contacted by the Coolest Projects team if your project is accepted.
-            </label>
-            <ul class="list">
-              <li>Only one person should register per project.</li>
-              <li>If you have already registered a project please fill in your email below to receive a unique link to edit or add a new project.</li>
-            </ul>
+            </p>
+            <p>
+              <ul class="list">
+                <li>Only one person should register per project.</li>
+                <li>If you have already registered a project please fill in your email below to receive a unique link to edit or add a new project.</li>
+              </ul>
+            </p>
           </div>
           <label v-if="!isOpen && !isFrozen">You can now only edit already registered projects for {{ event.name }}. Enter your email and you will get a link to edit your project.</label>
           <label v-else-if="isFrozen">The registration for {{ event.name }} has now closed. Please contact {{ event.contact }} if you have any questions.</label>
@@ -101,6 +102,10 @@
   };
 </script>
 <style lang="scss" scoped>
+  p {
+    margin: 16px 0;
+  }
+
   .list {
     padding-left: 16px;
     &> li {

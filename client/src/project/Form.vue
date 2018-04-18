@@ -93,7 +93,7 @@
               data-vv-name="orgRef"
               class="full-width-block"
               :class="{ error: errors.has('orgRef') }" />
-            <span class="error-message" v-show="errors.has('orgRef:required')">* It helps us to know where our attendees came from, please tell us how you came to Coolest Projects.</span>
+            <span class="error-message" v-show="errors.has('orgRef:required')">* It helps us to know where our attendees came from. Please tell us how you came to Coolest Projects.</span>
           </div>
         </div>
       </div>

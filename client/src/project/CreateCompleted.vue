@@ -7,13 +7,12 @@
     </div>
     <div class="row">
       <div class="col">
-        <p>Congratulations, you've succesfully registered "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For any more information on the event check out <a :href="`https://${event.homepage}`">{{ event.homepage }}</a>.
-The next step, have fun and keep building your project!</p>
+        <p>Congratulations, you've succesfully registered "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For more information on the event check out <a :href="`https://${event.homepage}`">{{ event.homepage }}</a>. The next step: have fun and keep building your project!</p>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <p>We've sent you a confirmation email and we'll be in contact soon with further details.</p>
+        <p>We've sent you a confirmation email, and we'll be in contact soon with further details.</p>
       </div>
     </div>
     <div v-if="event.requiresApproval" class="row">
@@ -24,7 +23,7 @@ The next step, have fun and keep building your project!</p>
     <div class="row">
       <div class="col">
         <p>The project supervisor and participants do not need a ticket.
-          <span v-if="event.externalTicketingUri">For anyone else who wants to come on the day they need to <a :href="event.externalTicketingUri">book a ticket</a>.</span>
+          <span v-if="event.externalTicketingUri">Anyone else who wants to come to the event needs to <a :href="event.externalTicketingUri">book a ticket</a>.</span>
         If you want to manage multiple projects you can add more by clicking the button below.</p>
       </div>
     </div>
