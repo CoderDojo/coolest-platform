@@ -21,37 +21,13 @@ describe('integration: events admin', () => {
       },
     )({ seed: true });
     util = utils(app);
-    return Promise.all([
-      getToken('regularuser@example.com')
-        .then((_token) => {
-          token = _token;
-          return Promise.resolve();
-        }),
-      getDefaultEvent(),
-    ]);
+    eventId = (await util.event.get('cp-2018')).body.id;
+    token = await util.user.create('verifyingproject@example.com');
   });
 
   after(() => {
     app.close();
   });
-
-  async function getToken(email) {
-    return request(app)
-      .post('/api/v1/users')
-      .set('Accept', 'application/json')
-      .send({ email, eventSlug: 'cp-2018' })
-      .then((res) => {
-        return Promise.resolve(res.body.auth.token);
-      });
-  }
-
-  async function getDefaultEvent() {
-    await request(app)
-      .get('/api/v1/events/cp-2018')
-      .then((res) => {
-        eventId = res.body.id;
-      });
-  }
 
   describe('POST /admin/events/:id/emails/confirmAttendance', () => {
     it('should return 401 for a basic user', async () => {
