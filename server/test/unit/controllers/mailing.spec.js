@@ -224,5 +224,123 @@ describe('mailing controllers', () => {
         });
       });
     });
+
+    describe('sendConfirmAttendanceEmail', () => {
+      function generateProjects(amount) {
+        const projects = [];
+        for (let i = 0; i < amount; i += 1) {
+          projects.push({
+            owner: {
+              email: `owner${i}@example.com`,
+            },
+            name: `Sample Project ${i}`,
+            id: `${i}`,
+          });
+        }
+        return projects;
+      }
+
+      function generateEmailPersonalizations(amount, eventSlug, offset = 0) {
+        const personalizations = [];
+        for (let i = offset; i < amount + offset; i += 1) {
+          personalizations.push({
+            to: `owner${i}@example.com`,
+            substitutions: {
+              projectName: `Sample Project ${i}`,
+              attendingUrl: `${process.env.HOSTNAME}/events/${eventSlug}/projects/${i}/confirm-attendance?attending=true`,
+              notAttendingUrl: `${process.env.HOSTNAME}/events/${eventSlug}/projects/${i}/confirm-attendance?attending=false`,
+            },
+          });
+        }
+        return personalizations;
+      }
+
+      it('should split emails into batches of 1000 and call the mailer instance with the correct payload', () => {
+        // ARRANGE
+        const configMock = { apiKey: 'apiKey' };
+        const Mailing = proxy('../../../controllers/mailing', {
+          '@sendgrid/mail': {
+            setApiKey: setApiKeyStub,
+            setSubstitutionWrappers: setSubstitutionWrappersStub,
+            send: sendStub,
+          },
+        });
+        const event = {
+          name: 'International',
+          location: 'Over there',
+          date: 'Some time',
+          contact: 'hello@coolestprojects.org',
+          slug: 'intl',
+        };
+        const projects = generateProjects(2400);
+        const mailingController = new Mailing(configMock);
+
+        // ACT
+        mailingController.sendConfirmAttendanceEmail(projects, event);
+
+        // ASSERT
+        expect(sendStub).to.have.been.calledThrice;
+        expect(sendStub).to.have.been.calledWith({
+          personalizations: generateEmailPersonalizations(1000, 'intl'),
+          from: {
+            email: 'enquiries+bot@coderdojo.org',
+            name: 'Coolest Projects',
+          },
+          reply_to: {
+            email: 'enquiries+bot@coderdojo.org',
+            name: 'Coolest Projects Support',
+          },
+          substitutions: {
+            eventName: 'International',
+            eventLocation: 'Over there',
+            eventDate: 'Some time',
+            eventContact: 'hello@coolestprojects.org',
+            eventUrl: `${process.env.HOSTNAME}/events/intl`,
+          },
+          categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
+          template_id: '3578d5f1-0212-4c98-94f3-8ab0b6735b22',
+        });
+        expect(sendStub).to.have.been.calledWith({
+          personalizations: generateEmailPersonalizations(1000, 'intl', 1000),
+          from: {
+            email: 'enquiries+bot@coderdojo.org',
+            name: 'Coolest Projects',
+          },
+          reply_to: {
+            email: 'enquiries+bot@coderdojo.org',
+            name: 'Coolest Projects Support',
+          },
+          substitutions: {
+            eventName: 'International',
+            eventLocation: 'Over there',
+            eventDate: 'Some time',
+            eventContact: 'hello@coolestprojects.org',
+            eventUrl: `${process.env.HOSTNAME}/events/intl`,
+          },
+          categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
+          template_id: '3578d5f1-0212-4c98-94f3-8ab0b6735b22',
+        });
+        expect(sendStub).to.have.been.calledWith({
+          personalizations: generateEmailPersonalizations(400, 'intl', 2000),
+          from: {
+            email: 'enquiries+bot@coderdojo.org',
+            name: 'Coolest Projects',
+          },
+          reply_to: {
+            email: 'enquiries+bot@coderdojo.org',
+            name: 'Coolest Projects Support',
+          },
+          substitutions: {
+            eventName: 'International',
+            eventLocation: 'Over there',
+            eventDate: 'Some time',
+            eventContact: 'hello@coolestprojects.org',
+            eventUrl: `${process.env.HOSTNAME}/events/intl`,
+          },
+          categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
+          template_id: '3578d5f1-0212-4c98-94f3-8ab0b6735b22',
+        });
+      });
+    });
   });
 });

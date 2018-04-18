@@ -68,6 +68,45 @@ class Mailing {
       template_id: '9f9ecdb3-df2b-403a-9f79-c80f91adf0ca',
     });
   }
+
+  sendConfirmAttendanceEmail(projects, event) {
+    const BATCH_SIZE = 1000;
+    const emailPayloads = [];
+    for (let i = 0; i < projects.length; i += BATCH_SIZE) {
+      emailPayloads.push({
+        personalizations: projects.slice(i, i + BATCH_SIZE).map((project) => {
+          return {
+            to: project.owner.email,
+            substitutions: {
+              projectName: htmlEntities.encode(project.name),
+              attendingUrl: `${process.env.HOSTNAME}/events/${htmlEntities.encode(event.slug)}/projects/${project.id}/confirm-attendance?attending=true`,
+              notAttendingUrl: `${process.env.HOSTNAME}/events/${htmlEntities.encode(event.slug)}/projects/${project.id}/confirm-attendance?attending=false`,
+            },
+          };
+        }),
+        from: {
+          email: 'enquiries+bot@coderdojo.org',
+          name: 'Coolest Projects',
+        },
+        reply_to: {
+          email: 'enquiries+bot@coderdojo.org',
+          name: 'Coolest Projects Support',
+        },
+        substitutions: {
+          eventName: event.name,
+          eventLocation: event.location,
+          eventDate: event.date,
+          eventContact: event.contact,
+          eventUrl: `${process.env.HOSTNAME}/events/${event.slug}`,
+        },
+        categories: this.categories.concat([`cp-${event.slug}-confirm-attendance`]),
+        template_id: '3578d5f1-0212-4c98-94f3-8ab0b6735b22',
+      });
+    }
+    return Promise.all(emailPayloads.map((payload) => {
+      return this.send(payload);
+    }));
+  }
 }
 
 module.exports = Mailing;

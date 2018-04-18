@@ -1,4 +1,5 @@
 const eventController = require('../../controllers/events');
+const projectController = require('../../controllers/projects');
 
 module.exports = {
   get: [
@@ -9,5 +10,24 @@ module.exports = {
           req.app.locals.logger.error(err);
           return next(new Error('Error while searching for an event.'));
         }),
+  ],
+  sendConfirmAttendanceEmail: [
+    async (req, res, next) => {
+      try {
+        const event = await eventController.get({ id: req.params.eventId });
+        const projects = await projectController.getExtended({
+          scopes: { event_id: event.id },
+          deleted_at: 'NULL',
+        });
+        await req.app.locals.mailing.sendConfirmAttendanceEmail(projects.toJSON(), {
+          ...event.attributes,
+          date: event.formattedDate(),
+        });
+        res.status(204).send();
+      } catch (err) {
+        req.app.locals.logger.error(err);
+        next(new Error('Error while sending confirm attendance emails'));
+      }
+    },
   ],
 };

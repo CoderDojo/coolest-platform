@@ -1,39 +1,50 @@
 const proxy = require('proxyquire').noCallThru();
 
 describe('router: events', () => {
+  let sandbox;
   let handlers;
+  const eventController = class {};
+  const projectController = class {};
+  let loggerStub;
+  let statusStub;
+  let jsonStub;
+  let sendStub;
+  let errorHandler;
+  let nextMock;
+
+  before(() => {
+    sandbox = sinon.sandbox.create();
+    handlers = proxy('../../../routes/handlers/events', {
+      '../../controllers/events': eventController,
+      '../../controllers/projects': projectController,
+    });
+    loggerStub = sandbox.stub();
+    jsonStub = sandbox.stub();
+    sendStub = sandbox.stub();
+    errorHandler = sandbox.stub();
+    statusStub = sandbox.stub();
+    nextMock = sandbox.stub();
+  });
+
+  beforeEach(() => {
+    sandbox.reset();
+    statusStub.returns({
+      json: jsonStub,
+      send: sendStub,
+    });
+    nextMock.callsFake((err, data) => {
+      if (err) return Promise.reject(err);
+      return Promise.resolve(data);
+    });
+  });
+
   describe('get', () => {
-    let sandbox;
     let handler;
-    const eventController = class {};
-    let loggerStub;
-    let statusStub;
-    let jsonStub;
-    let nextMock;
-    let errorHandler;
     before(() => {
-      sandbox = sinon.sandbox.create();
-      handlers = (proxy('../../../routes/handlers/events', {
-        '../../controllers/events': eventController,
-      })).get;
-      loggerStub = sandbox.stub();
-      jsonStub = sandbox.stub();
-      errorHandler = sandbox.stub();
       handler = (req, res, next) => {
-        return handlers[0](req, res, next)
+        return handlers.get[0](req, res, next)
           .catch(err => errorHandler(err));
       };
-    });
-
-    beforeEach(() => {
-      sandbox.reset();
-      statusStub = sandbox.stub().returns({
-        json: jsonStub,
-      });
-      nextMock = sandbox.stub().callsFake((err, data) => {
-        if (err) return Promise.reject(err);
-        return Promise.resolve(data);
-      });
     });
 
     it('should format to json', async () => {
@@ -85,6 +96,170 @@ describe('router: events', () => {
       expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
       expect(nextMock).to.have.been.calledOnce;
       expect(nextMock.getCall(0).args[0].message).to.have.equal('Error while searching for an event.');
+    });
+  });
+
+  describe('sendConfirmAttendanceEmail', () => {
+    let handler;
+    before(() => {
+      handler = (req, res, next) => {
+        return handlers.sendConfirmAttendanceEmail[0](req, res, next)
+          .catch(err => errorHandler(err));
+      };
+    });
+
+    it('should return 204 when successful', async () => {
+      // ARRANGE
+      const getEventController = sandbox.stub().resolves({
+        id: 'foo',
+        attributes: { slug: 'bar' },
+        formattedDate: () => 'Some date',
+      });
+      const getExtendedProjectController = sandbox.stub().resolves({
+        toJSON: () => 'some jsons',
+      });
+      eventController.get = getEventController;
+      projectController.getExtended = getExtendedProjectController;
+      const eventId = 'foo';
+      const sendEmailStub = sandbox.stub().resolves();
+      const reqMock = {
+        params: { eventId },
+        app: {
+          locals: {
+            mailing: {
+              sendConfirmAttendanceEmail: sendEmailStub,
+            },
+          },
+        },
+      };
+      const resMock = { status: statusStub };
+
+      // ACT
+      await handler(reqMock, resMock, nextMock);
+
+      // ASSERT
+      expect(sendEmailStub).to.have.been.calledOnce;
+      expect(sendEmailStub).to.have.been.calledWith('some jsons', { slug: 'bar', date: 'Some date' });
+      expect(statusStub).to.have.been.calledOnce;
+      expect(statusStub).to.have.been.calledWith(204);
+      expect(sendStub).to.have.been.calledOnce;
+    });
+
+    it('should call next with an error if eventController fails', async () => {
+      // ARRANGE
+      const getEventController = sandbox.stub().rejects(new Error('Fake err'));
+      const getExtendedProjectController = sandbox.stub();
+      eventController.get = getEventController;
+      const eventId = 'foo';
+      const sendEmailStub = sandbox.stub();
+      const reqMock = {
+        params: { eventId },
+        app: {
+          locals: {
+            logger: {
+              error: loggerStub,
+            },
+            mailing: {
+              sendConfirmAttendanceEmail: sendEmailStub,
+            },
+          },
+        },
+      };
+      const resMock = { status: statusStub };
+
+      // ACT
+      await handler(reqMock, resMock, nextMock);
+
+      // ASSERT
+      expect(getEventController).to.have.been.calledOnce;
+      expect(getExtendedProjectController).to.not.have.been.called;
+      expect(sendEmailStub).to.not.have.been.called;
+      expect(loggerStub).to.have.been.calledOnce;
+      expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
+      expect(nextMock).to.have.been.calledOnce;
+      expect(nextMock.getCall(0).args[0].message).to.have.equal('Error while sending confirm attendance emails');
+    });
+
+    it('should call next with an error if projectController fails', async () => {
+      // ARRANGE
+      const getEventController = sandbox.stub().resolves({
+        id: 'foo',
+        attributes: { slug: 'bar' },
+        formattedDate: () => 'Some date',
+      });
+      const getExtendedProjectController = sandbox.stub().rejects(new Error('Fake err'));
+      eventController.get = getEventController;
+      projectController.getExtended = getExtendedProjectController;
+      const eventId = 'foo';
+      const sendEmailStub = sandbox.stub();
+      const reqMock = {
+        params: { eventId },
+        app: {
+          locals: {
+            logger: {
+              error: loggerStub,
+            },
+            mailing: {
+              sendConfirmAttendanceEmail: sendEmailStub,
+            },
+          },
+        },
+      };
+      const resMock = { status: statusStub };
+
+      // ACT
+      await handler(reqMock, resMock, nextMock);
+
+      // ASSERT
+      expect(getEventController).to.have.been.calledOnce;
+      expect(getExtendedProjectController).to.have.been.calledOnce;
+      expect(sendEmailStub).to.not.have.been.called;
+      expect(loggerStub).to.have.been.calledOnce;
+      expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
+      expect(nextMock).to.have.been.calledOnce;
+      expect(nextMock.getCall(0).args[0].message).to.have.equal('Error while sending confirm attendance emails');
+    });
+
+    it('should call next with an error if mailer fails', async () => {
+      // ARRANGE
+      const getEventController = sandbox.stub().resolves({
+        id: 'foo',
+        attributes: { slug: 'bar' },
+        formattedDate: () => 'Some date',
+      });
+      const getExtendedProjectController = sandbox.stub().resolves({
+        toJSON: () => 'some jsons',
+      });
+      eventController.get = getEventController;
+      projectController.getExtended = getExtendedProjectController;
+      const eventId = 'foo';
+      const sendEmailStub = sandbox.stub().rejects(new Error('Fake err'));
+      const reqMock = {
+        params: { eventId },
+        app: {
+          locals: {
+            logger: {
+              error: loggerStub,
+            },
+            mailing: {
+              sendConfirmAttendanceEmail: sendEmailStub,
+            },
+          },
+        },
+      };
+      const resMock = { status: statusStub };
+
+      // ACT
+      await handler(reqMock, resMock, nextMock);
+
+      // ASSERT
+      expect(getEventController).to.have.been.calledOnce;
+      expect(getExtendedProjectController).to.have.been.calledOnce;
+      expect(sendEmailStub).to.have.been.calledOnce;
+      expect(loggerStub).to.have.been.calledOnce;
+      expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
+      expect(nextMock).to.have.been.calledOnce;
+      expect(nextMock.getCall(0).args[0].message).to.have.equal('Error while sending confirm attendance emails');
     });
   });
 });
