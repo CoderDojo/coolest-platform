@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Register or edit projects for {{ event.name }}</h2>
+    <h2>{{ titleActionCopy }} for {{ event.name }}</h2>
     <div v-if="error && error.status === 409">
       <p>It looks like you've already registered a project with us. We've just sent an email to {{ email }} with a unique link. Click the link in your email to edit your project or create an additional one!</p>
     </div>
@@ -79,6 +79,11 @@
         error: null,
         approval: false,
       };
+    },
+    computed: {
+      titleActionCopy() {
+        return this.event.requiresApproval ? 'Apply' : 'Register or edit projects';
+      },
     },
     methods: {
       async onSubmit() {
