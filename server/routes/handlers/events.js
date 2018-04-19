@@ -44,8 +44,6 @@ module.exports = {
       await eventController.update(event, { lastConfirmationEmailDate: new Date() });
       return next();
     },
-    async (req, res, next) => {
-      return res.status(204).send();
-    },
+    async (req, res, next) => res.status(204).send(),
   ],
 };
