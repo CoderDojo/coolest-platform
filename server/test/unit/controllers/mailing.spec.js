@@ -82,6 +82,7 @@ describe('mailing controllers', () => {
           date: 'Friday 6th',
           location: 'there',
           homepage: 'cp.orgs/usa',
+          requiresApproval: false,
         };
         // STUBS
         const Mailing = proxy('../../../controllers/mailing', {
@@ -109,6 +110,63 @@ describe('mailing controllers', () => {
           },
           subject: 'Welcome on CP',
           substitutions: {
+            verificationSentence: '',
+            projectName: 'myLittleProject',
+            eventName: mockEvent.name,
+            eventDate: mockEvent.date,
+            eventLocation: mockEvent.location,
+            eventWebsite: mockEvent.homepage,
+            eventManageLink: process.env.HOSTNAME,
+          },
+          categories: ['coolest-projects', 'cp-cp-2018-registration'],
+          template_id: '6d20e65f-ae16-4b25-a17f-66d0398f474f',
+        });
+      });
+      it('should call the mailer instance with the extra sentence set', async () => {
+        // DATA
+        const apiKey = 'apiKey';
+        const configMock = { apiKey };
+        const mockProject = {
+          name: 'myLittleProject',
+          users: [
+            { type: 'supervisor', email: 'doubidou@example.com' },
+          ],
+        };
+        const mockEvent = {
+          name: 'cp 2018',
+          slug: 'cp-2018',
+          date: 'Friday 6th',
+          location: 'there',
+          homepage: 'cp.orgs/usa',
+          requiresApproval: true,
+        };
+        // STUBS
+        const Mailing = proxy('../../../controllers/mailing', {
+          '@sendgrid/mail': {
+            setApiKey: setApiKeyStub,
+            setSubstitutionWrappers: setSubstitutionWrappersStub,
+            send: sendStub,
+          },
+        });
+        // ACT
+        const mailingController = new Mailing(configMock);
+        mailingController.sendWelcomeEmail(creatorMock, mockProject, mockEvent);
+
+        // Build the request
+        expect(mailingController.mailer.send).to.have.been.calledOnce;
+        expect(mailingController.mailer.send).to.have.been.calledWith({
+          to: 'doubidou@example.com',
+          from: {
+            email: 'enquiries+bot@coderdojo.org',
+            name: 'Coolest Projects',
+          },
+          reply_to: {
+            email: 'enquiries+bot@coderdojo.org',
+            name: 'Coolest Projects Support',
+          },
+          subject: 'Welcome on CP',
+          substitutions: {
+            verificationSentence: 'You will be contacted by the Coolest Projects team if your project is accepted.',
             projectName: 'myLittleProject',
             eventName: mockEvent.name,
             eventDate: mockEvent.date,
