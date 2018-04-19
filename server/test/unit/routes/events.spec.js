@@ -102,9 +102,19 @@ describe('router: events', () => {
   describe('sendConfirmAttendanceEmail', () => {
     let handler;
     before(() => {
-      handler = (req, res, next) => {
-        return handlers.sendConfirmAttendanceEmail[0](req, res, next)
-          .catch(err => errorHandler(err));
+      handler = async (req, res, next) => {
+        try {
+          const wrappedNext = (err) => {
+            next(err);
+            return err ? Promise.reject(err) : Promise.resolve();
+          };
+          await handlers.sendConfirmAttendanceEmail[0](req, res, wrappedNext);
+          await handlers.sendConfirmAttendanceEmail[1](req, res, wrappedNext);
+          await handlers.sendConfirmAttendanceEmail[2](req, res, wrappedNext);
+          await handlers.sendConfirmAttendanceEmail[3](req, res, wrappedNext);
+        } catch (err) {
+          errorHandler(err);
+        }
       };
     });
 
@@ -115,10 +125,12 @@ describe('router: events', () => {
         attributes: { slug: 'bar' },
         formattedDate: () => 'Some date',
       });
+      const updateEventController = sandbox.stub().resolves();
       const getExtendedProjectController = sandbox.stub().resolves({
         toJSON: () => 'some jsons',
       });
       eventController.get = getEventController;
+      eventController.update = updateEventController;
       projectController.getExtended = getExtendedProjectController;
       const eventId = 'foo';
       const sendEmailStub = sandbox.stub().resolves();
@@ -132,7 +144,7 @@ describe('router: events', () => {
           },
         },
       };
-      const resMock = { status: statusStub };
+      const resMock = { status: statusStub, locals: {} };
 
       // ACT
       await handler(reqMock, resMock, nextMock);
@@ -165,7 +177,7 @@ describe('router: events', () => {
           },
         },
       };
-      const resMock = { status: statusStub };
+      const resMock = { status: statusStub, locals: {} };
 
       // ACT
       await handler(reqMock, resMock, nextMock);
@@ -205,7 +217,7 @@ describe('router: events', () => {
           },
         },
       };
-      const resMock = { status: statusStub };
+      const resMock = { status: statusStub, locals: {} };
 
       // ACT
       await handler(reqMock, resMock, nextMock);
@@ -216,8 +228,8 @@ describe('router: events', () => {
       expect(sendEmailStub).to.not.have.been.called;
       expect(loggerStub).to.have.been.calledOnce;
       expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
-      expect(nextMock).to.have.been.calledOnce;
-      expect(nextMock.getCall(0).args[0].message).to.have.equal('Error while sending confirm attendance emails');
+      expect(nextMock).to.have.been.calledTwice;
+      expect(nextMock.getCall(1).args[0].message).to.have.equal('Error while sending confirm attendance emails');
     });
 
     it('should call next with an error if mailer fails', async () => {
@@ -247,7 +259,7 @@ describe('router: events', () => {
           },
         },
       };
-      const resMock = { status: statusStub };
+      const resMock = { status: statusStub, locals: {} };
 
       // ACT
       await handler(reqMock, resMock, nextMock);
@@ -258,8 +270,8 @@ describe('router: events', () => {
       expect(sendEmailStub).to.have.been.calledOnce;
       expect(loggerStub).to.have.been.calledOnce;
       expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
-      expect(nextMock).to.have.been.calledOnce;
-      expect(nextMock.getCall(0).args[0].message).to.have.equal('Error while sending confirm attendance emails');
+      expect(nextMock).to.have.been.calledTwice;
+      expect(nextMock.getCall(1).args[0].message).to.have.equal('Error while sending confirm attendance emails');
     });
   });
 });

@@ -38,11 +38,17 @@ describe('integration: events admin', () => {
     });
 
     it('should return 204 for an admin user', async () => {
+      const beforeSend = new Date();
       const adminToken = (await util.auth.get('hello@coolestprojects.org'))[0].token;
       return request(app)
         .post(`/api/v1/admin/events/${eventId}/emails/confirmAttendance?token=${adminToken}`)
         .send()
-        .expect(204);
+        .expect(204)
+        .then(async () => {
+          const afterSend = (await util.event.get('cp-2018')).body.lastConfirmationEmailDate;
+          expect(new Date(afterSend)).to.be.above(beforeSend);
+          return Promise.resolve();
+        });
     });
   });
 });

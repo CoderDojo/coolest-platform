@@ -14,20 +14,38 @@ module.exports = {
   sendConfirmAttendanceEmail: [
     async (req, res, next) => {
       try {
-        const event = await eventController.get({ id: req.params.eventId });
+        res.locals.event = await eventController.get({ id: req.params.eventId });
+        return next();
+      } catch (err) {
+        req.app.locals.logger.error(err);
+        return next(new Error('Error while sending confirm attendance emails'));
+      }
+    },
+    async (req, res, next) => {
+      try {
+        const event = res.locals.event;
         const projects = await projectController.getExtended({
           scopes: { event_id: event.id },
           deleted_at: 'NULL',
+          status: 'pending',
         });
         await req.app.locals.mailing.sendConfirmAttendanceEmail(projects.toJSON(), {
           ...event.attributes,
           date: event.formattedDate(),
         });
-        res.status(204).send();
+        return next();
       } catch (err) {
         req.app.locals.logger.error(err);
-        next(new Error('Error while sending confirm attendance emails'));
+        return next(new Error('Error while sending confirm attendance emails'));
       }
+    },
+    async (req, res, next) => {
+      const event = res.locals.event;
+      await eventController.update(event, { lastConfirmationEmailDate: new Date() });
+      return next();
+    },
+    async (req, res, next) => {
+      return res.status(204).send();
     },
   ],
 };
