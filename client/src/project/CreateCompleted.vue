@@ -46,7 +46,7 @@
     mixins: [FetchProjectMixin],
     computed: {
       eventDateFormatted() {
-        return moment.utc(this.event.date).format('MMM Do');
+        return moment.utc(this.event.date).format('LL');
       },
       successCopy() {
         return this.event.requiresApproval ? 'Thanks for submitting' : "Congratulations, you've succesfully registered";
