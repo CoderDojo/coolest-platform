@@ -23,7 +23,7 @@ describe('Create Project Completed component', () => {
         };
 
         // ASSERT
-        expect(vm.eventDateFormatted).to.equal('May 12th');
+        expect(vm.eventDateFormatted).to.equal('May 12, 2017');
       });
     });
   });
