@@ -12,6 +12,11 @@
       <li class="nav-item">
         <a :href="csvUrl" :download="`${eventSlug}-export.csv`" class="nav-link">Export CSV</a>
       </li>
+      <li class="nav-item">
+        <a v-show="confirmationEmailSendState === 'visible'" href="#" @click.prevent="sendConfirmAttendanceEmails" class="nav-link">Send Confirmation Emails</a>
+        <a v-show="confirmationEmailSendState === 'sending'" class="nav-link"><i class="fa fa-spinner fa-pulse fa-fw"></i> Sending</a>
+        <a v-show="confirmationEmailSendState === 'sent'" class="nav-link">Confirmation emails sent!</a>
+      </li>
     </navigation>
     <div class="container-fluid">
       <v-server-table ref="projectListTable" v-if="event.id" :url="tableUrl" :columns="columns" :options="options">
@@ -32,6 +37,7 @@
 <script>
   import Navigation from '@/admin/Navigation';
   import FetchEventMixin from '@/event/FetchEventMixin';
+  import AdminEventsService from '@/admin/events/service';
 
   export default {
     name: 'AdminProjects',
@@ -55,6 +61,7 @@
         ],
         tableState: {},
         itemsPerPage: 50,
+        confirmationEmailSendState: 'visible',
       };
     },
     computed: {
@@ -187,6 +194,18 @@
       requestAdapter(data) {
         this.tableState = data;
         return data;
+      },
+      async sendConfirmAttendanceEmails() {
+        let confirmString = 'Clicking OK will send emails to all pending projects.';
+        if (this.event.lastConfirmationEmailDate) {
+          confirmString += ` The last emails were sent on ${this.event.lastConfirmationEmailDate}`;
+        }
+        // eslint-disable-next-line no-alert
+        if (confirm(confirmString)) {
+          this.confirmationEmailSendState = 'sending';
+          await AdminEventsService.sendConfirmAttendanceEmails(this.event.id);
+          this.confirmationEmailSendState = 'sent';
+        }
       },
     },
   };
