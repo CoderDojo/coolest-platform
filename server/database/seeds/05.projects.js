@@ -22,13 +22,13 @@ exports.seed = (knex, Promise) =>
           return knex('public.user').insert([
             {
               id: ownerId,
-              email: `testowner${i + 1}@example.com`,
+              email: `testowner${i + 1}@sink.sendgrid.net`,
             },
             {
               id: memberId,
               first_name: 'Test',
               last_name: `Member ${i + 1}`,
-              email: `testmember${i + 1}@example.com`,
+              email: `testmember${i + 1}@sink.sendgrid.net`,
               dob: '2004-06-25T00:00:00.000Z',
               gender: genders[Math.floor(Math.random() * 3)],
             },
@@ -36,7 +36,7 @@ exports.seed = (knex, Promise) =>
               id: supervisorId,
               first_name: 'Test',
               last_name: `Supervisor ${i + 1}`,
-              email: `testsupervisor${i + 1}@example.com`,
+              email: `testsupervisor${i + 1}@sink.sendgrid.net`,
               phone: '+353851234567',
             },
           ]);
