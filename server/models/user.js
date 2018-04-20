@@ -7,6 +7,15 @@ const User = bookshelf.Model.extend({
   project() {
     return this.belongsToMany('Project').through('ProjectUsers');
   },
+  platformUsers() {
+    return this.query((qb) => {
+      qb.leftOuterJoin('auth', 'auth.user_id', 'user.id');
+      qb.where(function () {
+        this.where('role', '!=', 'admin')
+          .orWhere('role', 'IS', null);
+      });
+    });
+  },
   membership() {
     return this.hasMany('ProjectUsers');
   },
