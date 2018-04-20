@@ -37,12 +37,14 @@ class User {
   }
 
   static getExtended(query) {
-    const users = UserModel.query((qb) => {
-      Object.keys(query.query).forEach((field) => {
-        const value = query.query[field];
-        qb.andWhere(snakeCase(field), '=', value);
-      });
-    })
+    const users = new UserModel().platformUsers()
+      .query((qb) => {
+        Object.keys(query.query).forEach((field) => {
+          const value = query.query[field];
+          qb.andWhere(snakeCase(field), '=', value);
+        });
+        qb.andWhere('user.deleted_at', 'IS', null);
+      })
       .orderBy(query.orderBy ? snakeCase(query.orderBy) : 'created_at', query.ascending === '1' ? 'asc' : 'desc');
     return users.fetchPage({
       pageSize: query.limit || 25,

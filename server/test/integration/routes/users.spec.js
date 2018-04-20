@@ -92,9 +92,17 @@ describe('integration: users', () => {
       await reqUtils.user.get(adminToken)
         .expect(200)
         .then((res) => {
-          expect(res.body.count).to.equal(5);
-          expect(res.body.data.length).to.equal(5);
+          expect(res.body.count).to.equal(4);
+          expect(res.body.data.length).to.equal(4);
           expect(res.body.data[0]).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt', 'membership']);
+        });
+    });
+    it('should filter out admins from the user list', async () => {
+      const reqUtils = utils(app);
+      await reqUtils.user.get(adminToken)
+        .expect(200)
+        .then((res) => {
+          expect(res.body.data.map(u => u.email)).to.not.includes('hello@coolestprojects.org');
         });
     });
     it('should accept some params', async () => {
