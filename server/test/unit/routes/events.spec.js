@@ -103,18 +103,10 @@ describe('router: events', () => {
     let handler;
     before(() => {
       handler = async (req, res, next) => {
-        try {
-          const wrappedNext = (err) => {
-            next(err);
-            return err ? Promise.reject(err) : Promise.resolve();
-          };
-          await handlers.sendConfirmAttendanceEmail[0](req, res, wrappedNext);
-          await handlers.sendConfirmAttendanceEmail[1](req, res, wrappedNext);
-          await handlers.sendConfirmAttendanceEmail[2](req, res, wrappedNext);
-          await handlers.sendConfirmAttendanceEmail[3](req, res, wrappedNext);
-        } catch (err) {
-          errorHandler(err);
-        }
+        await handlers.sendConfirmAttendanceEmail[0](req, res, next);
+        await handlers.sendConfirmAttendanceEmail[1](req, res, next);
+        await handlers.sendConfirmAttendanceEmail[2](req, res, next);
+        await handlers.sendConfirmAttendanceEmail[3](req, res, next);
       };
     });
 
@@ -180,16 +172,19 @@ describe('router: events', () => {
       const resMock = { status: statusStub, locals: {} };
 
       // ACT
-      await handler(reqMock, resMock, nextMock);
-
-      // ASSERT
-      expect(getEventController).to.have.been.calledOnce;
-      expect(getExtendedProjectController).to.not.have.been.called;
-      expect(sendEmailStub).to.not.have.been.called;
-      expect(loggerStub).to.have.been.calledOnce;
-      expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
-      expect(nextMock).to.have.been.calledOnce;
-      expect(nextMock.getCall(0).args[0].message).to.have.equal('Error while sending confirm attendance emails');
+      try {
+        await handler(reqMock, resMock, nextMock);
+      } catch (e) {
+        // ASSERT
+        expect(getEventController).to.have.been.calledOnce;
+        expect(getExtendedProjectController).to.not.have.been.called;
+        expect(sendEmailStub).to.not.have.been.called;
+        expect(loggerStub).to.have.been.calledOnce;
+        expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
+        expect(nextMock).to.have.been.calledOnce;
+        expect(nextMock.getCall(0).args[0].message).to.be.equal('Error while sending confirm attendance emails');
+        expect(e.message).to.be.equal('Error while sending confirm attendance emails');
+      }
     });
 
     it('should call next with an error if projectController fails', async () => {
@@ -220,16 +215,18 @@ describe('router: events', () => {
       const resMock = { status: statusStub, locals: {} };
 
       // ACT
-      await handler(reqMock, resMock, nextMock);
-
+      try {
+        await handler(reqMock, resMock, nextMock);
       // ASSERT
-      expect(getEventController).to.have.been.calledOnce;
-      expect(getExtendedProjectController).to.have.been.calledOnce;
-      expect(sendEmailStub).to.not.have.been.called;
-      expect(loggerStub).to.have.been.calledOnce;
-      expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
-      expect(nextMock).to.have.been.calledTwice;
-      expect(nextMock.getCall(1).args[0].message).to.have.equal('Error while sending confirm attendance emails');
+      } catch (e) {
+        expect(getEventController).to.have.been.calledOnce;
+        expect(getExtendedProjectController).to.have.been.calledOnce;
+        expect(sendEmailStub).to.not.have.been.called;
+        expect(loggerStub).to.have.been.calledOnce;
+        expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
+        expect(nextMock).to.have.been.calledTwice;
+        expect(nextMock.getCall(1).args[0].message).to.have.equal('Error while sending confirm attendance emails');
+      }
     });
 
     it('should call next with an error if mailer fails', async () => {
@@ -262,16 +259,18 @@ describe('router: events', () => {
       const resMock = { status: statusStub, locals: {} };
 
       // ACT
-      await handler(reqMock, resMock, nextMock);
-
-      // ASSERT
-      expect(getEventController).to.have.been.calledOnce;
-      expect(getExtendedProjectController).to.have.been.calledOnce;
-      expect(sendEmailStub).to.have.been.calledOnce;
-      expect(loggerStub).to.have.been.calledOnce;
-      expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
-      expect(nextMock).to.have.been.calledTwice;
-      expect(nextMock.getCall(1).args[0].message).to.have.equal('Error while sending confirm attendance emails');
+      try {
+        await handler(reqMock, resMock, nextMock);
+      } catch (e) {
+        // ASSERT
+        expect(getEventController).to.have.been.calledOnce;
+        expect(getExtendedProjectController).to.have.been.calledOnce;
+        expect(sendEmailStub).to.have.been.calledOnce;
+        expect(loggerStub).to.have.been.calledOnce;
+        expect(loggerStub.getCall(0).args[0].message).to.be.equal('Fake err');
+        expect(nextMock).to.have.been.calledTwice;
+        expect(nextMock.getCall(1).args[0].message).to.have.equal('Error while sending confirm attendance emails');
+      }
     });
   });
 });

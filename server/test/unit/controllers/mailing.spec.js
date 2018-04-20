@@ -140,6 +140,7 @@ describe('mailing controllers', () => {
           location: 'there',
           homepage: 'cp.orgs/usa',
           requiresApproval: true,
+          contact: 'enquiries+bot@coderdojo.org',
         };
         // STUBS
         const Mailing = proxy('../../../controllers/mailing', {
