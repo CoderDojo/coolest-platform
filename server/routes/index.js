@@ -7,6 +7,7 @@ const eventsApi = require('./api/events');
 const pingApi = require('./api/ping');
 // Admin-side
 const adminAuthApi = require('./api/admin/auth');
+const adminEventsApi = require('./api/admin/events');
 
 const router = express.Router();
 const apiPrefix = '/api/v1';
@@ -18,6 +19,7 @@ eventsApi(router, apiPrefix);
 pingApi(router, apiPrefix);
 // Admin prefix
 adminAuthApi(router, `${apiPrefix}/admin`);
+adminEventsApi(router, `${apiPrefix}/admin`);
 
 router.get('/robots.txt', (req, res) => {
   res.type('text/plain').send('User-agent: *\nDisallow: /');

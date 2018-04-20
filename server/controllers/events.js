@@ -1,10 +1,13 @@
-const Event = require('../models/event');
+const EventModel = require('../models/event');
 
-// curl http://localhost:8080/api/v1/events/cp-2018
-const get = identifier =>
-  new Event(identifier)
-    .fetch();
+class EventController {
+  static get(identifier) {
+    return new EventModel(identifier).fetch();
+  }
 
-module.exports = {
-  get,
-};
+  static update(originalEvent, event) {
+    return originalEvent.save(event, { method: 'update', patch: true });
+  }
+}
+
+module.exports = EventController;
