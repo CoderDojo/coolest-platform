@@ -2,7 +2,7 @@ const json2csv = require('json2csv');
 const projectController = require('../../controllers/projects');
 const userController = require('../../controllers/users');
 const eventController = require('../../controllers/events');
-const CSVHeaderSerializer = require('../../models/projectCSVSerializer');
+const csvHeader = require('../../models/projectCSVHeader');
 
 module.exports = {
   post: [
@@ -152,7 +152,7 @@ module.exports = {
             : 0;
           // The serializer is not attached to the model
           // We may have no models to render the header from
-          const fields = CSVHeaderSerializer(
+          const fields = csvHeader(
             req.app.locals.event.attributes.questions,
             maxParticipants,
           );

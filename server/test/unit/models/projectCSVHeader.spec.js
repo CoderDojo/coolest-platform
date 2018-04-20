@@ -1,6 +1,6 @@
-const CSVHeader = require('../../../models/projectCSVSerializer');
+const CSVHeader = require('../../../models/projectCSVHeader');
 
-describe('project CSV serializer', () => {
+describe('project CSV header', () => {
   const baseHeader = [
     {
       label: 'Name',

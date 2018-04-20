@@ -1,5 +1,5 @@
 const proxy = require('proxyquire').noCallThru();
-const CSVHeaderSerializer = require('../../../models/projectCSVSerializer');
+const projectCSVHeader = require('../../../models/projectCSVHeader');
 const _ = require('lodash');
 
 describe('router: project', () => {
@@ -263,12 +263,12 @@ describe('router: project', () => {
     let handler;
     const projectController = class {};
     const sandbox = sinon.sandbox.create();
-    const CSVSerializer = sandbox.spy(CSVHeaderSerializer);
+    const CSVHeader = sandbox.spy(projectCSVHeader);
 
     before(() => {
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
-        '../../models/projectCSVSerializer': CSVSerializer,
+        '../../models/projectCSVHeader': CSVHeader,
       })).getAll;
       handler = (req, res, next) => {
         return handlers[0](req, res, next);
@@ -362,8 +362,8 @@ describe('router: project', () => {
       expect(projectController.getExtended).to.have.been.calledWith(mockQuery, false);
       expect(mockRes.setHeader).to.have.been.calledOnce;
       expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
-      expect(CSVSerializer).to.have.been.calledOnce;
-      expect(CSVSerializer).to.have.been.calledWith(['question_1', 'question_2'], 0);
+      expect(CSVHeader).to.have.been.calledOnce;
+      expect(CSVHeader).to.have.been.calledWith(['question_1', 'question_2'], 0);
       expect(send).to.have.been.calledOnce;
       expect(send).to.have.been.calledWith('"Name","Description","Category","Owner Email","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
     });
