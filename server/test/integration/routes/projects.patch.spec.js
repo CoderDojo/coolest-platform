@@ -38,7 +38,6 @@ describe('integration: projects with open event by default', () => {
         .send(payload)
         .expect(200)
         .then((res) => {
-          console.log(res.body);
           expect(res.body).to.be.empty;
         });
     });

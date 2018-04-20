@@ -1,7 +1,8 @@
+const json2csv = require('json2csv');
 const projectController = require('../../controllers/projects');
 const userController = require('../../controllers/users');
 const eventController = require('../../controllers/events');
-const json2csv = require('json2csv');
+const csvHeader = require('../../models/projectCSVHeader');
 
 module.exports = {
   post: [
@@ -143,44 +144,18 @@ module.exports = {
       req.query.scopes = { event_id: req.params.eventId };
 
       return projectController.getExtended(req.query, paginated).then((projects) => {
-        const dateFormat = date => new Date(date).toLocaleDateString();
-        const questionFields = (req.app.locals.event.attributes.questions || []).map((question) => {
-          return {
-            label: `${question[0].toUpperCase()}${question.slice(1)}`.replace(/(_)/g, ' '),
-            value: `answers.${question}`,
-          };
-        });
         if (!paginated) {
           res.setHeader('Content-Type', 'text/csv');
           const data = projects.toJSON();
-          let fields = [
-            { label: 'Name', value: 'name' },
-            { label: 'Description', value: 'description' },
-            { label: 'Category', value: 'category' },
-            { label: 'Owner Email', value: 'owner.email' },
-            { label: 'Status', value: 'status' },
-            { label: 'Created At', value: row => dateFormat(row.createdAt) },
-            { label: 'Updated At', value: row => dateFormat(row.updatedAt) },
-            { label: 'Supervisor First Name', value: 'supervisor.firstName' },
-            { label: 'Supervisor Last Name', value: 'supervisor.lastName' },
-            { label: 'Supervisor Email', value: 'supervisor.email' },
-            { label: 'Supervisor Phone', value: 'supervisor.phone' },
-          ];
-
-          const maxParticipants = Math.max(...data.map(x => x.members).map(x => x.length)) || 1;
-          for (let i = 0; i < maxParticipants; i += 1) {
-            const member = [
-              { label: `Participant ${i + 1} First Name`, value: `members[${i}].firstName` },
-              { label: `Participant ${i + 1} Last Name`, value: `members[${i}].lastName` },
-              { label: `Participant ${i + 1} Dob`, value: `members[${i}].dob` },
-              { label: `Participant ${i + 1} Gender`, value: `members[${i}].gender` },
-              {
-                label: `Participant ${i + 1} Special requirements`,
-                value: `members[${i}].specialRequirements`,
-              },
-            ];
-            fields = fields.concat(questionFields).concat(member);
-          }
+          const maxParticipants = data.length > 0 ?
+            Math.max(...data.map(x => x.members).map(x => x.length))
+            : 0;
+          // The serializer is not attached to the model
+          // We may have no models to render the header from
+          const fields = csvHeader(
+            req.app.locals.event.attributes.questions,
+            maxParticipants,
+          );
           return res.status(200).send(json2csv({
             data,
             fields,
