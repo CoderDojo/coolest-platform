@@ -142,6 +142,10 @@ describe('router: events', () => {
       await handler(reqMock, resMock, nextMock);
 
       // ASSERT
+      expect(getExtendedProjectController).to.have.been.calledWith({
+        scopes: { event_id: 'foo' },
+        query: { status: 'pending' },
+      });
       expect(sendEmailStub).to.have.been.calledOnce;
       expect(sendEmailStub).to.have.been.calledWith('some jsons', { slug: 'bar', date: 'Some date' });
       expect(statusStub).to.have.been.calledOnce;
