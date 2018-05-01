@@ -108,9 +108,9 @@ class Project {
 
   static async setSeatingPerCategory(cat) {
     if (cat === 'SC') {
-      const projects = await this.setSeating(cat, ['age', '<', 13], 100);
+      const projects = await this.setSeating(cat, ['age', '<=', 11], 100);
       const index = projects.length;
-      return this.setSeating(cat, ['age', '>', 12], index + 100);
+      return this.setSeating(cat, ['age', '>', 11], index + 100);
     }
     return this.setSeating(cat, null, 100);
   }
