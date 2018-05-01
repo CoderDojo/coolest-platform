@@ -19,6 +19,10 @@ describe('project CSV header', () => {
       value: 'owner.email',
     },
     {
+      label: 'Seat',
+      value: 'seat',
+    },
+    {
       label: 'Status',
       value: 'status',
     },

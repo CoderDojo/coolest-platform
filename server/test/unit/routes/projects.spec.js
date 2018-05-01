@@ -365,7 +365,7 @@ describe('router: project', () => {
       expect(CSVHeader).to.have.been.calledOnce;
       expect(CSVHeader).to.have.been.calledWith(['question_1', 'question_2'], 0);
       expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"Name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1", "Question 2"');
+      expect(send).to.have.been.calledWith('"Name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
     });
 
     it('should format data for csv', async () => {
