@@ -1,4 +1,4 @@
-const request = require('supertest');
+/* const request = require('supertest');
 const proxy = require('proxyquire');
 const dbConfig = require('../../config/db.js');
 const seeder = require('../../database/seed');
@@ -63,4 +63,4 @@ describe.skip('integration: events - generateSeating', () => {
         .expect(200);
     });
   });
-});
+}); */
