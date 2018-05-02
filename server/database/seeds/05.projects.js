@@ -29,7 +29,10 @@ exports.seed = (knex, Promise) =>
               first_name: 'Test',
               last_name: `Member ${i + 1}`,
               email: `testmember${i + 1}@sink.sendgrid.net`,
-              dob: '2004-06-25T00:00:00.000Z',
+              dob: new Date(
+                new Date().setFullYear(
+                  new Date().getFullYear() - Math.floor(Math.random() * 18)),
+              ).toISOString(),
               gender: genders[Math.floor(Math.random() * 3)],
             },
             {

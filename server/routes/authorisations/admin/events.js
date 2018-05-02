@@ -12,6 +12,13 @@ module.exports.define = (apiPrefix) => {
       permissions: ['post'],
     }],
   },
+  {
+    roles: ['admin'],
+    allows: [{
+      resources: `${apiPrefix}/:eventId/seats`,
+      permissions: ['post'],
+    }],
+  },
   ]);
 };
 

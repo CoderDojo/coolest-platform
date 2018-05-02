@@ -6,6 +6,7 @@ const utils = require('../utils');
 
 dbConfig['@global'] = true;
 dbConfig['@noCallThru'] = true;
+// Skipping because we require a postgres database to have access to the age function
 describe.skip('integration: events - generateSeating', () => {
   let app;
   let token;

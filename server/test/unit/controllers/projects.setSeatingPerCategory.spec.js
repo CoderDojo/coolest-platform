@@ -25,7 +25,7 @@ describe('projects controllers: setSeatingPerCategory', () => {
     controllers.setSeating = sandbox.stub().resolves(new Array(sizeSeed).fill(sizeSeed));
     await controllers.setSeatingPerCategory('SC');
     expect(controllers.setSeating).to.have.been.calledTwice;
-    expect(controllers.setSeating.getCall(0)).to.have.been.calledWith('SC', ['age', '<=', 1], 100);
+    expect(controllers.setSeating.getCall(0)).to.have.been.calledWith('SC', ['age', '<=', 11], 100);
     expect(controllers.setSeating.getCall(1)).to.have.been.calledWith('SC', ['age', '>', 11], 100 + sizeSeed);
   });
 });
