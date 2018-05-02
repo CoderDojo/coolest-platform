@@ -13,6 +13,7 @@
     "start-with-mocks": "concurrently --kill-others --success first \"yarn mock-server\" \"yarn client-start\" ",
     "test": "yarn client-unit && yarn server-unit && yarn server-int",
     "lint": "eslint --ext .js,.vue .",
+    "precommit": "lint-staged",
     "client-start": "node client/build/dev-server.js",
     "client-unit": "cross-env BABEL_ENV=test karma start client/test/unit/karma.conf.js --single-run",
     "client-lint": "eslint --ext .js,.vue src client/test/unit/specs",
@@ -21,6 +22,16 @@
     "server-unit": "HOSTNAME=http://platform.local mocha -t 3000 --require ./server/test/helper.js ./server/test/unit --recursive --reporter=nyan --forbid-pending",
     "server-int": "NODE_ENV=test mocha -t 10000 --require ./server/test/helper.js ./server/test/integration --recursive --reporter=nyan --forbid-pending",
     "server-lint": "eslint server --env mocha,chai --global expect,sinon"
+  },
+  "lint-staged": {
+    "*.vue": [
+      "eslint --ext .js,.vue",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --ext .js,.vue",
+      "git add"
+    ]
   },
   "dependencies": {
     "@newrelic/native-metrics": "^2.1.2",
@@ -115,6 +126,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.31",
     "karma-webpack": "^2.0.5",
+    "lint-staged": "^5.0.0",
     "mocha": "^4.0.1",
     "node-sass": "^4.7.2",
     "opn": "^5.1.0",
