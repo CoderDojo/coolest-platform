@@ -1,5 +1,6 @@
 const ProjectModel = require('../models/project');
 const ProjectUsersModel = require('../models/projectUsers');
+const ProjectSeat = require('../models/seat');
 const UserModel = require('../models/user');
 const { pick, differenceWith, intersectionWith } = require('lodash');
 const snakeCase = require('decamelize');
@@ -102,7 +103,33 @@ class Project {
         withRelated: ['owner', 'supervisor', 'members'],
       });
     }
-    return projects.fetchAll({ withRelated: ['owner', 'supervisor', 'members'] });
+    return projects.fetchAll({ withRelated: ['owner', 'supervisor', 'members', 'seat'] });
+  }
+
+  static async setSeatingPerCategory(cat) {
+    if (cat === 'SC') {
+      const projects = await this.setSeating(cat, ['age', '<=', 11], 100);
+      const index = projects.length;
+      return this.setSeating(cat, ['age', '>', 11], index + 100);
+    }
+    return this.setSeating(cat, null, 100);
+  }
+
+  static setSeating(cat, filter, index) {
+    const query = new ProjectModel()
+      .ageGroup()
+      .where('deleted_at', null)
+      .where('category', cat);
+    if (filter) {
+      query.where(...filter);
+    }
+    return query.orderBy('org_ref', 'DESC')
+      .fetchAll({ withRelated: ['seat'] })
+      .then((projects) => {
+        return Promise.all(projects.models.map((p, i) => {
+          return new ProjectSeat({ project_id: p.attributes.id, seat: `${cat}-${i + index}` }).save();
+        }));
+      });
   }
 }
 

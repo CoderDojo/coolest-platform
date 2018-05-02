@@ -15,6 +15,18 @@ const Event = bookshelf.Model.extend({
   formattedDate() {
     return moment(this.attributes.date).tz(this.attributes.tz).format('dddd [the] Do [of] MMMM');
   },
+  constructor,
 });
+
+function constructor(...args) {
+  this.on('saving', (model) => {
+    if (model.attributes && model.attributes.questions) {
+      model.set('questions', JSON.stringify(model.attributes.questions));
+    } else if (model.changed && model.changed.questions) {
+      model.set('questions', JSON.stringify(model.changed.questions));
+    }
+  });
+  bookshelf.Model.apply(this, args);
+}
 
 module.exports = bookshelf.model('Event', Event);

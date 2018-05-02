@@ -15,7 +15,7 @@ exports.seed = (knex, Promise) =>
       name: 'Coolest Projects International 2018',
       homepage: 'coolestprojects.org',
       slug: 'cp-2018',
-      categories: { scratch: 'Scratch', web: 'Websites & Web Games', evolution: 'Evolution' },
+      categories: { SC: 'Scratch', WEB: 'Websites & Web Games', EVO: 'Evolution' },
       registration_start: eventDate.clone().subtract(3, 'days'),
       registration_end: eventDate.clone().subtract(1, 'days'),
       freeze_date: eventDate,

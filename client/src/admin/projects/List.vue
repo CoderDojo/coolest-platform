@@ -17,6 +17,9 @@
         <a v-show="confirmationEmailSendState === 'sending'" class="nav-link"><i class="fa fa-spinner fa-pulse fa-fw"></i> Sending</a>
         <a v-show="confirmationEmailSendState === 'sent'" class="nav-link">Confirmation emails sent!</a>
       </li>
+      <li class="nav-item">
+        <button @click="generateSeating()" :disabled="event.seatingPrepared" :class="{'nav-link__btn--stroke' : event.seatingPrepared}" class="nav-link nav-link__btn"><i class="fa fa-map-o"></i> Generate seating</button>
+      </li>
     </navigation>
     <div class="container-fluid">
       <v-server-table ref="projectListTable" v-if="event.id" :url="tableUrl" :columns="columns" :options="options">
@@ -38,6 +41,7 @@
   import Navigation from '@/admin/Navigation';
   import FetchEventMixin from '@/event/FetchEventMixin';
   import AdminEventsService from '@/admin/events/service';
+  import eventService from '@/event/service';
 
   export default {
     name: 'AdminProjects',
@@ -207,6 +211,27 @@
           this.confirmationEmailSendState = 'sent';
         }
       },
+      async generateSeating() {
+        const message = 'This should only be done once. So make sure you have closed all applications before doing this as once the seating order is set it stays set!';
+        if (confirm(message)) { // eslint-disable-line no-alert
+          this.event = (await eventService.seats.post(this.event.id)).body;
+        }
+      },
     },
   };
 </script>
+<style lang="scss" scoped>
+.nav-item{
+  & .nav-link {
+    &__btn{
+      background-color: inherit;
+      border: none;
+      color: white;
+      cursor: pointer;
+      &--stroke {
+        text-decoration: line-through; 
+      }
+    }
+  }
+}
+</style>

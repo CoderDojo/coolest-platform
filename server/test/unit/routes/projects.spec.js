@@ -365,7 +365,7 @@ describe('router: project', () => {
       expect(CSVHeader).to.have.been.calledOnce;
       expect(CSVHeader).to.have.been.calledWith(['question_1', 'question_2'], 0);
       expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"Name","Description","Category","Owner Email","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
+      expect(send).to.have.been.calledWith('"Name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
     });
 
     it('should format data for csv', async () => {
@@ -439,8 +439,8 @@ describe('router: project', () => {
       expect(mockRes.setHeader).to.have.been.calledOnce;
       expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
       expect(send).to.have.been.calledOnce;
-      const csvHeader = '"Name","Description","Category","Owner Email","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2","Participant 1 First Name","Participant 1 Last Name","Participant 1 Dob","Participant 1 Gender","Participant 1 Special requirements","Participant 2 First Name","Participant 2 Last Name","Participant 2 Dob","Participant 2 Gender","Participant 2 Special requirements"';
-      const csvContent = '"Desu","Blah blah blah","HTML","test@test.com",,"2018-1-19","2018-1-19","Sup first","Sup last","sup@sup.com","1234",true,false,"Foo 1","Bar 1","DOB 1","Gender 1","sr 1","Foo 2","Bar 2","DOB 2","Gender 2","sr 2"';
+      const csvHeader = '"Name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2","Participant 1 First Name","Participant 1 Last Name","Participant 1 Dob","Participant 1 Gender","Participant 1 Special requirements","Participant 2 First Name","Participant 2 Last Name","Participant 2 Dob","Participant 2 Gender","Participant 2 Special requirements"';
+      const csvContent = '"Desu","Blah blah blah","HTML","test@test.com",,,"2018-1-19","2018-1-19","Sup first","Sup last","sup@sup.com","1234",true,false,"Foo 1","Bar 1","DOB 1","Gender 1","sr 1","Foo 2","Bar 2","DOB 2","Gender 2","sr 2"';
       expect(send).to.have.been.calledWith(`${csvHeader}\n${csvContent}`);
     });
   });
