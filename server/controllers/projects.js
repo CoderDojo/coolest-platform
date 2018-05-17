@@ -119,6 +119,7 @@ class Project {
     const query = new ProjectModel()
       .ageGroup()
       .where('deleted_at', null)
+      .where('status', '!=', 'canceled')
       .where('category', cat);
     if (filter) {
       query.where(...filter);
