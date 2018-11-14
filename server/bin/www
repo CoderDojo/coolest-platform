@@ -25,6 +25,9 @@ const init = async (seed) => {
   process.on('unhandledRejection', (reason, p) => {
     logger.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
   });
+  server.on('close', () => {
+    app.locals.bookshelf.knex.destroy();
+  });
 
   // Run migrations if passed down
   if (seed) {

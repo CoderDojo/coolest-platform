@@ -20,7 +20,7 @@
     "mock-server": "node ./client/mock-server/server.js",
     "server-start": "cd server && node bin/www",
     "server-unit": "HOSTNAME=http://platform.local mocha -t 3000 -c --require ./server/test/helper.js ./server/test/unit --recursive --reporter=nyan --forbid-pending",
-    "server-int": "NODE_ENV=test mocha -t 10000 -c --require ./server/test/helper.js ./server/test/integration --recursive --reporter=nyan --forbid-pending --exit",
+    "server-int": "NODE_ENV=test mocha -t 10000 -c --require ./server/test/helper.js ./server/test/integration --recursive --reporter=nyan --forbid-pending",
     "server-lint": "eslint server --env mocha,chai --global expect,sinon"
   },
   "lint-staged": {
