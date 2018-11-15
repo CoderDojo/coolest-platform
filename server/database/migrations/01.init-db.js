@@ -1,6 +1,7 @@
-exports.up = (knex, Promise) =>
-  knex.schema
-    .createTableIfNotExists('event', (table) => {
+exports.up = async (knex, Promise) => {
+  // NOTE: do not reuse schema : https://github.com/tgriesser/knex/issues/1509#issuecomment-289028026
+  if (!await knex.schema.hasTable('event')) {
+    await knex.schema.createTable('event', (table) => {
       table.uuid('id').primary();
       table.string('name');
       table.string('slug');
@@ -12,9 +13,10 @@ exports.up = (knex, Promise) =>
       table.string('homepage');
       table.string('contact');
       table.timestamps(true, true);
-    })
-
-    .createTableIfNotExists('project', (table) => {
+    });
+  }
+  if (!await knex.schema.hasTable('project')) {
+    await knex.schema.createTable('project', (table) => {
       table.uuid('id').primary();
       table.string('name');
       table.string('category');
@@ -27,9 +29,10 @@ exports.up = (knex, Promise) =>
         .index()
         .references('id')
         .inTable('event');
-    })
-
-    .createTableIfNotExists('user', (table) => {
+    });
+  }
+  if (!await knex.schema.hasTable('user')) {
+    await knex.schema.createTable('user', (table) => {
       table.uuid('id').primary();
       table.string('first_name');
       table.string('last_name');
@@ -40,9 +43,10 @@ exports.up = (knex, Promise) =>
       table.string('phone');
       table.string('country');
       table.timestamps(true, true);
-    })
-
-    .createTableIfNotExists('user_family', (table) => {
+    });
+  }
+  if (!await knex.schema.hasTable('user_family')) {
+    await knex.schema.createTable('user_family', (table) => {
       table.uuid('id').primary();
       table
         .uuid('parent_id')
@@ -54,9 +58,10 @@ exports.up = (knex, Promise) =>
         .index()
         .references('id')
         .inTable('user');
-    })
-
-    .createTableIfNotExists('project_users', (table) => {
+    });
+  }
+  if (!await knex.schema.hasTable('project_users')) {
+    await knex.schema.createTable('project_users', (table) => {
       table.uuid('id').primary();
       table.string('type');
       table
@@ -69,9 +74,10 @@ exports.up = (knex, Promise) =>
         .index()
         .references('id')
         .inTable('project');
-    })
-
-    .createTableIfNotExists('auth', (table) => {
+    });
+  }
+  if (!await knex.schema.hasTable('auth')) {
+    await knex.schema.createTable('auth', (table) => {
       table.uuid('id').primary();
       table.string('token');
       table.timestamps(true, true);
@@ -80,8 +86,10 @@ exports.up = (knex, Promise) =>
         .index()
         .references('id')
         .inTable('user');
-    })
-    .then(() => Promise.resolve());
+    });
+  }
+  return Promise.resolve();
+};
 
 exports.down = (knex, Promise) =>
   knex.schema
