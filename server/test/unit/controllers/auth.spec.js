@@ -3,7 +3,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const config = require('../../../config/auth');
 
 describe('auth controllers', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
   const userModel = {};
   describe('authenticate', () => {
     beforeEach(() => {

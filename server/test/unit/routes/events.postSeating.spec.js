@@ -9,7 +9,7 @@ describe('router: event', () => {
     let sandbox;
     let next;
     before(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/events', {
         '../../controllers/projects': projectController,
         '../../controllers/events': eventController,

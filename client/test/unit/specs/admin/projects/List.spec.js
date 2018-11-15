@@ -7,7 +7,7 @@ describe('Admin Projects List component', () => {
   let MockAdminEventsService;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     MockAdminEventsService = {
       sendConfirmAttendanceEmails: sandbox.stub(),
     };

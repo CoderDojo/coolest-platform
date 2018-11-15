@@ -2,7 +2,7 @@ import Vue from 'vue';
 import UserService from '@/user/service';
 
 describe('User service', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
 
   afterEach(() => {
     sandbox.reset();

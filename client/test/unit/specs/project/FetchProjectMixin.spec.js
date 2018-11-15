@@ -7,7 +7,7 @@ describe('Fetch Project mixin', () => {
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     ProjectServiceMock = {
       get: sandbox.stub(),
     };

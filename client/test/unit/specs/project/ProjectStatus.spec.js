@@ -7,7 +7,7 @@ describe('Project Status component', () => {
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     ProjectService = {
       status: {
         update: sandbox.stub(),

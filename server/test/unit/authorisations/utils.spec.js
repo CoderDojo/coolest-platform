@@ -2,7 +2,7 @@ const authorisations = require('../../../routes/authorisations/utils');
 
 describe('utils', () => {
   describe('isAllowed', () => {
-    const sandbox = sinon.sandbox.create();
+    const sandbox = sinon.createSandbox();
     const areAnyRolesAllowed = sandbox.stub();
     const aclMock = {
       areAnyRolesAllowed,

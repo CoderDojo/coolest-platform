@@ -7,7 +7,7 @@ describe('AdminLogin component', () => {
   let MockAdminAuthService;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     MockAdminAuthService = {
       login: sandbox.stub(),
     };

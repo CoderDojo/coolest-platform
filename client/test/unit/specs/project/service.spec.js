@@ -2,7 +2,7 @@ import Vue from 'vue';
 import ProjectService from '@/project/service';
 
 describe('Project service', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
 
   afterEach(() => {
     sandbox.reset();

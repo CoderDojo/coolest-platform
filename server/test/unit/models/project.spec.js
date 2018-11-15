@@ -2,7 +2,7 @@ const proxy = require('proxyquire');
 
 let Project;
 describe('auth model', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
   const logger = {};
   const db = {};
   before(async () => {

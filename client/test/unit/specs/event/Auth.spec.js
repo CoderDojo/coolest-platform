@@ -8,7 +8,7 @@ describe('Auth component', () => {
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     CookieMock = {
       set: sandbox.stub(),
     };

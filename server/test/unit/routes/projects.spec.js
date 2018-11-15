@@ -15,7 +15,7 @@ describe('router: project', () => {
     let nextMock;
     let errorHandler;
     before(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
       })).post;
@@ -199,7 +199,7 @@ describe('router: project', () => {
     const projectController = class {};
     let sandbox;
     before(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       handler = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
       })).param;
@@ -230,7 +230,7 @@ describe('router: project', () => {
     let sandbox;
 
     before(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
       })).get;
@@ -262,7 +262,7 @@ describe('router: project', () => {
   describe('GET /', () => {
     let handler;
     const projectController = class {};
-    const sandbox = sinon.sandbox.create();
+    const sandbox = sinon.createSandbox();
     const CSVHeader = sandbox.spy(projectCSVHeader);
 
     before(() => {
@@ -452,7 +452,7 @@ describe('router: project', () => {
     let sandbox;
     let errorHandler;
     before(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
         '../../controllers/users': userController,
@@ -695,7 +695,7 @@ describe('router: project', () => {
     let sandbox;
     let errorHandler;
     before(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
       })).patch;
@@ -773,7 +773,7 @@ describe('router: project', () => {
     let errorHandler;
     const projectController = class {};
     before(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
       })).getUserProjects;

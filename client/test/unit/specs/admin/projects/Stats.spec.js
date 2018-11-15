@@ -70,7 +70,7 @@ describe('AdminProjectStats component', () => {
   const project9 = { org: 'codeclub' };
 
   beforeEach(() => {
-    // sandbox = sinon.sandbox.create();
+    // sandbox = sinon.createSandbox();
     vm = vueUnitHelper(AdminProjectStats());
     vm.users = [
       user1,

@@ -9,7 +9,7 @@ describe('projects controllers: setSeatingPerCategory', () => {
   const seatModel = {};
   let seatModelConstructor;
   before(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
   });
   beforeEach(() => {
     projectModel.ageGroup = sandbox.stub().returns(projectModel);

@@ -13,7 +13,7 @@ describe('router: events', () => {
   let nextMock;
 
   before(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     handlers = proxy('../../../routes/handlers/events', {
       '../../controllers/events': eventController,
       '../../controllers/projects': projectController,

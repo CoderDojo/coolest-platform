@@ -8,7 +8,7 @@ describe('router: project', () => {
     let sandbox;
     let errorHandler;
     before(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
       })).patchStatus;

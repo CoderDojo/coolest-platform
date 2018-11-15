@@ -4,7 +4,7 @@ const {
 } = require('lodash');
 
 describe('projects controllers', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
   describe('post', () => {
     let creatorMock;
     before(() => {

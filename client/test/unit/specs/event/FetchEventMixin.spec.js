@@ -8,7 +8,7 @@ describe('Fetch Event mixin', () => {
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     EventServiceMock = {
       get: sandbox.stub(),
     };

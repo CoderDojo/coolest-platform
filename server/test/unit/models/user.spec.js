@@ -5,7 +5,7 @@ describe('user model', () => {
   let sandbox;
 
   before(async () => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     User = proxy('../../../models/user', {
       '../database': {},
     });

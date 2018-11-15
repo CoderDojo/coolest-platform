@@ -6,7 +6,7 @@ const config = require('../../../config/auth');
 
 let Auth;
 describe('auth model', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
   before(async () => {
     Auth = proxy('../../../models/auth', {
       '../database': {},

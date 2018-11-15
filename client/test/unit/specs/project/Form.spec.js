@@ -9,7 +9,7 @@ describe('ProjectForm component', () => {
   let ProjectServiceMock;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     ProjectServiceMock = {
       create: sandbox.stub(),
       update: sandbox.stub(),
