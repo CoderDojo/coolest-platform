@@ -3,7 +3,7 @@ const acl = require('acl');
 
 describe('authorisations: project', () => {
   describe('isAllowed', () => {
-    const sandbox = sinon.sandbox.create();
+    const sandbox = sinon.createSandbox();
     const utils = {};
     let authorisations;
     afterEach(() => {

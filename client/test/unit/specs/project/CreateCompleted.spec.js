@@ -6,7 +6,7 @@ describe('Create Project Completed component', () => {
   let vm;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     vm = vueUnitHelper(CreateProjectCompleted({}));
   });
 

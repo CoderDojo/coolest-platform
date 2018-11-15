@@ -6,7 +6,7 @@ describe('Event mixin', () => {
   let sandbox;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     vm = vueUnitHelper(EventUtils);
   });
 

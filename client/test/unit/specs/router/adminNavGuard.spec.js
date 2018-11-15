@@ -13,7 +13,7 @@ describe('adminNavGuard', () => {
   };
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     MockAdminAuthService = {
       checkToken: sandbox.stub(),
     };

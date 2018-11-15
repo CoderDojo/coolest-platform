@@ -1,7 +1,7 @@
 const proxy = require('proxyquire').noCallThru();
 
 describe('mailing controllers', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
   describe('get', () => {
     let setSubstitutionWrappersStub;
     let sendStub;

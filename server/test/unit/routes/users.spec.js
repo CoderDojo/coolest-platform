@@ -19,7 +19,7 @@ describe('router: user', () => {
     let nextMock;
     let errorHandler;
     before(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/users', {
         '../../controllers/users': userController,
         '../../controllers/auth': authController,
@@ -226,7 +226,7 @@ describe('router: user', () => {
     let jsonStub;
     let errorHandler;
     before(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/users', {
         '../../controllers/users': userController,
         '../../controllers/auth': authController,

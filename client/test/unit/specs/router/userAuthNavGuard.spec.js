@@ -10,7 +10,7 @@ describe('adminNavGuard', () => {
   let fromStub;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     toStub = {
       path: '/admin',
       params: {},

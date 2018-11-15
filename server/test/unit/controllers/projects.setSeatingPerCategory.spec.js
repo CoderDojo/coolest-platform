@@ -4,7 +4,7 @@ describe('projects controllers: setSeatingPerCategory', () => {
   let controllers;
   let sandbox;
   before(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     controllers = proxy('../../../controllers/projects', {
       '../models/user': {},
       '../models/project': {},

@@ -1,7 +1,7 @@
 const proxy = require('proxyquire').noCallThru();
 
 describe('users controllers', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
 
   beforeEach(() => {
     sandbox.reset();

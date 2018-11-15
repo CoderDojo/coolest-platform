@@ -2,7 +2,7 @@ import Vue from 'vue';
 import AdminAuthService from '@/admin/auth/service';
 
 describe('Admin Auth service', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
 
   afterEach(() => {
     sandbox.reset();

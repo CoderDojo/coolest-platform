@@ -3,7 +3,7 @@ import ProjectList from '!!vue-loader?inject!@/project/List';
 
 describe('ProjectList component', () => {
   let vm;
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
   const ProjectServiceMock = {
     list: sandbox.stub(),
   };

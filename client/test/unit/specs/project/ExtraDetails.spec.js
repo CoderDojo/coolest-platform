@@ -7,7 +7,7 @@ describe('Project ExtraDetails component', () => {
   let ProjectServiceMock;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     ProjectServiceMock = {
       partialUpdate: sandbox.stub(),
     };

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import AuthService from '@/auth/service';
 
 describe('Auth service', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
 
   afterEach(() => {
     sandbox.reset();

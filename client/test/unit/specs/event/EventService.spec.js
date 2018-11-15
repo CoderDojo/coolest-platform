@@ -2,7 +2,7 @@ import Vue from 'vue';
 import EventService from '@/event/service';
 
 describe('Event service', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
 
   afterEach(() => {
     sandbox.reset();

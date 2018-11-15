@@ -2,7 +2,7 @@ const proxy = require('proxyquire').noCallThru();
 const uuid = require('uuid/v4');
 
 describe('events controllers', () => {
-  const sandbox = sinon.sandbox.create();
+  const sandbox = sinon.createSandbox();
   describe('get', () => {
     beforeEach(() => {
       sandbox.reset();
