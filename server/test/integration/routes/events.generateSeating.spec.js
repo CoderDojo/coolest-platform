@@ -1,31 +1,16 @@
-/* const request = require('supertest');
-const proxy = require('proxyquire');
-const dbConfig = require('../../config/db.js');
-const seeder = require('../../database/seed');
-const utils = require('../utils');
+const { setup, cleanup } = require('../../setup-db');
+const request = require('supertest');
 
-dbConfig['@global'] = true;
-dbConfig['@noCallThru'] = true;
-// Skipping because we require a postgres database to have access to the age function
-describe.skip('integration: events - generateSeating', () => {
-  let app;
+describe('integration: events - generateSeating', () => {
   let token;
   let eventId;
-  let util;
 
   before(async () => {
-    app = await proxy(
-      '../../../bin/www',
-      {
-        '../config/db.json': dbConfig,
-        '../database/seed': seeder,
-      },
-    )({ seed: true });
-    util = utils(app);
+    await setup();
     const event = (await util.event.get('cp-2018')).body;
     eventId = event.id;
-    token = (await util.auth.get('hello@coolestprojects.org'))[0].token;
-    const categories = Object.keys(JSON.parse(event.categories));
+    token = (await util.auth.get('hello@coolestprojects.org')).rows[0].token;
+    const categories = Object.keys(event.categories);
     return Promise.all(new Array(100).fill(1)
       .map(async (value, index) => {
         const _token = await util.user.create(`test${index}@example.com`);
@@ -58,9 +43,14 @@ describe.skip('integration: events - generateSeating', () => {
   describe('POST /seating', () => {
     it('should set the seats for all projects categories', () => {
       return request(app)
-        .post(`/api/v1/events/${eventId}/seats?token=${token}`)
+        .post(`/api/v1/admin/events/${eventId}/seats?token=${token}`)
         .send()
-        .expect(200);
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.seatingPrepared).to.be.true;
+        });
     });
   });
-}); */
+
+  after(cleanup);
+});
