@@ -2,25 +2,28 @@
 version: 2
 jobs:
   build:
+    machine: true
     working_directory: ~/coolest-platform
-    docker:
-      - image: circleci/node:8-browsers
-        environment:
-          LANG: en_US.utf8
     steps:
       - checkout
+      - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            mv ~/docker-compose /usr/local/bin/docker-compose
       - restore_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
           name: Install Dep
-          command: yarn
+          command: docker-compose run --rm --no-deps test yarn
       - save_cache:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - node_modules
       - run:
           name: Tests
-          command: docker-compose up test
+          command: docker-compose run --rm test
   deploy:
     working_directory: ~/coolest-platform
     docker:
