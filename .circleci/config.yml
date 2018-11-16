@@ -20,7 +20,7 @@ jobs:
             - node_modules
       - run:
           name: Tests
-          command: yarn test
+          command: docker-compose up test
   deploy:
     working_directory: ~/coolest-platform
     docker:
