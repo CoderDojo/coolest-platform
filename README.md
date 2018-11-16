@@ -40,3 +40,8 @@ which includes the necessary browsers.
 ```
 docker-compose up test
 ```
+
+Server side integration tests requires a db. To run any test separately: 
+```
+docker-compose run --rm yarn server-int
+```

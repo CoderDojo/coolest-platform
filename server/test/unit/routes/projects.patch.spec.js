@@ -5,12 +5,14 @@ describe('router: project', () => {
   describe('PATCH /:id/status', () => {
     let handler;
     const projectController = class {};
+    const userController = class {};
     let sandbox;
     let errorHandler;
     before(() => {
       sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
+        '../../controllers/users': userController,
       })).patchStatus;
       errorHandler = sandbox.stub();
       handler = (req, res, next) => {

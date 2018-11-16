@@ -1,27 +1,11 @@
 // TODO fix parallel tests
+const { setup, cleanup } = require('../../setup-db');
 const request = require('supertest');
-const proxy = require('proxyquire');
-const dbConfig = require('../../config/db.js');
-const seeder = require('../../database/seed');
-const utils = require('../utils');
 
-
-dbConfig['@global'] = true;
-dbConfig['@noCallThru'] = true;
 describe('integration: users', () => {
-  let app;
   let refToken;
-  before(async () => {
-    app = await proxy(
-      '../../../bin/www',
-      {
-        '../config/db.json': dbConfig,
-        '../database/seed': seeder,
-      },
-    )({ seed: true });
-    return app;
-  });
 
+  before(setup);
   describe('post', () => {
     it('should create a user', async () => {
       const payload = { email: 'me@example.com', eventSlug: 'cp-2018' };
@@ -63,9 +47,8 @@ describe('integration: users', () => {
 
     it('should not create a user when the email exists (case insensitive)', async () => {
       const payload = { email: 'Me@example.com', eventSlug: 'cp-2018' };
-      const reqUtils = utils(app);
-      return reqUtils.event.get('cp-2018')
-        .then(res => reqUtils.project.create(refToken, res.body.id))
+      return util.event.get('cp-2018')
+        .then(res => util.project.create(refToken, res.body.id))
         .then(() => {
           return request(app)
             .post('/api/v1/users')
@@ -79,17 +62,14 @@ describe('integration: users', () => {
   describe('get', () => {
     let adminToken;
     before(async () => {
-      const reqUtils = utils(app);
-      adminToken = (await reqUtils.auth.get('hello@coolestprojects.org'))[0].token;
+      adminToken = (await util.auth.get('hello@coolestprojects.org')).rows[0].token;
     });
     it('should reject if requesting user is not an admin', async () => {
-      const reqUtils = utils(app);
-      await reqUtils.user.get(refToken)
+      await util.user.get(refToken)
         .expect(403);
     });
     it('should return a list of users', async () => {
-      const reqUtils = utils(app);
-      await reqUtils.user.get(adminToken)
+      await util.user.get(adminToken)
         .expect(200)
         .then((res) => {
           expect(res.body.count).to.equal(4);
@@ -98,23 +78,19 @@ describe('integration: users', () => {
         });
     });
     it('should filter out admins from the user list', async () => {
-      const reqUtils = utils(app);
-      await reqUtils.user.get(adminToken)
+      await util.user.get(adminToken)
         .expect(200)
         .then((res) => {
           expect(res.body.data.map(u => u.email)).to.not.includes('hello@coolestprojects.org');
         });
     });
     it('should accept some params', async () => {
-      const reqUtils = utils(app);
-      await reqUtils.user.get(adminToken, 'query[gender]=female')
+      await util.user.get(adminToken, 'query[gender]=female')
         .expect(200)
         .then((res) => {
           expect(res.body.count).to.equal(0);
         });
     });
   });
-  after(() => {
-    app.close();
-  });
+  after(cleanup);
 });

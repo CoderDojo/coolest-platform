@@ -1,28 +1,14 @@
+const { setup, cleanup } = require('../../setup-db');
 const request = require('supertest');
 const moment = require('moment');
-const proxy = require('proxyquire');
-const dbConfig = require('../../config/db.js');
-const seeder = require('../../database/seed');
-const utils = require('../utils');
 
-dbConfig['@global'] = true;
-dbConfig['@noCallThru'] = true;
 describe('integration: projects with open event by default', () => {
-  let app;
   let token;
   let eventId;
   let projectId;
-  let util;
 
   before(async () => {
-    app = await proxy(
-      '../../../bin/www',
-      {
-        '../config/db.json': dbConfig,
-        '../database/seed': seeder,
-      },
-    )({ seed: true });
-    util = utils(app);
+    await setup();
     return Promise.all([
       getToken('owner@example.com')
         .then((_token) => {
@@ -114,7 +100,7 @@ describe('integration: projects with open event by default', () => {
         ],
       };
       return request(app)
-        .post(`/api/v1/events/aaa/projects?token=${token}`)
+        .post(`/api/v1/events/861599a4-ca93-4a87-973f-276766f2a25b/projects?token=${token}`)
         .send(payload)
         .expect('Content-Type', /json/)
         .expect(404)
@@ -242,11 +228,13 @@ describe('integration: projects with open event by default', () => {
           expect(res.body).to.have.all.keys(['name', 'category', 'org', 'orgRef', 'description', 'answers', 'id', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'users', 'status']);
           expect(res.body.name).to.be.equal('Self-updated');
           expect(res.body.users.length).to.eql(3);
-          expect(res.body.users[0]).to.have.all.keys(['createdAt', 'updatedAt', 'deletedAt', 'id', 'firstName', 'lastName', 'email', 'phone', 'country', 'specialRequirements', 'dob', 'gender']);
-          expect(res.body.users[0].firstName).to.be.equal('replaced');
-          expect(res.body.users[0].gender).to.be.equal('female');
-          expect(res.body.users[0].id).to.be.equal(payload.users[0].id);
-          expect(res.body.users[1].id).to.be.equal(payload.users[1].id);
+          const user = res.body.users.find(u => u.id === payload.users[0].id);
+          expect(user).to.have.all.keys(['createdAt', 'updatedAt', 'deletedAt', 'id', 'firstName', 'lastName', 'email', 'phone', 'country', 'specialRequirements', 'dob', 'gender']);
+          expect(user.firstName).to.be.equal('replaced');
+          expect(user.gender).to.be.equal('female');
+          expect(user.id).to.be.equal(payload.users[0].id);
+          const index = res.body.users.findIndex(u => u.id === refProject.supervisor.id);
+          expect(index).to.be.within(0, 3);
         });
     });
 
@@ -270,8 +258,8 @@ describe('integration: projects with open event by default', () => {
         .expect(200)
         .then((res) => {
           expect(res.body.users.length).to.eql(3);
-          expect(res.body.users[1].email).to.be.equal('updated@example.com');
-          expect(res.body.users[1].id).to.be.equal(payload.users[1].id);
+          const user = res.body.users.find(u => u.id === payload.users[1].id);
+          expect(user.email).to.be.equal('updated@example.com');
         });
     });
     it('should allow adding of users', async () => {
@@ -322,7 +310,7 @@ describe('integration: projects with open event by default', () => {
         .catch(() => {
           return util.auth.get('updater@example.com')
             .then((res) => {
-              return util.project.update(res[0].token, eventId, refProject.id, payload)
+              return util.project.update(res.rows[0].token, eventId, refProject.id, payload)
                 .expect(403)
                 .then(() => {
                   clock.restore();
@@ -340,7 +328,7 @@ describe('integration: projects with open event by default', () => {
         .catch(() => {
           return util.auth.get('updater@example.com')
             .then((res) => {
-              return util.project.update(res[0].token, eventId, refProject.id, payload)
+              return util.project.update(res.rows[0].token, eventId, refProject.id, payload)
                 .expect(200)
                 .then(() => {
                   clock.restore();
@@ -390,7 +378,7 @@ describe('integration: projects with open event by default', () => {
           return util.auth.get('updater@example.com')
             .then((res) => {
               return request(app)
-                .patch(`/api/v1/events/${eventId}/projects/${projectId}?token=${res[0].token}`)
+                .patch(`/api/v1/events/${eventId}/projects/${projectId}?token=${res.rows[0].token}`)
                 .send(payload)
                 .expect(403)
                 .then(() => {
@@ -472,12 +460,14 @@ describe('integration: projects with open event by default', () => {
       return Promise.all([
         util.auth.get('hello@coolestprojects.org')
           .then((res) => {
-            refAuth = res[0];
+            refAuth = res.rows[0];
           }),
-        (() => {
-          const proms = [];
-          for (let i = 0; i < 50; i += 1) {
-            const prom = util.user.create(`test${i}@test.com`)
+        (async () => {
+          const projects = new Array(50);
+          // eslint-disable-next-line no-restricted-syntax
+          for (const i of projects.keys()) {
+            // eslint-disable-next-line no-await-in-loop
+            await util.user.create(`test${i}@test.com`)
               // eslint-disable-next-line no-loop-func
               .then(_token => util.project.create(_token, eventId, {
                 name: `MyPoneyProject${i}`,
@@ -502,9 +492,7 @@ describe('integration: projects with open event by default', () => {
                   },
                 ],
               }));
-            proms.push(prom);
           }
-          return Promise.all(proms);
         })(),
       ]);
     });
@@ -634,7 +622,7 @@ describe('integration: projects with open event by default', () => {
     });
     it('should support camelCase names', async () => {
       await request(app)
-        .get(`/api/v1/events/${eventId}/projects?limit=10&orderBy=supervisor.createdAt&query[createdAt]=2018-01-01&ascending=0&token=${refAuth.token}`)
+        .get(`/api/v1/events/${eventId}/projects?limit=10&orderBy=supervisor.createdAt&query[orgRef]=choubidou&ascending=0&token=${refAuth.token}`)
         .expect(200)
         .then((res) => {
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
@@ -679,6 +667,9 @@ describe('integration: projects with open event by default', () => {
         '"Supervisor Last Name"',
         '"Supervisor Email"',
         '"Supervisor Phone"',
+        '"Social project"',
+        '"Educational project"',
+        '"Innovator stage"',
       ];
 
       const csvColumnsWithParticipant = csvColumns.concat([
@@ -701,7 +692,7 @@ describe('integration: projects with open event by default', () => {
             const columns = lines[0].split(',');
             const row = lines[1].split(',');
             expect(columns).to.eql(csvColumnsWithParticipant);
-            expect(row[row.length - 10]).to.eql(`"${new Date(Date.now()).toLocaleDateString()}"`);
+            expect(row[row.length - 13]).to.eql(`"${new Date(Date.now()).toLocaleDateString()}"`);
           });
       });
       it('should return an empty csv with headers', async () => {
@@ -720,8 +711,5 @@ describe('integration: projects with open event by default', () => {
       });
     });
   });
-
-  after(() => {
-    app.close();
-  });
+  after(cleanup);
 });

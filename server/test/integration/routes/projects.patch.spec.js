@@ -1,28 +1,14 @@
+const { setup, cleanup } = require('../../setup-db');
 const request = require('supertest');
 const moment = require('moment');
-const proxy = require('proxyquire');
-const dbConfig = require('../../config/db.js');
-const seeder = require('../../database/seed');
-const utils = require('../utils');
 
-dbConfig['@global'] = true;
-dbConfig['@noCallThru'] = true;
 describe('integration: projects with open event by default', () => {
-  let app;
   let token;
   let eventId;
   let projectId;
-  let util;
 
   before(async () => {
-    app = await proxy(
-      '../../../bin/www',
-      {
-        '../config/db.json': dbConfig,
-        '../database/seed': seeder,
-      },
-    )({ seed: true });
-    util = utils(app);
+    await setup();
     eventId = (await util.event.get('cp-2018')).body.id;
     token = await util.user.create('verifyingproject@example.com');
     projectId = (await util.project.create(token, eventId)).body.id;
@@ -57,8 +43,5 @@ describe('integration: projects with open event by default', () => {
         });
     });
   });
-
-  after(() => {
-    app.close();
-  });
+  after(cleanup);
 });

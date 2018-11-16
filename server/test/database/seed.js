@@ -14,7 +14,7 @@ module.exports = (bookshelf) => {
     const userId = uuid();
     const authId = uuid();
     const token = jwt.sign({ data: userId }, config.authSecret, { expiresIn: '2h' });
-    return knex.raw(`INSERT INTO user(id, email) VALUES('${userId}', '${email}')`)
+    return knex.raw(`INSERT INTO "public".user(id, email) VALUES('${userId}', '${email}')`)
       .then(() => {
         if (password) {
           const hash = bcrypt.hashSync(password, 10);
@@ -33,8 +33,8 @@ module.exports = (bookshelf) => {
       name: 'CP-2018',
       slug: 'cp-2018',
       tz: 'Europe/Dublin',
-      categories: JSON.stringify({ SC: 'Scratch', WEB: 'Websites & Web Games', EVO: 'Evolution' }),
-      questions: ['social_project', 'educational_project', 'innovator_stage'],
+      categories: { SC: 'Scratch', WEB: 'Websites & Web Games', EVO: 'Evolution' },
+      questions: JSON.stringify(['social_project', 'educational_project', 'innovator_stage']),
       registration_start: eventDate.clone().subtract(3, 'days').toDate(),
       registration_end: eventDate.clone().subtract(2, 'days').toDate(),
       freeze_date: eventDate.clone().subtract(1, 'days').toDate(),

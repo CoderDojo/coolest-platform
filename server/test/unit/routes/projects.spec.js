@@ -8,6 +8,7 @@ describe('router: project', () => {
     let sandbox;
     let handler;
     const projectController = class {};
+    const userController = class {};
     let mailingStub;
     let loggerStub;
     let statusStub;
@@ -18,6 +19,7 @@ describe('router: project', () => {
       sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
+        '../../controllers/users': userController,
       })).post;
       loggerStub = sandbox.stub();
       jsonStub = sandbox.stub();
@@ -197,11 +199,13 @@ describe('router: project', () => {
   describe('param', () => {
     let handler;
     const projectController = class {};
+    const userController = class {};
     let sandbox;
     before(() => {
       sandbox = sinon.createSandbox();
       handler = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
+        '../../controllers/users': userController,
       })).param;
     });
 
@@ -227,12 +231,14 @@ describe('router: project', () => {
   describe('get :id', () => {
     let handler;
     const projectController = class {};
+    const userController = class {};
     let sandbox;
 
     before(() => {
       sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
+        '../../controllers/users': userController,
       })).get;
       handler = (req, res, next) => {
         return handlers[0](req, res, next);
@@ -262,12 +268,14 @@ describe('router: project', () => {
   describe('GET /', () => {
     let handler;
     const projectController = class {};
+    const userController = class {};
     const sandbox = sinon.createSandbox();
     const CSVHeader = sandbox.spy(projectCSVHeader);
 
     before(() => {
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
+        '../../controllers/users': userController,
         '../../models/projectCSVHeader': CSVHeader,
       })).getAll;
       handler = (req, res, next) => {
@@ -692,12 +700,14 @@ describe('router: project', () => {
   describe('patch', () => {
     let handler;
     const projectController = class {};
+    const userController = class {};
     let sandbox;
     let errorHandler;
     before(() => {
       sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
+        '../../controllers/users': userController,
       })).patch;
       errorHandler = sandbox.stub();
       handler = (req, res, next) => {
@@ -772,10 +782,12 @@ describe('router: project', () => {
     let sandbox;
     let errorHandler;
     const projectController = class {};
+    const userController = class {};
     before(() => {
       sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
+        '../../controllers/users': userController,
       })).getUserProjects;
       errorHandler = sandbox.stub();
       handler = (req, res, next) => {
