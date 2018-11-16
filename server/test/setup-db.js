@@ -50,13 +50,13 @@ module.exports.cleanup = () => {
 };
 
 after(() => {
-  knex.destroy();
   const deletePromises = [];
   createdDbs.forEach((db) => {
-    deletePromises.push(async () => {
+    deletePromises.push((async () => {
       await db.db.destroy();
       await knex.raw(`DROP DATABASE ${db.name}`);
-    });
+    })());
   });
-  return Promise.all(deletePromises);
+  return Promise.all(deletePromises)
+    .then(() => knex.destroy());
 });
