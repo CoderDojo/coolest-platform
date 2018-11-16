@@ -36,5 +36,7 @@ services:
     working_dir: /usr/src/app
     environment:
       NODE_ENV: development
+    depends_on:
+      - db
     volumes:
       - ./:/usr/src/app/

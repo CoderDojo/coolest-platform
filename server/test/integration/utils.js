@@ -78,7 +78,7 @@ module.exports = (app) => {
   }
 
   function getAuth(email) {
-    return db.raw(`SELECT auth.* FROM auth JOIN user u ON u.id = auth.user_id WHERE u.email = '${email}'`);
+    return db.raw(`SELECT auth.* FROM auth JOIN "public".user u ON u.id = auth.user_id WHERE u.email = '${email}'`);
   }
 
   return {

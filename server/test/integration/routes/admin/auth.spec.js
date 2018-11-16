@@ -1,30 +1,14 @@
 // TODO fix parallel tests
+const { setup, cleanup } = require('../../../setup-db');
 const request = require('supertest');
-const proxy = require('proxyquire');
-const dbConfig = require('../../../config/db.js');
-const seeder = require('../../../database/seed');
-const utils = require('../../utils');
 const jwt = require('jsonwebtoken');
 
-dbConfig['@global'] = true;
-dbConfig['@noCallThru'] = true;
 describe('integration: auth', () => {
-  let app;
   let refToken;
   let refAuth;
-  let util;
-  let db;
   before(async () => {
-    app = await proxy(
-      '../../../../bin/www',
-      {
-        '../config/db.json': dbConfig,
-        '../database/seed': seeder,
-      },
-    )({ seed: true });
-    db = app.app.locals.bookshelf.knex;
-    util = utils(app);
-    refAuth = (await db.raw('SELECT auth.* FROM auth JOIN user u ON u.id = auth.user_id WHERE u.email = \'hello@coolestprojects.org\''))[0];
+    await setup();
+    refAuth = (await db.raw('SELECT auth.* FROM auth JOIN "public".user u ON u.id = auth.user_id WHERE u.email = \'hello@coolestprojects.org\'')).rows[0];
     refToken = refAuth.token;
   });
 
@@ -91,7 +75,5 @@ describe('integration: auth', () => {
         .expect(401);
     });
   });
-  after(() => {
-    app.close();
-  });
+  after(cleanup);
 });

@@ -8,7 +8,10 @@ module.exports = {
   },
   globals: {
     expect: true,
-    sinon: true
+    sinon: true,
+    app: true,
+    db: true,
+    util: true,
   },
   env: {
     mocha: true
