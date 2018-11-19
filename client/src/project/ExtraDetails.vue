@@ -5,43 +5,13 @@
         <h2>Extra details</h2>
       </div>
     </div>
-    <div v-if="hasQuestion('social_project')" class="row row-v-center">
-      <div class="col">
-        <p>Do you think your project tries to tackle a social problem?</p>
-      </div>
-      <div>
-        <select v-model="answers.social_project">
-          <option value="undefined" disabled></option>
-          <option :value="true">Yes</option>
-          <option :value="false">No</option>
-        </select>
-      </div>
-    </div>
-    <div v-if="hasQuestion('educational_project')" class="row row-v-center">
-      <div class="col">
-        <p>Do you think your project topic is around Education?</p>
-      </div>
-      <div>
-        <select v-model="answers.educational_project">
-          <option value="undefined" disabled></option>
-          <option :value="true">Yes</option>
-          <option :value="false">No</option>
-        </select>
-      </div>
-    </div>
-    <div v-if="hasQuestion('innovator_stage')">
-      <div class="row">
+    <div v-if="event.questions" >
+      <div v-for="{ sentence, key } in usedQuestions" class="row row-v-center">
         <div class="col">
-          <h2>Innovator Stage</h2>
-          <p>The Openet Innovator Stage provides an opportunity for young people participating in Coolest Projects to get on the stage in the Main Hall to pitch and be interviewed about their projects and ideas./nParticipants do not have to present a business plan! The idea behind the Openet Innovator Stage is to give participants the opportunity to further enhance their presentation skills which are vital for the future innovators of the world.</p>
-        </div>
-      </div>
-      <div class="row row-v-center">
-        <div class="col">
-          <p>Would you or your team want to present your project on the Innovator Stage? (This does not guarantee a place as spaces are limited on the day)</p>
+          <p v-html="sentence"></p>
         </div>
         <div>
-          <select v-model="answers.innovator_stage">
+          <select v-model="answers[key]">
             <option value="undefined" disabled></option>
             <option :value="true">Yes</option>
             <option :value="false">No</option>
@@ -60,6 +30,7 @@
 <script>
   import ProjectService from '@/project/service';
   import FetchProjectMixin from '@/project/FetchProjectMixin';
+  import customQuestions from '@/project/CustomQuestions';
 
   export default {
     name: 'ExtraDetails',
@@ -68,6 +39,17 @@
       return {
         answers: {},
       };
+    },
+    computed: {
+      usedQuestions() {
+        return this.event.questions.reduce((acc, question) => {
+          const customQuestion = customQuestions.find(q => q.key === question);
+          if (customQuestion) {
+            acc.push(customQuestion);
+          }
+          return acc;
+        }, []);
+      },
     },
     watch: {
       project() {

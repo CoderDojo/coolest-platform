@@ -25,26 +25,4 @@ describe('Event mixin', () => {
       });
     });
   });
-  describe('methods', () => {
-    describe('hasQuestion', () => {
-      it('should return true if the provided question is in the questions array', () => {
-        // ARRANGE
-        vm.event = {
-          questions: ['foo', 'bar'],
-        };
-        // ASSERT
-        expect(vm.hasQuestion('bar')).to.equal(true);
-      });
-
-      it('should return false if the provided question is not in the questions array', () => {
-        // ARRANGE
-        vm.event = {
-          questions: ['foo', 'bar'],
-        };
-
-        // ASSERT
-        expect(vm.hasQuestion('baz')).to.equal(false);
-      });
-    });
-  });
 });

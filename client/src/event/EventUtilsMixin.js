@@ -9,9 +9,4 @@ export default {
       return '';
     },
   },
-  methods: {
-    hasQuestion(q) {
-      return this.event.questions && this.event.questions.indexOf(q) >= 0;
-    },
-  },
 };
