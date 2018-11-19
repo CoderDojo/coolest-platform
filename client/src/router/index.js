@@ -32,7 +32,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/events/cp-2018',
+      redirect: `/events/${process.env.EVENT_SLUG}`,
       component: Index,
       name: 'Index',
       children: [

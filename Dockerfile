@@ -1,9 +1,13 @@
-FROM node:carbon-alpine as builder
+FROM node:carbon-alpine AS builder
 RUN apk --no-cache add python build-base
 WORKDIR /usr/src/app
 COPY yarn.lock package.json ./
 RUN yarn
 COPY client /usr/src/app/client
+ARG EVENT_SLUG
+ARG GOOGLE_ANALYTICS_PROPERTY_ID
+ENV EVENT_SLUG=$EVENT_SLUG
+ENV GOOGLE_ANALYTICS_PROPERTY_ID=$GOOGLE_ANALYTICS_PROPERTY_ID
 RUN yarn build
 
 FROM node:carbon-alpine

@@ -14,6 +14,9 @@ services:
     environment:
       NODE_ENV: development
       HOSTNAME: 'http://platform.local'
+      # args, but we don't use the Dockerfile in dev
+      EVENT_SLUG: 'cp-2018'
+      GOOGLE_ANALYTICS_PROPERTY_ID: 'UA-112027238-3'
     ports:
       - 8080:8080
     volumes:
