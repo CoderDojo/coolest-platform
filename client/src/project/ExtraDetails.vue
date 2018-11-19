@@ -8,7 +8,7 @@
     <div v-if="event.questions" >
       <div v-for="{ sentence, key } in usedQuestions" class="row row-v-center">
         <div class="col">
-          <p>{{ sentence }}</p>
+          <p v-html="sentence"></p>
         </div>
         <div>
           <select v-model="answers[key]">
