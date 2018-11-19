@@ -59,7 +59,10 @@ describe('Project ExtraDetails component', () => {
         vm.event = {
           questions: ['social_project'],
         };
-        expect(vm.usedQuestions).to.eql([{ social_project: 'Does your project have an educational focus/aim?' }]);
+        expect(vm.usedQuestions).to.eql([{
+          key: 'social_project',
+          sentence: 'Does your project have an educational focus/aim?',
+        }]);
       });
       it('should ignore undefined questions', () => {
         vm.event = {
