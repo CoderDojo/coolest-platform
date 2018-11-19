@@ -53,6 +53,23 @@ describe('Project ExtraDetails component', () => {
     });
   });
 
+  describe('computed', () => {
+    describe('usedQuestions', () => {
+      it('should return all the questions used in this instance', () => {
+        vm.event = {
+          questions: ['social_project'],
+        };
+        expect(vm.usedQuestions).to.eql([{ social_project: 'Does your project have an educational focus/aim?' }]);
+      });
+      it('should ignore undefined questions', () => {
+        vm.event = {
+          questions: ['are_you_a_banana'],
+        };
+        expect(vm.usedQuestions).to.eql([]);
+      });
+    });
+  });
+
   describe('methods', () => {
     describe('onSubmit', async () => {
       it('should go to the create project completed page', async () => {
