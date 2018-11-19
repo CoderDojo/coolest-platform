@@ -16,4 +16,10 @@
   .logo {
     max-width: 300px;
   }
+
+  @media screen and (max-width: 768px) {
+      .logo {
+        max-width: 225px;
+      }
+    }
 </style>
