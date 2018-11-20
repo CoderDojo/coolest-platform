@@ -1,7 +1,7 @@
-import Vue from 'vue';
-import vueUnitHelper from 'vue-unit-helper';
-import moment from 'moment';
 import ProjectForm from '!!vue-loader?inject!@/project/Form';
+import Vue from 'vue';
+import moment from 'moment';
+import vueUnitHelper from 'vue-unit-helper';
 
 describe('ProjectForm component', () => {
   let vm;
@@ -35,6 +35,8 @@ describe('ProjectForm component', () => {
           category: 'scratch',
           org: 'codeclub',
           orgRef: 'That one!',
+          state: 'Cambridgeshire',
+          city: 'Cambridge',
         };
         vm.participants = [{
           id: 'user1',
@@ -68,6 +70,8 @@ describe('ProjectForm component', () => {
           category: 'scratch',
           org: 'codeclub',
           orgRef: 'That one!',
+          state: 'Cambridgeshire',
+          city: 'Cambridge',
           users: [
             {
               id: 'user1',
@@ -108,6 +112,8 @@ describe('ProjectForm component', () => {
           category: 'scratch',
           org: 'coderdojo',
           orgRef: 'foo',
+          state: 'Cambridgeshire',
+          city: 'Cambridge',
           members: [
             {
               id: 'user1',
@@ -149,6 +155,8 @@ describe('ProjectForm component', () => {
           category: 'scratch',
           org: 'coderdojo',
           orgRef: 'foo',
+          state: 'Cambridgeshire',
+          city: 'Cambridge',
         });
         expect(vm.participants).to.deep.equal([
           {

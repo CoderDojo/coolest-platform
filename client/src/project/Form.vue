@@ -97,6 +97,24 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col">
+        <label>State/County</label>
+        <input type="text" v-model="projectDetails.state" v-validate="'required'" data-vv-name="state" class="full-width-block" :class="{ error: errors.has('state:required') }" />
+        <span class="error-message" v-show="errors.has('state:required')">* State is required.</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>City/Town</label>
+        <div class="row row-no-margin">
+          <div class="col">
+            <input type="text" v-model="projectDetails.city" v-validate="'required'" data-vv-name="city" class="full-width-block" :class="{ error: errors.has('city:required') }" />
+            <span class="error-message" v-show="errors.has('city:required')">* City is required.</span>
+          </div>
+        </div>
+      </div>
+    </div>
     <hr />
     <div class="row">
       <div class="col">
@@ -333,6 +351,8 @@
             'category',
             'org',
             'orgRef',
+            'state',
+            'city',
           ]);
           project.users = this.participants.map((participant) => {
             const _participant = pick(participant, [
@@ -362,7 +382,7 @@
         },
         set(project) {
           this.projectDetails = pick(project, [
-            'id', 'name', 'description', 'category', 'org', 'orgRef',
+            'id', 'name', 'description', 'category', 'org', 'orgRef', 'state', 'city',
           ]);
           this.org = project.org;
           this.participants = project.members.map((user) => {

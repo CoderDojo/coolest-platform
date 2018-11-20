@@ -44,6 +44,14 @@
           </td>
           <td v-else>{{ project.orgRef }}</td>
         </tr>
+        <tr>
+          <th>State/County</th>
+          <td>{{ project.state }}</td>
+        </tr>
+        <tr>
+          <th>City/Town</th>
+          <td>{{ project.city }}</td>
+        </tr>
       </table>
       <h2>Extra details</h2>
       <table class="table">
