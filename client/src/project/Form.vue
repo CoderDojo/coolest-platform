@@ -258,12 +258,11 @@
           type="text"
           placeholder="e.g. +353851234567"
           v-model="supervisor.phone"
-          v-validate="{ required: true, regex: /^\+[0-9\ \.\-]+$/ }"
+          v-validate="{ required: true }"
           data-vv-name="supervisor-phone"
           class="full-width-block"
           :class="{ error: errors.has('supervisor-phone') }" />
         <span class="error-message" v-show="errors.has('supervisor-phone:required')">* Supervisor's phone number is required</span>
-        <span class="error-message" v-show="errors.has('supervisor-phone:regex')">* Please include the country code. For example, a phone number in Ireland should begin +353</span>
       </div>
     </div>
     <hr />
