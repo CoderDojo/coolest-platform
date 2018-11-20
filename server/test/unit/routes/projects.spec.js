@@ -1,5 +1,6 @@
 const proxy = require('proxyquire').noCallThru();
 const projectCSVHeader = require('../../../models/projectCSVHeader');
+const userCSVHeader = require('../../../models/userCSVHeader');
 const _ = require('lodash');
 
 describe('router: project', () => {
@@ -270,13 +271,15 @@ describe('router: project', () => {
     const projectController = class {};
     const userController = class {};
     const sandbox = sinon.createSandbox();
-    const CSVHeader = sandbox.spy(projectCSVHeader);
+    const spyProjectCSVHeader = sandbox.spy(projectCSVHeader);
+    const spyUserCSVHeader = sandbox.spy(userCSVHeader);
 
     before(() => {
       handlers = (proxy('../../../routes/handlers/projects', {
         '../../controllers/projects': projectController,
         '../../controllers/users': userController,
-        '../../models/projectCSVHeader': CSVHeader,
+        '../../models/projectCSVHeader': spyProjectCSVHeader,
+        '../../models/userCSVHeader': spyUserCSVHeader,
       })).getAll;
       handler = (req, res, next) => {
         return handlers[0](req, res, next);
@@ -370,10 +373,10 @@ describe('router: project', () => {
       expect(projectController.getExtended).to.have.been.calledWith(mockQuery, false);
       expect(mockRes.setHeader).to.have.been.calledOnce;
       expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
-      expect(CSVHeader).to.have.been.calledOnce;
-      expect(CSVHeader).to.have.been.calledWith(['question_1', 'question_2'], 0);
+      expect(spyProjectCSVHeader).to.have.been.calledOnce;
+      expect(spyProjectCSVHeader).to.have.been.calledWith(['question_1', 'question_2'], 0);
       expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"Name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
+      expect(send).to.have.been.calledWith('"Project name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
     });
 
     it('should format data for csv', async () => {
@@ -447,9 +450,55 @@ describe('router: project', () => {
       expect(mockRes.setHeader).to.have.been.calledOnce;
       expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
       expect(send).to.have.been.calledOnce;
-      const csvHeader = '"Name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2","Participant 1 First Name","Participant 1 Last Name","Participant 1 Dob","Participant 1 Gender","Participant 1 Special requirements","Participant 2 First Name","Participant 2 Last Name","Participant 2 Dob","Participant 2 Gender","Participant 2 Special requirements"';
+      const csvHeader = '"Project name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2","Participant 1 First Name","Participant 1 Last Name","Participant 1 Dob","Participant 1 Gender","Participant 1 Special requirements","Participant 2 First Name","Participant 2 Last Name","Participant 2 Dob","Participant 2 Gender","Participant 2 Special requirements"';
       const csvContent = '"Desu","Blah blah blah","HTML","test@test.com",,,"2018-1-19","2018-1-19","Sup first","Sup last","sup@sup.com","1234",true,false,"Foo 1","Bar 1","DOB 1","Gender 1","sr 1","Foo 2","Bar 2","DOB 2","Gender 2","sr 2"';
       expect(send).to.have.been.calledWith(`${csvHeader}\n${csvContent}`);
+    });
+
+    it('should return a list of users projects as csv when passed the format parameter and the user view', async () => {
+      const mockReq = {
+        params: { eventId: '111' },
+        query: { orderBy: 'banana', format: 'csv', view: 'user' },
+        accepts: sandbox.stub().returns(false),
+        get: sinon.stub().returns(false),
+        app: {
+          locals: {
+            event: {
+              attributes: {
+                questions: ['question_1', 'question_2'],
+              },
+            },
+          },
+        },
+      };
+      const send = sandbox.stub();
+      const mockRes = {
+        setHeader: sandbox.stub(),
+        status: sandbox.stub().returns({ send }),
+      };
+      const res = {
+        models: [],
+        pagination: {
+          rowCount: 0,
+        },
+        toJSON: sandbox.stub(),
+      };
+      const mockQuery = mockReq.query;
+      mockQuery.event_id = mockReq.params;
+      res.toJSON.returns(res.models);
+      projectController.getExtended.resolves(res);
+      await handler(mockReq, mockRes);
+
+      expect(mockRes.status).to.have.been.calledOnce;
+      expect(mockRes.status).to.have.been.calledWith(200);
+      expect(projectController.getExtended).to.have.been.calledOnce;
+      expect(projectController.getExtended).to.have.been.calledWith(mockQuery, false);
+      expect(mockRes.setHeader).to.have.been.calledOnce;
+      expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
+      expect(spyUserCSVHeader).to.have.been.calledOnce;
+      expect(spyUserCSVHeader).to.have.been.calledWith(['question_1', 'question_2']);
+      expect(send).to.have.been.calledOnce;
+      expect(send).to.have.been.calledWith('"First name","Last name","Dob","Gender","Special requirements","Project name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
     });
   });
 
