@@ -9,7 +9,7 @@
   "scripts": {
     "build": "node client/build/build.js",
     "start": "concurrently --kill-others --success first \"yarn server-start\" \"yarn client-start\"",
-    "start-dev": "concurrently --kill-others --success first \"yarn server-start --seed --trace-sync-io\" \"yarn client-start\"",
+    "start-dev": "concurrently --kill-others --success first \"yarn server-start-dev --seed --trace-sync-io\" \"yarn client-start\"",
     "start-with-mocks": "concurrently --kill-others --success first \"yarn mock-server\" \"yarn client-start\" ",
     "test": "yarn client-unit && yarn server-unit && yarn server-int",
     "lint": "eslint --ext .js,.vue .",
@@ -19,6 +19,7 @@
     "client-lint": "eslint --ext .js,.vue src client/test/unit/specs",
     "mock-server": "node ./client/mock-server/server.js",
     "server-start": "cd server && node bin/www",
+    "server-start-dev": "cd server && node --inspect=0.0.0.0 bin/www",
     "server-unit": "HOSTNAME=http://platform.local mocha -t 3000 -c --require ./server/test/helper.js ./server/test/unit --recursive --reporter=nyan --forbid-pending",
     "server-int": "NODE_ENV=test mocha -t 10000 -c --require ./server/test/helper.js ./server/test/integration --recursive --reporter=nyan --forbid-pending",
     "server-lint": "eslint server --env mocha,chai --global expect,sinon"

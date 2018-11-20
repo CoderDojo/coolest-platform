@@ -2,7 +2,8 @@ const json2csv = require('json2csv');
 const projectController = require('../../controllers/projects');
 const userController = require('../../controllers/users');
 const eventController = require('../../controllers/events');
-const csvHeader = require('../../models/projectCSVHeader');
+const ProjectCSVHeader = require('../../models/projectCSVHeader');
+const UserCSVHeader = require('../../models/userCSVHeader');
 
 module.exports = {
   post: [
@@ -142,20 +143,52 @@ module.exports = {
     (req, res) => {
       const paginated = !(req.query.format && req.query.format === 'csv');
       req.query.scopes = { event_id: req.params.eventId };
-
       return projectController.getExtended(req.query, paginated).then((projects) => {
         if (!paginated) {
+          let data = projects.toJSON();
           res.setHeader('Content-Type', 'text/csv');
-          const data = projects.toJSON();
           const maxParticipants = data.length > 0 ?
             Math.max(...data.map(x => x.members).map(x => x.length))
             : 0;
+          let fields;
           // The serializer is not attached to the model
           // We may have no models to render the header from
-          const fields = csvHeader(
-            req.app.locals.event.attributes.questions,
-            maxParticipants,
-          );
+          if (req.query.view === 'user') {
+            // This could be another endpoint, but this is another representation of the same data
+            // TODO: once bookshelf replaced, separate into a different API endpoint
+            data = data.reduce((acc, project) => {
+              const {
+                name,
+                description,
+                category,
+                owner,
+                seat,
+                status,
+                supervisor,
+                answers,
+              } = project;
+              project.members.forEach((member) => {
+                acc.push({
+                  ...member,
+                  name,
+                  description,
+                  category,
+                  owner,
+                  seat,
+                  status,
+                  supervisor,
+                  answers,
+                });
+              });
+              return acc;
+            }, []);
+            fields = new UserCSVHeader(req.app.locals.event.attributes.questions).fields;
+          } else {
+            fields = new ProjectCSVHeader(
+              req.app.locals.event.attributes.questions,
+              maxParticipants,
+            ).fields;
+          }
           return res.status(200).send(json2csv({
             data,
             fields,

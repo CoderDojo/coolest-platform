@@ -1,7 +1,27 @@
-const CSVHeader = require('../../../models/projectCSVHeader');
+const CSVHeader = require('../../../models/userCSVHeader');
 
-describe('project CSV header', () => {
+describe('User CSV header', () => {
   const baseHeader = [
+    {
+      label: 'First name',
+      value: 'firstName',
+    },
+    {
+      label: 'Last name',
+      value: 'lastName',
+    },
+    {
+      label: 'Dob',
+      value: 'dob',
+    },
+    {
+      label: 'Gender',
+      value: 'gender',
+    },
+    {
+      label: 'Special requirements',
+      value: 'specialRequirements',
+    },
     {
       label: 'Project name',
       value: 'name',
@@ -51,30 +71,16 @@ describe('project CSV header', () => {
       value: 'supervisor.phone',
     }];
   const questionsHeader = ['Question 1', 'Question 2'];
-  const participantsHeader = ['Participant 1 First Name', 'Participant 1 Last Name', 'Participant 1 Dob', 'Participant 1 Gender', 'Participant 1 Special requirements']
-    .concat(['Participant 2 First Name', 'Participant 2 Last Name', 'Participant 2 Dob', 'Participant 2 Gender', 'Participant 2 Special requirements']);
 
   it('should return a csv header without participants nor questions', () => {
-    const res = new CSVHeader([], 0).fields;
+    const res = new CSVHeader([]).fields;
     expect(res.map(l => l.label)).to.have.all.members(baseHeader.map(l => l.label));
   });
 
-  it('should return a csv header with participants but no questions', () => {
-    const res = new CSVHeader([], 2).fields;
-    expect(res.map(l => l.label))
-      .to.have.all.members(baseHeader
-        .map(l => l.label).concat(participantsHeader));
-  });
-  it('should return a csv header with no participants but with some questions', () => {
-    const res = new CSVHeader(['question_1', 'question_2'], 0).fields;
+  it('should return a csv header with questions', () => {
+    const res = new CSVHeader(['question_1', 'question_2']).fields;
     expect(res.map(l => l.label))
       .to.have.all.members(baseHeader
         .map(l => l.label).concat(questionsHeader));
-  });
-  it('should return a csv header with participants and questions', () => {
-    const res = new CSVHeader(['question_1', 'question_2'], 2).fields;
-    expect(res.map(l => l.label))
-      .to.have.all.members(baseHeader
-        .map(l => l.label).concat(questionsHeader).concat(participantsHeader));
   });
 });

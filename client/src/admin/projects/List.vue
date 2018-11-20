@@ -10,7 +10,10 @@
         </select>
       </li>
       <li class="nav-item">
-        <a :href="csvUrl" :download="`${eventSlug}-export.csv`" class="nav-link">Export CSV</a>
+        <a :href="projectCSVUrl" :download="`${eventSlug}-projects-export.csv`" class="nav-link">Export Projects CSV</a>
+      </li>
+      <li class="nav-item">
+        <a :href="userCSVUrl" :download="`${eventSlug}-members-export.csv`" class="nav-link">Export Members CSV</a>
       </li>
       <li class="nav-item">
         <a v-show="confirmationEmailSendState === 'visible'" href="#" @click.prevent="sendConfirmAttendanceEmails" class="nav-link">Send Confirmation Emails</a>
@@ -168,7 +171,7 @@
       token() {
         return localStorage.getItem('authToken');
       },
-      csvUrl() {
+      CSVQueryString() {
         if (!this.tableState.query) return '';
         let queryStr = '';
         Object.keys(this.tableState.query).forEach((key) => {
@@ -186,7 +189,15 @@
         if (this.tableState.byColumn) {
           queryStr += `&byColumn=${encodeURIComponent(this.tableState.byColumn)}`;
         }
+        return queryStr;
+      },
+      projectCSVUrl() {
+        const queryStr = this.CSVQueryString;
         return `/api/v1/events/${this.event.id}/projects?format=csv&token=${this.token}${queryStr}`;
+      },
+      userCSVUrl() {
+        const queryStr = this.CSVQueryString;
+        return `/api/v1/events/${this.event.id}/projects?view=user&format=csv&token=${this.token}${queryStr}`;
       },
     },
     watch: {

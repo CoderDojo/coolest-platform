@@ -652,10 +652,9 @@ describe('integration: projects with open event by default', () => {
             });
         });
     });
-
     describe('with csv format', () => {
-      const csvColumns = [
-        '"Name"',
+      const projectCSVColumns = [
+        '"Project name"',
         '"Description"',
         '"Category"',
         '"Owner Email"',
@@ -672,13 +671,14 @@ describe('integration: projects with open event by default', () => {
         '"Innovator stage"',
       ];
 
-      const csvColumnsWithParticipant = csvColumns.concat([
+      const csvColumnsWithParticipant = projectCSVColumns.concat([
         '"Participant 1 First Name"',
         '"Participant 1 Last Name"',
         '"Participant 1 Dob"',
         '"Participant 1 Gender"',
         '"Participant 1 Special requirements"',
       ]);
+      const userCSVColumns = ['"First name"', '"Last name"', '"Dob"', '"Gender"', '"Special requirements"'].concat(projectCSVColumns);
       it('should return a csv', async () => {
         await request(app)
           .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[supervisor.email]=test1&format=csv&ascending=false&token=${
@@ -688,7 +688,8 @@ describe('integration: projects with open event by default', () => {
           .then((res) => {
             expect(res.text).not.to.be.empty;
             const lines = res.text.split('\n');
-            expect(lines.length).to.equal(12); // 10-19 + 1 + headers
+            // 10-19 + 1 + headers due to supervisor email filtering
+            expect(lines.length).to.equal(12);
             const columns = lines[0].split(',');
             const row = lines[1].split(',');
             expect(columns).to.eql(csvColumnsWithParticipant);
@@ -706,8 +707,23 @@ describe('integration: projects with open event by default', () => {
             const lines = res.text.split('\n');
             expect(lines.length).to.equal(1); // headers
             const columns = lines[0].split(',');
-            expect(columns).to.eql(csvColumns);
+            expect(columns).to.eql(projectCSVColumns);
           });
+      });
+      describe('with view === user', () => {
+        it('should return the projects with the a user per row', async () => {
+          await request(app)
+            .get(`/api/v1/events/${eventId}/projects?view=user&format=csv&limit=50&token=${refAuth.token}`)
+            .expect(200)
+            .then((res) => {
+              expect(res.text).not.to.be.empty;
+              const lines = res.text.split('\n');
+              // Limit is "wrong" because it's only applied to the number of project
+              expect(lines.length).to.equal(54); // 50 + header
+              const columns = lines[0].split(',');
+              expect(columns).to.eql(userCSVColumns);
+            });
+        });
       });
     });
   });
