@@ -30,7 +30,7 @@ docker push coderdojo/coolest-platform:usa
 docker push coderdojo/coolest-platform:usa-"${GIT_SHA1}-${TIMESTAMP}"
 ./kubectl --namespace=coolest-namespace-usa patch deployment coolest-platform -p '{"spec":{"template":{"spec":{"containers":[{"name":"coolest-platform","image":"coderdojo/coolest-platform:'usa-"${GIT_SHA1}-${TIMESTAMP}"'"}]}}}}'
 # UK
-# docker build --rm=false -t coderdojo/coolest-platform:uk -t coderdojo/coolest-platform:uk-"${GIT_SHA1}-${TIMESTAMP}" --build-arg "EVENT_SLUG=uk-2019" --build-arg "GOOGLE_ANALYTICS_PROPERTY_ID=UA-112027238-5" .
-# docker push coderdojo/coolest-platform:uk
-# docker push coderdojo/coolest-platform:uk-"${GIT_SHA1}-${TIMESTAMP}"
-# ./kubectl --namespace=coolest-namespace-uk patch deployment coolest-platform -p '{"spec":{"template":{"spec":{"containers":[{"name":"coolest-platform","image":"coderdojo/coolest-platform:'uk-"${GIT_SHA1}-${TIMESTAMP}"'"}]}}}}'
+docker build --rm=false -t coderdojo/coolest-platform:uk -t coderdojo/coolest-platform:uk-"${GIT_SHA1}-${TIMESTAMP}" --build-arg "EVENT_SLUG=uk-2019" --build-arg "GOOGLE_ANALYTICS_PROPERTY_ID=UA-112027238-5" .
+docker push coderdojo/coolest-platform:uk
+docker push coderdojo/coolest-platform:uk-"${GIT_SHA1}-${TIMESTAMP}"
+./kubectl --namespace=coolest-namespace-uk patch deployment coolest-platform -p '{"spec":{"template":{"spec":{"containers":[{"name":"coolest-platform","image":"coderdojo/coolest-platform:'uk-"${GIT_SHA1}-${TIMESTAMP}"'"}]}}}}'
