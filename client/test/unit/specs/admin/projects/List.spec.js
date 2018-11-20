@@ -77,19 +77,17 @@ describe('Admin Projects List component', () => {
       });
     });
 
-    describe('csvUrl', () => {
+    describe('CSVQueryString', () => {
       it('should return an empty string if tableState does not have a query', () => {
         // ARRANGE
         vm.tableState = {};
 
         // ASSERT
-        expect(vm.csvUrl).to.equal('');
+        expect(vm.CSVQueryString).to.equal('');
       });
 
       it('should query params for fields with values', () => {
         // ARRANGE
-        vm.event = { id: 'foo' };
-        vm.token = 'bar';
         vm.tableState = {
           query: {
             name: 'baz',
@@ -99,43 +97,35 @@ describe('Admin Projects List component', () => {
         };
 
         // ASSERT
-        expect(vm.csvUrl).to.equal('/api/v1/events/foo/projects?format=csv&token=bar&query[name]=baz&query[email]=someone%40example.com');
+        expect(vm.CSVQueryString).to.equal('&query[name]=baz&query[email]=someone%40example.com');
       });
 
       it('should include orderBy if tableState contains it', () => {
         // ARRANGE
-        vm.event = { id: 'foo' };
-        vm.token = 'bar';
         vm.tableState = { query: {}, orderBy: 'category' };
 
         // ASSERT
-        expect(vm.csvUrl).to.equal('/api/v1/events/foo/projects?format=csv&token=bar&orderBy=category');
+        expect(vm.CSVQueryString).to.equal('&orderBy=category');
       });
 
       it('should include ascending if tableState contains it', () => {
         // ARRANGE
-        vm.event = { id: 'foo' };
-        vm.token = 'bar';
         vm.tableState = { query: {}, ascending: '1' };
 
         // ASSERT
-        expect(vm.csvUrl).to.equal('/api/v1/events/foo/projects?format=csv&token=bar&ascending=1');
+        expect(vm.CSVQueryString).to.equal('&ascending=1');
       });
 
       it('should include byColumn if tableState contains it', () => {
         // ARRANGE
-        vm.event = { id: 'foo' };
-        vm.token = 'bar';
         vm.tableState = { query: {}, byColumn: '1' };
 
         // ASSERT
-        expect(vm.csvUrl).to.equal('/api/v1/events/foo/projects?format=csv&token=bar&byColumn=1');
+        expect(vm.CSVQueryString).to.equal('&byColumn=1');
       });
 
       it('should support all query params together', () => {
         // ARRANGE
-        vm.event = { id: 'foo' };
-        vm.token = 'bar';
         vm.tableState = {
           query: {
             name: 'baz',
@@ -148,7 +138,23 @@ describe('Admin Projects List component', () => {
         };
 
         // ASSERT
-        expect(vm.csvUrl).to.equal('/api/v1/events/foo/projects?format=csv&token=bar&query[name]=baz&query[email]=someone%40example.com&orderBy=category&ascending=1&byColumn=1');
+        expect(vm.CSVQueryString).to.equal('&query[name]=baz&query[email]=someone%40example.com&orderBy=category&ascending=1&byColumn=1');
+      });
+    });
+    describe('userCSVUrl', () => {
+      it('should prefix CSVQueryString with its default params', () => {
+        vm.CSVQueryString = '&query[name]=baz&query[email]=someone%40example.com&orderBy=category&ascending=1&byColumn=1';
+        vm.event = { id: 'foo' };
+        vm.token = 'bar';
+        expect(vm.userCSVUrl).to.be.equal('/api/v1/events/foo/projects?view=user&format=csv&token=bar&query[name]=baz&query[email]=someone%40example.com&orderBy=category&ascending=1&byColumn=1');
+      });
+    });
+    describe('projectCSVUrl', () => {
+      it('should prefix CSVQueryString with its default params', () => {
+        vm.CSVQueryString = '&query[name]=baz&query[email]=someone%40example.com&orderBy=category&ascending=1&byColumn=1';
+        vm.event = { id: 'foo' };
+        vm.token = 'bar';
+        expect(vm.projectCSVUrl).to.be.equal('/api/v1/events/foo/projects?format=csv&token=bar&query[name]=baz&query[email]=someone%40example.com&orderBy=category&ascending=1&byColumn=1');
       });
     });
   });
