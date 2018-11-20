@@ -7,7 +7,7 @@ describe('project CSV header', () => {
   });
   describe('dateFormat', () => {
     it('should format a date', () => {
-      const date = CSV.dateFormat('2018-11-14T23:53:00.000Z');
+      const date = CSVHeader.dateFormat('2018-11-14T23:53:00.000Z');
       expect(date).to.equal('2018-11-14');
     });
   });
