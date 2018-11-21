@@ -721,7 +721,7 @@ describe('integration: projects with open event by default', () => {
               expect(res.text).not.to.be.empty;
               const lines = res.text.split('\n');
               // Limit is "wrong" because it's only applied to the number of project
-              expect(lines.length).to.equal(54); // 50 + header
+              expect(lines.length).to.equal(56); // 52 + header
               const columns = lines[0].split(',');
               expect(columns).to.eql(userCSVColumns);
             });
