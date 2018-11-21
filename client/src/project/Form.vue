@@ -292,7 +292,7 @@
     </div>
     <div class="row">
       <div class="col text-center">
-        <button type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
+        <button type="submit" class="btn btn-primary" :disabled="submitted">{{ submitButtonText }}</button>
       </div>
     </div>
     <div class="row">
@@ -438,6 +438,7 @@
         })).body;
       },
       async onSubmit() {
+        this.submitted = true;
         const valid = await this.$validator.validateAll();
         if (valid) {
           let project;
@@ -447,7 +448,6 @@
             project = await this.register();
           }
           window.removeEventListener('beforeunload', this.onBeforeUnload);
-          this.submitted = true;
           const nextRouteNamePrefix = this.$route.path.startsWith('/admin/') ? 'Admin' : '';
           this.$router.push({
             name: this.event.questions && this.event.questions.length > 0 ? `${nextRouteNamePrefix}ProjectExtraDetails` : 'CreateProjectCompleted',
@@ -458,6 +458,8 @@
               _project: project,
             },
           });
+        } else {
+          this.submitted = false;
         }
       },
       async register() {
