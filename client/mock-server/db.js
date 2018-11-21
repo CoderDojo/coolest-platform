@@ -212,6 +212,8 @@ for (let i = 0; i < 100; i += 1) {
     category: Object.keys(categories)[Math.floor(Math.random() * 3)],
     org: orgs[Math.floor(Math.random() * 5)],
     orgRef: uuidv1(),
+    state: 'Cambridgeshire',
+    city: 'Cambridge',
     owner: {
       email: `testowner${i + 1}@example.com`,
       type: 'owner',

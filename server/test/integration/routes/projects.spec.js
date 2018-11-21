@@ -225,7 +225,7 @@ describe('integration: projects with open event by default', () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .then((res) => {
-          expect(res.body).to.have.all.keys(['name', 'category', 'org', 'orgRef', 'description', 'answers', 'id', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'users', 'status']);
+          expect(res.body).to.have.all.keys(['name', 'category', 'org', 'orgRef', 'state', 'city', 'description', 'answers', 'id', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'users', 'status']);
           expect(res.body.name).to.be.equal('Self-updated');
           expect(res.body.users.length).to.eql(3);
           const user = res.body.users.find(u => u.id === payload.users[0].id);
@@ -410,7 +410,7 @@ describe('integration: projects with open event by default', () => {
           expect(res.body.data.length).to.equal(1);
           expect(res.body.count).to.equal(1);
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
-          expect(res.body.data[0]).to.have.all.keys(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members', 'status']);
+          expect(res.body.data[0]).to.have.all.keys(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'state', 'city', 'owner', 'supervisor', 'members', 'status']);
           expect(res.body.data[0].owner).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
           expect(res.body.data[0].supervisor).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
           expect(res.body.data[0].members[0]).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
@@ -428,7 +428,7 @@ describe('integration: projects with open event by default', () => {
               expect(res.body.data.length).to.equal(2);
               expect(res.body.count).to.equal(2);
               expect(Object.keys(res.body)).to.eql(['data', 'count']);
-              expect(res.body.data[0]).to.have.keys(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members', 'status']);
+              expect(res.body.data[0]).to.have.keys(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'state', 'city', 'owner', 'supervisor', 'members', 'status']);
               expect(res.body.data[0].owner).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
               expect(res.body.data[0].supervisor).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
               expect(res.body.data[0].members[0]).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
@@ -505,7 +505,7 @@ describe('integration: projects with open event by default', () => {
           // Content
           expect(res.body.count).to.equal(count);
           expect(Object.keys(res.body)).to.eql(['data', 'count']);
-          expect(res.body.data[0]).to.have.all.keys(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'owner', 'supervisor', 'members', 'status']);
+          expect(res.body.data[0]).to.have.all.keys(['id', 'name', 'category', 'createdAt', 'updatedAt', 'deletedAt', 'eventId', 'description', 'answers', 'org', 'orgRef', 'state', 'city', 'owner', 'supervisor', 'members', 'status']);
           expect(res.body.data[0].owner).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
           expect(res.body.data[0].supervisor).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
           expect(res.body.data[0].members[0]).to.have.all.keys(['id', 'firstName', 'lastName', 'dob', 'gender', 'specialRequirements', 'email', 'phone', 'country', 'createdAt', 'updatedAt', 'deletedAt']);
