@@ -47,7 +47,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <label>Which of the following do you attend?</label>
+        <label>How are you involved with the Raspberry Pi community?</label>
         <div class="row row-no-margin">
           <div class="col-2fr">
             <select
@@ -57,9 +57,10 @@
               class="full-width-block"
               :class="{ error: errors.has('org') }">
               <option :value="undefined" disabled></option>
-              <option value="coderdojo">CoderDojo</option>
-              <option value="codeclub">Code Club</option>
-              <option value="raspberryjam">Raspberry Jam</option>
+              <option value="coderdojo">Attend a CoderDojo</option>
+              <option value="codeclub">Attend a Code Club</option>
+              <option value="raspberryjam">Attend a Raspberry Jam</option>
+              <option value="certified_educator">Student of Raspberry Pi Certified Educator</option>
               <option value="other">Other</option>
             </select>
             <span class="error-message" v-show="errors.has('org:required')">* You must select where this project is from</span>
@@ -82,7 +83,7 @@
     </div>
     <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
-        <label v-if="org === 'other'">Please describe.</label>
+        <label v-if="org === 'other'">If you are not associated with one of the above, please tell us how you learned about Coolest Projects. If you were told about Coolest Projects from a coding club or at school please add the name of this organisation or of your school.</label>
         <label v-else>Please tell us which Code Club or Raspberry Jam you attend.</label>
         <div class="row row-no-margin">
           <div class="col">
@@ -212,7 +213,7 @@
             :class="{ error: errors.has(`participant-${n}-gender`) }">
               <option value="male">Male</option>
               <option value="female">Female</option>
-              <option value="undisclosed">Rather not say</option>
+              <option value="undisclosed">Prefer not to say</option>
           </select>
           <span class="error-message" v-show="errors.has(`participant-${n}-gender:required`)">* We want everyone to enjoy Coolest Projects equally. Gathering this information helps us check how well we’re doing.</span>
         </div>

@@ -45,3 +45,17 @@ Server side integration tests requires a db. To run any test separately:
 ```
 docker-compose run --rm yarn server-int
 ```
+## Production setup
+### Connect to the psql
+```
+
+psql -h $PG_COOL_HOST -U $PG_COOL_USER $PG_COOL_DATABASE
+
+```
+
+### Create the event
+```
+
+INSERT INTO event(id, name, slug, location, categories, date, registration_start, registration_end, homepage, contact, questions, freeze_date, tz, external_ticketing_uri, requires_approval, seating_prepared, last_confirmation_email_date) VALUES(uuid_generate_v4(), 'Coolest Projects International 2019', 'cp-2019', 'RDS Main Hall, Dublin, Ireland', '{"VIS":"Visual programming", "WEB":"Web", "MOB":"Mobile apps", "HW": "Hardware", "3D": "3D design and animation", "ADV": "Advanced programming" }', null, null, '2018-04-14T12:00:00Z','www.coolestprojects.org/international','hello@coolestprojects.org','["social_project", "educational_project", "innovator_stage"]','2018-05-19T00:00:00Z','Europe/Dublin', null, false, false, null);
+
+```

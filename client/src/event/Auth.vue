@@ -41,7 +41,7 @@
               name="approval"/>
           </div>
           <div class="col-6fr">
-            <p for="approval">By selecting this you are agreeing that you are 13 or over, and are happy to be contacted about this project, Coolest Projects information and related news.</p>
+            <p for="approval">By selecting this you are agreeing that you are 16 or over, and are happy to be contacted about this project, Coolest Projects information and related news.</br>Read more about our <a href="https://www.raspberrypi.org/privacy/">Privacy Policy here</a>.</p>
             <span class="error-message" v-show="errors.has('approval:required')">* We need your permission to contact you. Please accept the terms and conditions.</span>
           </div>
         </label>
