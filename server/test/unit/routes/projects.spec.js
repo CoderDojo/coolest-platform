@@ -500,7 +500,7 @@ describe('router: project', () => {
       expect(spyUserCSVHeader).to.have.been.calledOnce;
       expect(spyUserCSVHeader).to.have.been.calledWith(['question_1', 'question_2']);
       expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"First name","Last name","Dob","Gender","Special requirements","Project name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
+      expect(send).to.have.been.calledWith('"First name","Last name","Dob","Gender","Special requirements","Project name","Description","Category","City","State","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
     });
   });
 
