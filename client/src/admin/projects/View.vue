@@ -1,8 +1,6 @@
 <template>
   <div v-if="project.name && event.categories">
-    <nav class="navbar navbar-branding">
-      <router-link :to="{ name: 'Admin' }">Coolest Projects Admin</router-link>
-    </nav>
+    <navigation :eventSlug="event.slug"></navigation>
     <div class="alert alert-danger" role="alert" v-if="project.deletedAt">
       <p><strong>This project has been deleted (at {{ project.deletedAt }})</strong></p>
     </div>
@@ -116,10 +114,14 @@
   import moment from 'moment';
   import ProjectService from '@/project/service';
   import FetchProjectMixin from '@/project/FetchProjectMixin';
+  import Navigation from '@/admin/Navigation';
 
   export default {
     name: 'AdminProjectsView',
     mixins: [FetchProjectMixin],
+    components: {
+      Navigation,
+    },
     data() {
       return {
         error: null,
