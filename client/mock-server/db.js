@@ -7,7 +7,7 @@ const categories = {
   evo: 'Evolution',
   hardware: 'Hardware',
 };
-const orgs = ['coderdojo', 'codeclub', 'raspberryjam', 'pioneers', 'other'];
+const orgs = ['coderdojo', 'codeclub', 'raspberryjam', 'other'];
 
 const users = [
   {
