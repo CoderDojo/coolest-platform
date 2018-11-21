@@ -25,7 +25,7 @@ docker build --rm=false -t coderdojo/coolest-platform:"${GIT_SHA1}-${TIMESTAMP}"
 docker push coderdojo/coolest-platform:"${GIT_SHA1}-${TIMESTAMP}"
 ./kubectl --namespace=coolest-namespace patch deployment coolest-platform -p '{"spec":{"template":{"spec":{"containers":[{"name":"coolest-platform","image":"coderdojo/coolest-platform:'"${GIT_SHA1}-${TIMESTAMP}"'"}]}}}}'
 # USA
-docker build --rm=false -t coderdojo/coolest-platform:usa -t coderdojo/coolest-platform:usa-"${GIT_SHA1}-${TIMESTAMP}" --build-arg "EVENT_SLUG=na-2019" --build-arg "GOOGLE_ANALYTICS_PROPERTY_ID=UA-112027238-4" .
+docker build --rm=false -t coderdojo/coolest-platform:usa -t coderdojo/coolest-platform:usa-"${GIT_SHA1}-${TIMESTAMP}" --build-arg "EVENT_SLUG=usa-2019" --build-arg "GOOGLE_ANALYTICS_PROPERTY_ID=UA-112027238-4" .
 docker push coderdojo/coolest-platform:usa
 docker push coderdojo/coolest-platform:usa-"${GIT_SHA1}-${TIMESTAMP}"
 ./kubectl --namespace=coolest-namespace-usa patch deployment coolest-platform -p '{"spec":{"template":{"spec":{"containers":[{"name":"coolest-platform","image":"coderdojo/coolest-platform:'usa-"${GIT_SHA1}-${TIMESTAMP}"'"}]}}}}'
