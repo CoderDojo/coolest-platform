@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <p>{{ successCopy }} "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} in the {{ event.location }}. For more information on the event check out <a :href="`https://${event.homepage}`">{{ event.homepage }}</a>. The next step: have fun and keep building your project!</p>
+        <p>{{ successCopy }} "{{ project.name }}" for {{ event.name }}. It's a full day of fun on {{ eventDateFormatted }} at the {{ event.location }}. For more information on the event check out <a :href="`https://${event.homepage}`">{{ event.homepage }}</a>. The next step: have fun and keep building your project!</p>
       </div>
     </div>
     <div class="row">
