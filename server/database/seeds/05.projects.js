@@ -9,7 +9,7 @@ exports.seed = (knex, Promise) =>
     const eventId = events[0].id;
     const categories = events[0].categories;
     const genders = ['male', 'female', 'undisclosed'];
-    const orgs = ['coderdojo', 'codeclub', 'raspberryjam', 'pioneers', 'other'];
+    const orgs = ['coderdojo', 'codeclub', 'raspberryjam', 'other'];
 
     function createProject(i) {
       const ownerId = uuid();

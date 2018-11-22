@@ -6,9 +6,6 @@
       <li class="nav-item">
         <router-link :to="{ name: 'AdminProjects', params: { eventSlug } }" class="nav-link">Projects List</router-link>
       </li>
-      <li class="nav-item">
-        <router-link :to="{ name: 'AdminProjectsStats', params: { eventSlug } }" class="nav-link">Stats</router-link>
-      </li>
     </ul>
   </nav>
 </template>

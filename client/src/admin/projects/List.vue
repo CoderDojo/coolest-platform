@@ -132,10 +132,6 @@
                 text: 'Raspberry Jam',
               },
               {
-                id: 'pioneers',
-                text: 'Pioneers',
-              },
-              {
                 id: 'other',
                 text: 'Other',
               },
