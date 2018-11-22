@@ -318,7 +318,7 @@ describe('ProjectForm component', () => {
             verified: 1,
             deleted: 0,
             stage: { ne$: 4 },
-            fields$: ['id', 'name'],
+            fields$: ['id', 'name', 'place'],
             sort$: {
               name: 1,
             },
