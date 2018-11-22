@@ -5,13 +5,13 @@
         <label>Project name</label>
         <input
           v-model="projectDetails.name"
-          v-validate="'required|max:50'"
+          v-validate="'required|max:45'"
           data-vv-name="projectName"
           placeholder="A few words to describe your project"
           class="full-width-block"
           :class="{ error: errors.has('projectName') }" />
         <span class="error-message" v-show="errors.has('projectName:required')">* A project name is required</span>
-        <span class="error-message" v-show="errors.has('projectName:max')">A project name cannot be longer than 50 characters</span>
+        <span class="error-message" v-show="errors.has('projectName:max')">A project name cannot be longer than 45 characters</span>
       </div>
     </div>
     <div class="row">
@@ -19,14 +19,14 @@
         <label>Project description</label>
         <textarea
           v-model="projectDetails.description"
-          v-validate="'required|max:1000'"
+          v-validate="'required|max:300'"
           data-vv-name="projectDescription"
           placeholder="A few sentences to describe what your project is about and what technology you are using to build it. This will be used on a project poster and on the website on the day of the event."
           class="full-width-block"
           rows="4"
           :class="{ error: errors.has('projectDescription') }"></textarea>
         <span class="error-message" v-show="errors.has('projectDescription:required')">* A project description is required</span>
-        <span class="error-message" v-show="errors.has('projectDescription:max')">A project description cannot be longer than 1000 characters</span>
+        <span class="error-message" v-show="errors.has('projectDescription:max')">This description will be printed on a desksheet where you present your project. Please keep it short so it's easily readable.</span>
       </div>
     </div>
     <div class="row">
