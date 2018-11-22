@@ -45,10 +45,11 @@
   import FetchEventMixin from '@/event/FetchEventMixin';
   import AdminEventsService from '@/admin/events/service';
   import eventService from '@/event/service';
+  import Organisations from '@/project/Organisations';
 
   export default {
     name: 'AdminProjects',
-    mixins: [FetchEventMixin],
+    mixins: [FetchEventMixin, Organisations],
     components: {
       Navigation,
     },
@@ -118,24 +119,7 @@
           },
           listColumns: {
             category: this.categoriesFilterOptions,
-            org: [
-              {
-                id: 'coderdojo',
-                text: 'CoderDojo',
-              },
-              {
-                id: 'codeclub',
-                text: 'Code Club',
-              },
-              {
-                id: 'raspberryjam',
-                text: 'Raspberry Jam',
-              },
-              {
-                id: 'other',
-                text: 'Other',
-              },
-            ],
+            org: this.orgListing,
             status: [
               {
                 id: 'pending',
