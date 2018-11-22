@@ -34,53 +34,58 @@ class Mailing {
         name: 'Coolest Projects Support',
       },
       subject: 'Welcome on CP',
-      substitutions: {
-        verificationSentence: event.requiresApproval ? 'You will be contacted by the Coolest Projects team if your project is accepted.' : '',
+      dynamic_template_data: {
         eventName: event.name,
         eventDate: event.date,
         eventLocation: event.location,
         eventWebsite: event.homepage,
         eventManageLink: process.env.HOSTNAME,
         projectName: htmlEntities.encode(project.name),
+        ...Mailing.customisationValues(event),
       },
       categories: this.categories.concat([`cp-${event.slug}-registration`]),
-      template_id: '6d20e65f-ae16-4b25-a17f-66d0398f474f',
+      template_id: 'd-23da4e90859043bf81d7c3c1d4c14a5c',
     });
   }
 
-  sendReturningAuthEmail(email, { slug, contact }, token) {
+  sendReturningAuthEmail(email, event, token) {
     return this.send({
       to: email,
       from: {
-        email: contact,
+        email: event.contact,
         name: 'Coolest Projects',
       },
       reply_to: {
-        email: contact,
+        email: event.contact,
         name: 'Coolest Projects Support',
       },
-      subject: 'Welcome on CP',
-      substitutions: {
-        link: `${process.env.HOSTNAME}/events/${htmlEntities.encode(slug)}/my-projects?token=${token}`,
-        contact,
+      subject: 'Welcome back on CP',
+      dynamic_template_data: {
+        link: `${process.env.HOSTNAME}/events/${htmlEntities.encode(event.slug)}/my-projects?token=${token}`,
+        contact: event.contact,
+        ...Mailing.customisationValues(event),
       },
-      categories: this.categories.concat([`cp-${slug}-returning-auth`]),
-      template_id: '9f9ecdb3-df2b-403a-9f79-c80f91adf0ca',
+      categories: this.categories.concat([`cp-${event.slug}-returning-auth`]),
+      template_id: 'd-fdb597373fb14b8fba7f7938a05ca0e3',
     });
   }
 
   sendConfirmAttendanceEmail(projects, event) {
     const BATCH_SIZE = 1000;
     const emailPayloads = [];
+    const customValues = Mailing.customisationValues(event);
     for (let i = 0; i < projects.length; i += BATCH_SIZE) {
       emailPayloads.push({
         personalizations: projects.slice(i, i + BATCH_SIZE).map((project) => {
           return {
             to: project.owner.email,
-            substitutions: {
+            // Bugfix for https://github.com/sendgrid/sendgrid-nodejs/issues/747
+            substitutions: { },
+            dynamic_template_data: {
               projectName: htmlEntities.encode(project.name),
               attendingUrl: `${process.env.HOSTNAME}/events/${event.slug}/projects/${project.id}/status/confirmed`,
               notAttendingUrl: `${process.env.HOSTNAME}/events/${event.slug}/projects/${project.id}/status/canceled`,
+              ...customValues,
             },
           };
         }),
@@ -92,20 +97,27 @@ class Mailing {
           email: event.contact,
           name: 'Coolest Projects Support',
         },
-        substitutions: {
+        dynamic_template_data: {
           eventName: event.name,
           eventLocation: event.location,
           eventDate: event.date,
           eventContact: event.contact,
           eventUrl: `${process.env.HOSTNAME}/events/${event.slug}`,
+          ...customValues,
         },
         categories: this.categories.concat([`cp-${event.slug}-confirm-attendance`]),
-        template_id: '3578d5f1-0212-4c98-94f3-8ab0b6735b22',
+        template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
       });
     }
     return Promise.all(emailPayloads.map((payload) => {
       return this.send(payload);
     }));
+  }
+  static customisationValues(event) {
+    return {
+      [event.slug]: true,
+      requiresApproval: event.requiresApproval,
+    };
   }
 }
 

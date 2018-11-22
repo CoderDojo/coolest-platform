@@ -82,7 +82,7 @@ describe('mailing controllers', () => {
           date: 'Friday 6th',
           location: 'there',
           homepage: 'cp.orgs/usa',
-          requiresApproval: false,
+          requiresApproval: true,
           contact: 'help@coolestprojects.org',
         };
         // STUBS
@@ -110,74 +110,18 @@ describe('mailing controllers', () => {
             name: 'Coolest Projects Support',
           },
           subject: 'Welcome on CP',
-          substitutions: {
-            verificationSentence: '',
+          dynamic_template_data: {
             projectName: 'myLittleProject',
             eventName: mockEvent.name,
             eventDate: mockEvent.date,
             eventLocation: mockEvent.location,
             eventWebsite: mockEvent.homepage,
             eventManageLink: process.env.HOSTNAME,
+            requiresApproval: true,
+            'cp-2018': true,
           },
           categories: ['coolest-projects', 'cp-cp-2018-registration'],
-          template_id: '6d20e65f-ae16-4b25-a17f-66d0398f474f',
-        });
-      });
-      it('should call the mailer instance with the extra sentence set', async () => {
-        // DATA
-        const apiKey = 'apiKey';
-        const configMock = { apiKey };
-        const mockProject = {
-          name: 'myLittleProject',
-          users: [
-            { type: 'supervisor', email: 'doubidou@example.com' },
-          ],
-        };
-        const mockEvent = {
-          name: 'cp 2018',
-          slug: 'cp-2018',
-          date: 'Friday 6th',
-          location: 'there',
-          homepage: 'cp.orgs/usa',
-          requiresApproval: true,
-          contact: 'enquiries+bot@coderdojo.org',
-        };
-        // STUBS
-        const Mailing = proxy('../../../controllers/mailing', {
-          '@sendgrid/mail': {
-            setApiKey: setApiKeyStub,
-            setSubstitutionWrappers: setSubstitutionWrappersStub,
-            send: sendStub,
-          },
-        });
-        // ACT
-        const mailingController = new Mailing(configMock);
-        mailingController.sendWelcomeEmail(creatorMock, mockProject, mockEvent);
-
-        // Build the request
-        expect(mailingController.mailer.send).to.have.been.calledOnce;
-        expect(mailingController.mailer.send).to.have.been.calledWith({
-          to: 'doubidou@example.com',
-          from: {
-            email: 'enquiries+bot@coderdojo.org',
-            name: 'Coolest Projects',
-          },
-          reply_to: {
-            email: 'enquiries+bot@coderdojo.org',
-            name: 'Coolest Projects Support',
-          },
-          subject: 'Welcome on CP',
-          substitutions: {
-            verificationSentence: 'You will be contacted by the Coolest Projects team if your project is accepted.',
-            projectName: 'myLittleProject',
-            eventName: mockEvent.name,
-            eventDate: mockEvent.date,
-            eventLocation: mockEvent.location,
-            eventWebsite: mockEvent.homepage,
-            eventManageLink: process.env.HOSTNAME,
-          },
-          categories: ['coolest-projects', 'cp-cp-2018-registration'],
-          template_id: '6d20e65f-ae16-4b25-a17f-66d0398f474f',
+          template_id: 'd-23da4e90859043bf81d7c3c1d4c14a5c',
         });
       });
     });
@@ -190,7 +134,7 @@ describe('mailing controllers', () => {
         const email = 'dada@da';
         const slug = 'cp-2018';
         const contact = 'help@coolestprojects.org';
-        const event = { slug, contact };
+        const event = { slug, contact, requiresApproval: true };
         const token = 'newtoken';
         // STUBS
         const Mailing = proxy('../../../controllers/mailing', {
@@ -216,13 +160,15 @@ describe('mailing controllers', () => {
             email: 'help@coolestprojects.org',
             name: 'Coolest Projects Support',
           },
-          subject: 'Welcome on CP',
-          substitutions: {
+          subject: 'Welcome back on CP',
+          dynamic_template_data: {
             link: 'http://platform.local/events/cp-2018/my-projects?token=newtoken',
             contact,
+            requiresApproval: true,
+            'cp-2018': true,
           },
           categories: ['coolest-projects', 'cp-cp-2018-returning-auth'],
-          template_id: '9f9ecdb3-df2b-403a-9f79-c80f91adf0ca',
+          template_id: 'd-fdb597373fb14b8fba7f7938a05ca0e3',
         });
       });
     });
@@ -247,10 +193,13 @@ describe('mailing controllers', () => {
         for (let i = offset; i < amount + offset; i += 1) {
           personalizations.push({
             to: `owner${i}@example.com`,
-            substitutions: {
+            substitutions: { },
+            dynamic_template_data: {
               projectName: `Sample Project ${i}`,
               attendingUrl: `${process.env.HOSTNAME}/events/${eventSlug}/projects/${i}/status/confirmed`,
               notAttendingUrl: `${process.env.HOSTNAME}/events/${eventSlug}/projects/${i}/status/canceled`,
+              requiresApproval: false,
+              intl: true,
             },
           });
         }
@@ -273,6 +222,7 @@ describe('mailing controllers', () => {
           date: 'Some time',
           contact: 'hello@coolestprojects.org',
           slug: 'intl',
+          requiresApproval: false,
         };
         const projects = generateProjects(2400);
         const mailingController = new Mailing(configMock);
@@ -294,15 +244,17 @@ describe('mailing controllers', () => {
             email: 'hello@coolestprojects.org',
             name: 'Coolest Projects Support',
           },
-          substitutions: {
+          dynamic_template_data: {
             eventName: 'International',
             eventLocation: 'Over there',
             eventDate: 'Some time',
             eventContact: 'hello@coolestprojects.org',
             eventUrl: `${process.env.HOSTNAME}/events/intl`,
+            requiresApproval: false,
+            intl: true,
           },
           categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
-          template_id: '3578d5f1-0212-4c98-94f3-8ab0b6735b22',
+          template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
         });
         expect(sendStub.getCall(1).args[0].personalizations[0].to).to.equal('owner1000@example.com');
         expect(sendStub.getCall(1).args[0].personalizations[999].to).to.equal('owner1999@example.com');
@@ -316,15 +268,17 @@ describe('mailing controllers', () => {
             email: 'hello@coolestprojects.org',
             name: 'Coolest Projects Support',
           },
-          substitutions: {
+          dynamic_template_data: {
             eventName: 'International',
             eventLocation: 'Over there',
             eventDate: 'Some time',
             eventContact: 'hello@coolestprojects.org',
             eventUrl: `${process.env.HOSTNAME}/events/intl`,
+            requiresApproval: false,
+            intl: true,
           },
           categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
-          template_id: '3578d5f1-0212-4c98-94f3-8ab0b6735b22',
+          template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
         });
         expect(sendStub.getCall(2).args[0].personalizations[0].to).to.equal('owner2000@example.com');
         expect(sendStub.getCall(2).args[0].personalizations[399].to).to.equal('owner2399@example.com');
@@ -338,15 +292,39 @@ describe('mailing controllers', () => {
             email: 'hello@coolestprojects.org',
             name: 'Coolest Projects Support',
           },
-          substitutions: {
+          dynamic_template_data: {
             eventName: 'International',
             eventLocation: 'Over there',
             eventDate: 'Some time',
             eventContact: 'hello@coolestprojects.org',
             eventUrl: `${process.env.HOSTNAME}/events/intl`,
+            requiresApproval: false,
+            intl: true,
           },
           categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
-          template_id: '3578d5f1-0212-4c98-94f3-8ab0b6735b22',
+          template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
+        });
+      });
+    });
+    describe('customisationValue', () => {
+      it('should return values from the event config', () => {
+        const Mailing = proxy('../../../controllers/mailing', {
+          '@sendgrid/mail': {
+            setApiKey: setApiKeyStub,
+            setSubstitutionWrappers: setSubstitutionWrappersStub,
+          },
+        });
+        const event = {
+          name: 'International',
+          location: 'Over there',
+          date: 'Some time',
+          contact: 'hello@coolestprojects.org',
+          slug: 'intl',
+          requiresApproval: false,
+        };
+        expect(Mailing.customisationValues(event)).to.eql({
+          intl: true,
+          requiresApproval: false,
         });
       });
     });
