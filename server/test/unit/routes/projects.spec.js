@@ -8,8 +8,8 @@ describe('router: project', () => {
   describe('post', () => {
     let sandbox;
     let handler;
-    const projectController = class {};
-    const userController = class {};
+    const projectController = class { };
+    const userController = class { };
     let mailingStub;
     let loggerStub;
     let statusStub;
@@ -199,8 +199,8 @@ describe('router: project', () => {
   });
   describe('param', () => {
     let handler;
-    const projectController = class {};
-    const userController = class {};
+    const projectController = class { };
+    const userController = class { };
     let sandbox;
     before(() => {
       sandbox = sinon.createSandbox();
@@ -231,8 +231,8 @@ describe('router: project', () => {
 
   describe('get :id', () => {
     let handler;
-    const projectController = class {};
-    const userController = class {};
+    const projectController = class { };
+    const userController = class { };
     let sandbox;
 
     before(() => {
@@ -268,8 +268,8 @@ describe('router: project', () => {
 
   describe('GET /', () => {
     let handler;
-    const projectController = class {};
-    const userController = class {};
+    const projectController = class { };
+    const userController = class { };
     const sandbox = sinon.createSandbox();
     const spyProjectCSVHeader = sandbox.spy(projectCSVHeader);
     const spyUserCSVHeader = sandbox.spy(userCSVHeader);
@@ -376,7 +376,7 @@ describe('router: project', () => {
       expect(spyProjectCSVHeader).to.have.been.calledOnce;
       expect(spyProjectCSVHeader).to.have.been.calledWith(['question_1', 'question_2'], 0);
       expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"Project name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
+      expect(send).to.have.been.calledWith('"Project name","Description","Category","City","State","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
     });
 
     it('should format data for csv', async () => {
@@ -406,6 +406,8 @@ describe('router: project', () => {
             name: 'Desu',
             description: 'Blah blah blah',
             category: 'HTML',
+            city: 'Cambridge',
+            state: 'Cambridgeshire',
             owner: {
               email: 'test@test.com',
             },
@@ -450,8 +452,8 @@ describe('router: project', () => {
       expect(mockRes.setHeader).to.have.been.calledOnce;
       expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
       expect(send).to.have.been.calledOnce;
-      const csvHeader = '"Project name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2","Participant 1 First Name","Participant 1 Last Name","Participant 1 Dob","Participant 1 Gender","Participant 1 Special requirements","Participant 2 First Name","Participant 2 Last Name","Participant 2 Dob","Participant 2 Gender","Participant 2 Special requirements"';
-      const csvContent = '"Desu","Blah blah blah","HTML","test@test.com",,,"2018-1-19","2018-1-19","Sup first","Sup last","sup@sup.com","1234",true,false,"Foo 1","Bar 1","DOB 1","Gender 1","sr 1","Foo 2","Bar 2","DOB 2","Gender 2","sr 2"';
+      const csvHeader = '"Project name","Description","Category","City","State","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2","Participant 1 First Name","Participant 1 Last Name","Participant 1 Dob","Participant 1 Gender","Participant 1 Special requirements","Participant 2 First Name","Participant 2 Last Name","Participant 2 Dob","Participant 2 Gender","Participant 2 Special requirements"';
+      const csvContent = '"Desu","Blah blah blah","HTML","Cambridge","Cambridgeshire","test@test.com",,,"2018-1-19","2018-1-19","Sup first","Sup last","sup@sup.com","1234",true,false,"Foo 1","Bar 1","DOB 1","Gender 1","sr 1","Foo 2","Bar 2","DOB 2","Gender 2","sr 2"';
       expect(send).to.have.been.calledWith(`${csvHeader}\n${csvContent}`);
     });
 
@@ -498,14 +500,14 @@ describe('router: project', () => {
       expect(spyUserCSVHeader).to.have.been.calledOnce;
       expect(spyUserCSVHeader).to.have.been.calledWith(['question_1', 'question_2']);
       expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"First name","Last name","Dob","Gender","Special requirements","Project name","Description","Category","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
+      expect(send).to.have.been.calledWith('"First name","Last name","Dob","Gender","Special requirements","Project name","Description","Category","City","State","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
     });
   });
 
   describe('put', () => {
     let handler;
-    const projectController = class {};
-    const userController = class {};
+    const projectController = class { };
+    const userController = class { };
     let sandbox;
     let errorHandler;
     before(() => {
@@ -748,8 +750,8 @@ describe('router: project', () => {
 
   describe('patch', () => {
     let handler;
-    const projectController = class {};
-    const userController = class {};
+    const projectController = class { };
+    const userController = class { };
     let sandbox;
     let errorHandler;
     before(() => {
@@ -830,8 +832,8 @@ describe('router: project', () => {
     let handler;
     let sandbox;
     let errorHandler;
-    const projectController = class {};
-    const userController = class {};
+    const projectController = class { };
+    const userController = class { };
     before(() => {
       sandbox = sinon.createSandbox();
       handlers = (proxy('../../../routes/handlers/projects', {

@@ -15,6 +15,14 @@ describe('project CSV header', () => {
       value: 'category',
     },
     {
+      label: 'City',
+      value: 'city',
+    },
+    {
+      label: 'State',
+      value: 'state',
+    },
+    {
       label: 'Owner Email',
       value: 'owner.email',
     },
