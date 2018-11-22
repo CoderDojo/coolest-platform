@@ -57,11 +57,9 @@
               class="full-width-block"
               :class="{ error: errors.has('org') }">
               <option :value="undefined" disabled></option>
-              <option value="coderdojo">Attend a CoderDojo</option>
-              <option value="codeclub">Attend a Code Club</option>
-              <option value="raspberryjam">Attend a Raspberry Jam</option>
-              <option value="certified_educator">Student of Raspberry Pi Certified Educator</option>
-              <option value="other">Other</option>
+              <option v-for="{ id, text } in orgRegistration" :value="id">
+              {{ text }}
+              </option>
             </select>
             <span class="error-message" v-show="errors.has('org:required')">* You must select where this project is from</span>
           </div>
@@ -314,6 +312,7 @@
   import { clone, pick } from 'lodash';
   import moment from 'moment';
   import ProjectService from '@/project/service';
+  import Organisations from '@/project/Organisations';
 
   export default {
     name: 'ProjectForm',
@@ -326,6 +325,7 @@
         type: Object,
       },
     },
+    mixins: [Organisations],
     components: {
       VueDobPicker,
       ModelListSelect,
