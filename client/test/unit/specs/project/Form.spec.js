@@ -345,7 +345,7 @@ describe('ProjectForm component', () => {
           city: '',
         };
 
-        const dojos = [{
+        vm.dojos = [{
           id: 'e8720e7a-ea30-4c6a-b10c-283165281db2',
           name: 'Cambridge Dojo',
           place: { nameWithHierarchy: 'Cambridgeshire' },
@@ -353,7 +353,7 @@ describe('ProjectForm component', () => {
 
         const id = 'e8720e7a-ea30-4c6a-b10c-283165281db2';
 
-        vm.getCity(dojos, id);
+        vm.getCity(id);
         expect(vm.projectDetails.city).to.equal('Cambridgeshire');
       });
     });

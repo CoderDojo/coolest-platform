@@ -74,7 +74,7 @@
               :list="dojos" placeholder="Type your Dojo name to select"
               option-value="id"
               option-text="name"
-              @input="getCity(dojos, $event)"
+              @input="getCity($event)"
               :isError="errors.has('orgRef')"></model-list-select>
           </div>
         </div>
@@ -437,8 +437,8 @@
           },
         })).body;
       },
-      getCity(dojos, id) {
-        const result = dojos.find(dojo => dojo.id === id);
+      getCity(id) {
+        const result = this.dojos.find(dojo => dojo.id === id);
         this.projectDetails.city = result.place.nameWithHierarchy;
       },
       async onSubmit() {
