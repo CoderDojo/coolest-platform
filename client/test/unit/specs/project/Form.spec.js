@@ -318,7 +318,7 @@ describe('ProjectForm component', () => {
             verified: 1,
             deleted: 0,
             stage: { ne$: 4 },
-            fields$: ['id', 'name'],
+            fields$: ['id', 'name', 'place'],
             sort$: {
               name: 1,
             },
@@ -332,6 +332,32 @@ describe('ProjectForm component', () => {
         expect(vm.dojos).to.equal('bar');
       });
     });
+    describe('getCity', () => {
+      it('sets the projectDetails.city to nameWithHierarchy from the corresponding dojo', () => {
+        vm.projectDetails = {
+          id: 'foo',
+          name: 'MyProject',
+          description: 'Some desc',
+          category: 'scratch',
+          org: 'codeclub',
+          orgRef: 'That one!',
+          state: 'Cambridgeshire',
+          city: '',
+        };
+
+        vm.dojos = [{
+          id: 'e8720e7a-ea30-4c6a-b10c-283165281db2',
+          name: 'Cambridge Dojo',
+          place: { nameWithHierarchy: 'Cambridgeshire' },
+        }];
+
+        const id = 'e8720e7a-ea30-4c6a-b10c-283165281db2';
+
+        vm.getCity(id);
+        expect(vm.projectDetails.city).to.equal('Cambridgeshire');
+      });
+    });
+
     describe('onSubmit', () => {
       it('should create the project with ProjectService then go to a confirmation page if form is valid and no project id is defined', async () => {
         // ARRANGE

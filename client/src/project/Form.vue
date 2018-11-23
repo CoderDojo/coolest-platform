@@ -73,6 +73,7 @@
               :list="dojos" placeholder="Type your Dojo name to select"
               option-value="id"
               option-text="name"
+              @input="getCity($event)"
               :isError="errors.has('orgRef')"></model-list-select>
           </div>
         </div>
@@ -96,19 +97,19 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
         <label>State/County</label>
-        <input type="text" v-model="projectDetails.state" v-validate="'required'" data-vv-name="state" class="full-width-block" :class="{ error: errors.has('state:required') }" />
+        <input type="text" v-model="projectDetails.state" v-validate="org && org !== 'coderdojo' ? 'required' : ''" data-vv-name="state" class="full-width-block" :class="{ error: errors.has('state:required') }" />
         <span class="error-message" v-show="errors.has('state:required')">* State is required.</span>
       </div>
     </div>
-    <div class="row">
+    <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
         <label>City/Town</label>
         <div class="row row-no-margin">
           <div class="col">
-            <input type="text" v-model="projectDetails.city" v-validate="'required'" data-vv-name="city" class="full-width-block" :class="{ error: errors.has('city:required') }" />
+            <input type="text" v-model="projectDetails.city" v-validate="org && org !== 'coderdojo' ? 'required' : ''" data-vv-name="city" class="full-width-block" :class="{ error: errors.has('city:required') }" />
             <span class="error-message" v-show="errors.has('city:required')">* City is required.</span>
           </div>
         </div>
@@ -430,12 +431,16 @@
             verified: 1,
             deleted: 0,
             stage: { ne$: 4 },
-            fields$: ['id', 'name'],
+            fields$: ['id', 'name', 'place'],
             sort$: {
               name: 1,
             },
           },
         })).body;
+      },
+      getCity(id) {
+        const result = this.dojos.find(dojo => dojo.id === id);
+        this.projectDetails.city = result.place.nameWithHierarchy;
       },
       async onSubmit() {
         this.submitted = true;
