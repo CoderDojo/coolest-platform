@@ -1,6 +1,5 @@
 const Knex = require('knex');
 const proxy = require('proxyquire');
-const seeder = require('./database/seed');
 const utils = require('./integration/utils');
 
 const createdDbs = [];
@@ -34,9 +33,8 @@ module.exports.setup = (async () => {
     '../bin/www',
     {
       '../config/db.json': dbConfig,
-      '../database/seed': seeder,
     },
-  )({ seed: true });
+  )();
   global.db = app.app.locals.bookshelf.knex;
   createdDbs.push({
     db: global.db,

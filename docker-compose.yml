@@ -17,6 +17,8 @@ services:
       # args, but we don't use the Dockerfile in dev
       EVENT_SLUG: 'cp-2018'
       GOOGLE_ANALYTICS_PROPERTY_ID: 'UA-112027238-3'
+      MASTER_ADMIN_PASSWORD: 'banana'
+      MASTER_ADMIN_EMAIL: 'hello@coolestprojects.org'
     ports:
       - 8080:8080
       - 9229:9229
@@ -40,6 +42,8 @@ services:
     working_dir: /usr/src/app
     environment:
       NODE_ENV: development
+      MASTER_ADMIN_PASSWORD: 'banana'
+      MASTER_ADMIN_EMAIL: 'hello@coolestprojects.org'
     user: root
     depends_on:
       - db
