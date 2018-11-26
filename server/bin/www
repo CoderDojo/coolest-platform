@@ -6,10 +6,9 @@ const appServer = require('..')();
 const logger = require('../util/logger');
 const debug = require('debug')('server:server');
 const http = require('http');
-const seeder = require('../database/seed');
 const yargs = require('yargs');
 
-const init = async (seed) => {
+const init = async () => {
   /**
    * Get port from environment and store in Express.
    */
@@ -28,11 +27,6 @@ const init = async (seed) => {
   server.on('close', () => {
     app.locals.bookshelf.knex.destroy();
   });
-
-  // Run migrations if passed down
-  if (seed) {
-    await seeder(app.locals.bookshelf);
-  }
 
   /**
    * Listen on provided port, on all network interfaces.
@@ -105,7 +99,7 @@ function normalizePort(val) {
  */
 if (require.main === module) {
   const argv = yargs.argv;
-  init(argv.seed).catch((err) => {
+  init().catch((err) => {
     logger.error(`Unhandled error: ${err}`);
   });
 } else {

@@ -18,7 +18,7 @@ exports.seed = (knex, Promise) =>
       categories: { SC: 'Scratch', WEB: 'Websites & Web Games', EVO: 'Evolution' },
       registration_start: eventDate.clone().subtract(3, 'days'),
       registration_end: eventDate.clone().subtract(1, 'days'),
-      freeze_date: eventDate,
+      freeze_date: eventDate.clone().subtract(1, 'days').toDate(),
       external_ticketing_uri: 'https://tickets.coolestprojects.org',
     });
   });
