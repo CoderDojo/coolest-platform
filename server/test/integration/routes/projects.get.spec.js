@@ -179,6 +179,7 @@ describe('integration: projects with open event by default', () => {
     });
     describe('with csv format', () => {
       const projectCSVColumns = [
+        '"Project ID"',
         '"Project name"',
         '"Description"',
         '"Category"',
