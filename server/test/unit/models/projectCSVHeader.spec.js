@@ -3,6 +3,10 @@ const CSVHeader = require('../../../models/projectCSVHeader');
 describe('project CSV header', () => {
   const baseHeader = [
     {
+      label: 'Project ID',
+      value: 'id',
+    },
+    {
       label: 'Project name',
       value: 'name',
     },

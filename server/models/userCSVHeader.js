@@ -3,6 +3,7 @@ const CSVHeader = require('./CSVHeader');
 module.exports = class UserCSVHeader extends CSVHeader {
   get fields() {
     let fields = [
+      { label: 'Project ID', value: 'id' },
       { label: 'First name', value: 'firstName' },
       { label: 'Last name', value: 'lastName' },
       { label: 'Dob', value: 'dob' },
