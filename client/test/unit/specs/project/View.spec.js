@@ -7,7 +7,6 @@ describe('ProjectView', () => {
 
   const ProjectViewWithMocks = ProjectView({
     '@/project/service': { status: { update: sandbox.stub().resolves() } },
-    // '@/project/FetchProjectMixin': sandbox.stub(),
   });
 
   beforeEach(() => {
