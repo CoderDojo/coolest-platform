@@ -53,6 +53,10 @@
       </table>
       <h2>Extra details</h2>
       <table class="table">
+        <tr>
+          <th>Status</th>
+          <td>{{ project.status }}</td>
+        </tr>
         <tr v-for="(value, key) in project.answers">
           <td>{{ key }}</td>
           <td>{{ value }}</td>
@@ -103,8 +107,14 @@
       </table>
       <hr>
       <h2>Admin Actions</h2>
-      <button class="btn btn-outline-danger" v-if="!project.deletedAt" v-on:click="confirmDeleteProject()">Delete Project</button>
-      <p v-else>No actions available</p>
+        <button class="btn btn-outline-info" v-if='project.status === "pending"' v-on:click="updateProjectStatus('confirmed')">Set to confirmed</button>
+        <button class="btn btn-outline-info" v-if='project.status === "pending"' v-on:click="updateProjectStatus('canceled')">Set to canceled</button>
+        <button class="btn btn-outline-info" v-if='project.status === "confirmed"' v-on:click="updateProjectStatus('canceled')">Set to canceled</button>
+        <button class="btn btn-outline-info" v-if='project.status === "confirmed"' v-on:click="updateProjectStatus('pending')">Set to pending</button>
+        <button class="btn btn-outline-info" v-if='project.status === "canceled"' v-on:click="updateProjectStatus('confirmed')">Set to confirmed</button>
+        <button class="btn btn-outline-info" v-if='project.status === "canceled"' v-on:click="updateProjectStatus('pending')">Set to pending</button>
+        <br><button class="btn btn-outline-danger" v-if="!project.deletedAt" v-on:click="confirmDeleteProject()">Delete Project</button>
+      </div>
     </div>
   </div>
 </template>
@@ -142,6 +152,18 @@
             deletedAt: timestamp,
             users: this.project.members.concat(this.project.supervisor),
           });
+          this.$router.go();
+        } catch (err) {
+          this.error = err;
+        }
+      },
+      async updateProjectStatus(status) {
+        try {
+          await ProjectService.status.update(
+            this.event.id,
+            this.$route.params.projectId,
+            { status },
+          );
           this.$router.go();
         } catch (err) {
           this.error = err;

@@ -123,15 +123,15 @@
             status: [
               {
                 id: 'pending',
-                text: 'Pending',
+                text: 'pending',
               },
               {
                 id: 'canceled',
-                text: 'Canceled',
+                text: 'canceled',
               },
               {
                 id: 'confirmed',
-                text: 'Confirmed',
+                text: 'confirmed',
               },
             ],
           },
@@ -220,7 +220,7 @@
       color: white;
       cursor: pointer;
       &--stroke {
-        text-decoration: line-through; 
+        text-decoration: line-through;
       }
     }
   }
