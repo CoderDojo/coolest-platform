@@ -206,7 +206,7 @@ describe('integration: projects with open event by default', () => {
         '"Participant 1 Gender"',
         '"Participant 1 Special requirements"',
       ]);
-      const userCSVColumns = ['"Project ID"', '"First name"', '"Last name"', '"Dob"', '"Gender"', '"Special requirements"'].concat(projectCSVColumns);
+      const userCSVColumns = ['"Project ID"', '"First name"', '"Last name"', '"Dob"', '"Gender"', '"Special requirements"'].concat(projectCSVColumns.slice(1));
       it('should return a csv', async () => {
         await request(app)
           .get(`/api/v1/events/${eventId}/projects?limit=50&orderBy=supervisor.email&query[supervisor.email]=testsupervisor1&format=csv&ascending=false&token=${
