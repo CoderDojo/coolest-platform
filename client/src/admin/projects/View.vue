@@ -108,11 +108,11 @@
       <hr>
       <h2>Admin Actions</h2>
         <button class="btn btn-outline-info" v-if='project.status === "pending"' v-on:click="updateProjectStatus('confirmed')">Set to confirmed</button>
-        <button class="btn btn-outline-info" v-if='project.status === "pending"' v-on:click="updateProjectStatus('cancelled')">Set to cancelled</button>
-        <button class="btn btn-outline-info" v-if='project.status === "confirmed"' v-on:click="updateProjectStatus('cancelled')">Set to cancelled</button>
+        <button class="btn btn-outline-info" v-if='project.status === "pending"' v-on:click="updateProjectStatus('canceled')">Set to canceled</button>
+        <button class="btn btn-outline-info" v-if='project.status === "confirmed"' v-on:click="updateProjectStatus('canceled')">Set to canceled</button>
         <button class="btn btn-outline-info" v-if='project.status === "confirmed"' v-on:click="updateProjectStatus('pending')">Set to pending</button>
-        <button class="btn btn-outline-info" v-if='project.status === "cancelled"' v-on:click="updateProjectStatus('confirmed')">Set to confirmed</button>
-        <button class="btn btn-outline-info" v-if='project.status === "cancelled"' v-on:click="updateProjectStatus('pending')">Set to pending</button>
+        <button class="btn btn-outline-info" v-if='project.status === "canceled"' v-on:click="updateProjectStatus('confirmed')">Set to confirmed</button>
+        <button class="btn btn-outline-info" v-if='project.status === "canceled"' v-on:click="updateProjectStatus('pending')">Set to pending</button>
         <br><button class="btn btn-outline-danger" v-if="!project.deletedAt" v-on:click="confirmDeleteProject()">Delete Project</button>
       </div>
     </div>
