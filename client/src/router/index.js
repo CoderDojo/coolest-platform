@@ -20,6 +20,7 @@ const AdminLogin = () => import(/* webpackChunkName: "admin" */ '@/admin/auth/Lo
 const AdminProjectsList = () => import(/* webpackChunkName: "admin" */ '@/admin/projects/List');
 const AdminProjectsView = () => import(/* webpackChunkName: "admin" */ '@/admin/projects/View');
 const AdminProjectsEdit = () => import(/* webpackChunkName: "admin" */ '@/admin/projects/Edit');
+const AdminUsersView = () => import(/* webpackChunkName: "admin" */ '@/admin/users/Create');
 const AdminProjectExtraDetails = () =>
   import(/* webpackChunkName: "admin" */ '@/admin/projects/ExtraDetails');
 
@@ -132,6 +133,12 @@ export default new Router({
               path: '',
               name: 'AdminProjects',
               component: AdminProjectsList,
+              props: true,
+            },
+            {
+              path: 'users',
+              name: 'AdminUsersView',
+              component: AdminUsersView,
               props: true,
             },
             {

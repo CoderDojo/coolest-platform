@@ -113,12 +113,36 @@ class Mailing {
       return this.send(payload);
     }));
   }
+
   static customisationValues(event) {
     return {
       [event.slug]: true,
       requiresApproval: event.requiresApproval,
     };
   }
+
+  sendNewAdminEmail(email, password) {
+    const sender = process.env.MASTER_ADMIN_EMAIL;
+    return this.send({
+      to: email,
+      from: {
+        email: sender,
+        name: 'Coolest Projects',
+      },
+      reply_to: {
+        email: sender, 
+        name: 'Coolest Projects Support',
+      },
+      subject: 'Welcome on CP',
+      dynamic_template_data: {
+        link: `${process.env.HOSTNAME}/admin`,
+        password,
+      },
+      categories: this.categories.concat([`cp-new-admin`]),
+      template_id: 'd-65f020be46f54bb8a369dfd356449a1e',
+    });
+  }
+
 }
 
 module.exports = Mailing;

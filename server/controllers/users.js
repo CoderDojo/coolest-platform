@@ -6,13 +6,21 @@ const snakeCase = require('decamelize');
 // TODO : use req.body and apply endpoint validation
 class User {
   // TODO: abstract by removing req/res and passing only the userPayload
-  static post(payload) {
+  static post(payload, authPayload = { role: 'basic' }) {
     return new UserModel(payload)
       .save()
-      .then(user =>
-        new AuthModel({ userId: user.id, role: 'basic' })
+      .then((user) => {
+        const { role, password } = authPayload;
+        return new AuthModel({ userId: user.id, role })
           .save()
-          .then(auth => Promise.resolve({ user, auth })))
+          .then(async (auth) => {
+            if (authPayload.password) {
+              await auth.setPassword(password);
+              auth = await auth.save();
+            }
+            return Promise.resolve({ user, auth });
+          });
+      })
       .catch((err) => {
         let expectedErr = err;
         if (err.code === '23505' || err.errno === 19) { // TODO : (postgres || sqlite) -> avoid this, really
