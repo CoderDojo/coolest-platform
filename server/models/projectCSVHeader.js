@@ -7,6 +7,7 @@ module.exports = class ProjectCSVHeader extends CSVHeader {
   }
   get fields() {
     let fields = [
+      { label: 'Project ID', value: 'id' },
       { label: 'Project name', value: 'name' },
       { label: 'Description', value: 'description' },
       { label: 'Category', value: 'category' },

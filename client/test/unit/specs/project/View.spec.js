@@ -1,7 +1,7 @@
 import ProjectView from '!!vue-loader?inject!@/admin/projects/View';
 import vueUnitHelper from 'vue-unit-helper';
 
-describe.only('ProjectView', () => {
+describe('ProjectView', () => {
   let vm;
   let sandbox;
 

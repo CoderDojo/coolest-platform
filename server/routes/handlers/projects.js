@@ -158,6 +158,7 @@ module.exports = {
             // TODO: once bookshelf replaced, separate into a different API endpoint
             data = data.reduce((acc, project) => {
               const {
+                id,
                 name,
                 description,
                 category,
@@ -170,6 +171,7 @@ module.exports = {
               project.members.forEach((member) => {
                 acc.push({
                   ...member,
+                  id,
                   name,
                   description,
                   category,
