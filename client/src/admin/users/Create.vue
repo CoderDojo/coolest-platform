@@ -9,6 +9,7 @@
         <input type="password" name="password" v-model="password"/>
         <input type="submit"/>
       </form>
+      {{ err }}
     </div>
   </div>
 </template>
