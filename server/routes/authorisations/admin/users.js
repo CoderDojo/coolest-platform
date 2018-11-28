@@ -16,7 +16,7 @@ module.exports.define = (apiPrefix) => {
 
 module.exports.isAllowed = (req, res, next) => {
   if (req.user.user.email !== process.env.MASTER_ADMIN_EMAIL) {
-    return utils.disallowed(next); 
+    return utils.disallowed(next);
   }
   return utils.isAllowed(acl)(req, res, next);
 };

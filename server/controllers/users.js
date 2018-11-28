@@ -13,10 +13,11 @@ class User {
         const { role, password } = authPayload;
         return new AuthModel({ userId: user.id, role })
           .save()
-          .then(async (auth) => {
+          .then(async (_auth) => {
+            let auth = _auth;
             if (authPayload.password) {
-              await auth.setPassword(password);
-              auth = await auth.save();
+              await _auth.setPassword(password);
+              auth = await _auth.save();
             }
             return Promise.resolve({ user, auth });
           });

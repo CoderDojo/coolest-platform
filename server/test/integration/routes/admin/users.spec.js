@@ -19,7 +19,7 @@ describe.only('integration: users', () => {
         .expect(403);
     });
     it('should return 403 if the admin is not hello@coolestprojects.org', async () => {
-      const res = await db.raw("UPDATE public.user SET email = 'admin@coderdojo.org' WHERE email = 'hello@coolestprojects.org'");
+      await db.raw("UPDATE public.user SET email = 'admin@coderdojo.org' WHERE email = 'hello@coolestprojects.org'");
       await request(app)
         .post(`/api/v1/admin/users?token=${refToken}`)
         .set('Accept', 'application/json')
@@ -27,14 +27,14 @@ describe.only('integration: users', () => {
         .expect(403);
     });
     it('should return 200 if the admin is hello@coolestprojects.org', async () => {
-      const res = await db.raw("UPDATE public.user SET email = 'hello@coolestprojects.org' WHERE email = 'admin@coderdojo.org'");
+      await db.raw("UPDATE public.user SET email = 'hello@coolestprojects.org' WHERE email = 'admin@coderdojo.org'");
       await request(app)
         .post(`/api/v1/admin/users?token=${refToken}`)
         .set('Accept', 'application/json')
         .send(payload)
         .expect(200)
         .then((res) => {
-          expect(Object.keys(res.body)).to.eql(['user', 'auth']);
+          expect(res.body).to.be.empty;
         });
     });
   });

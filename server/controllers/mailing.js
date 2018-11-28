@@ -130,7 +130,7 @@ class Mailing {
         name: 'Coolest Projects',
       },
       reply_to: {
-        email: sender, 
+        email: sender,
         name: 'Coolest Projects Support',
       },
       subject: 'Welcome on CP',
@@ -138,11 +138,10 @@ class Mailing {
         link: `${process.env.HOSTNAME}/admin`,
         password,
       },
-      categories: this.categories.concat([`cp-new-admin`]),
+      categories: this.categories.concat(['cp-new-admin']),
       template_id: 'd-65f020be46f54bb8a369dfd356449a1e',
     });
   }
-
 }
 
 module.exports = Mailing;
