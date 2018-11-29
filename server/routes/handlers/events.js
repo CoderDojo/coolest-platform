@@ -28,6 +28,7 @@ module.exports = {
           scopes: { event_id: event.id },
           query: { status: 'pending' },
         });
+        event.attributes.timesConfirmationEmailSent += 1;
         await req.app.locals.mailing.sendConfirmAttendanceEmail(projects.toJSON(), {
           ...event.attributes,
           date: event.formattedDate(),
@@ -40,7 +41,10 @@ module.exports = {
     },
     async (req, res, next) => {
       const event = res.locals.event;
-      await eventController.update(event, { lastConfirmationEmailDate: new Date() });
+      await eventController.update(event, {
+        lastConfirmationEmailDate: new Date(),
+        timesConfirmationEmailSent: event.attributes.timesConfirmationEmailSent,
+      });
       return next();
     },
     async (req, res, next) => res.status(204).send(),

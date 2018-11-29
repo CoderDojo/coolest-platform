@@ -103,9 +103,10 @@ class Mailing {
           eventDate: event.date,
           eventContact: event.contact,
           eventUrl: `${process.env.HOSTNAME}/events/${event.slug}`,
+          emailIteration: event.timesConfirmationEmailSent,
           ...customValues,
         },
-        categories: this.categories.concat([`cp-${event.slug}-confirm-attendance`]),
+        categories: this.categories.concat([`cp-${event.slug}-${event.timesConfirmationEmailSent}-confirm-attendance`]),
         template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
       });
     }

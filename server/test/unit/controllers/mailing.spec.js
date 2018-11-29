@@ -222,6 +222,7 @@ describe('mailing controllers', () => {
           date: 'Some time',
           contact: 'hello@coolestprojects.org',
           slug: 'intl',
+          timesConfirmationEmailSent: 1,
           requiresApproval: false,
         };
         const projects = generateProjects(2400);
@@ -251,9 +252,10 @@ describe('mailing controllers', () => {
             eventContact: 'hello@coolestprojects.org',
             eventUrl: `${process.env.HOSTNAME}/events/intl`,
             requiresApproval: false,
+            emailIteration: 1,
             intl: true,
           },
-          categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
+          categories: ['coolest-projects', 'cp-intl-1-confirm-attendance'],
           template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
         });
         expect(sendStub.getCall(1).args[0].personalizations[0].to).to.equal('owner1000@example.com');
@@ -275,9 +277,10 @@ describe('mailing controllers', () => {
             eventContact: 'hello@coolestprojects.org',
             eventUrl: `${process.env.HOSTNAME}/events/intl`,
             requiresApproval: false,
+            emailIteration: 1,
             intl: true,
           },
-          categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
+          categories: ['coolest-projects', 'cp-intl-1-confirm-attendance'],
           template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
         });
         expect(sendStub.getCall(2).args[0].personalizations[0].to).to.equal('owner2000@example.com');
@@ -299,9 +302,10 @@ describe('mailing controllers', () => {
             eventContact: 'hello@coolestprojects.org',
             eventUrl: `${process.env.HOSTNAME}/events/intl`,
             requiresApproval: false,
+            emailIteration: 1,
             intl: true,
           },
-          categories: ['coolest-projects', 'cp-intl-confirm-attendance'],
+          categories: ['coolest-projects', 'cp-intl-1-confirm-attendance'],
           template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
         });
       });

@@ -114,7 +114,7 @@ describe('router: events', () => {
       // ARRANGE
       const getEventController = sandbox.stub().resolves({
         id: 'foo',
-        attributes: { slug: 'bar' },
+        attributes: { slug: 'bar', timesConfirmationEmailSent: 0 },
         formattedDate: () => 'Some date',
       });
       const updateEventController = sandbox.stub().resolves();
@@ -147,7 +147,7 @@ describe('router: events', () => {
         query: { status: 'pending' },
       });
       expect(sendEmailStub).to.have.been.calledOnce;
-      expect(sendEmailStub).to.have.been.calledWith('some jsons', { slug: 'bar', date: 'Some date' });
+      expect(sendEmailStub).to.have.been.calledWith('some jsons', { slug: 'bar', date: 'Some date', timesConfirmationEmailSent: 1 });
       expect(statusStub).to.have.been.calledOnce;
       expect(statusStub).to.have.been.calledWith(204);
       expect(sendStub).to.have.been.calledOnce;
