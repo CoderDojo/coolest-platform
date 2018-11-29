@@ -3,6 +3,7 @@ const htmlEntities = require('html-entities').AllHtmlEntities;
 const { isEmpty } = require('lodash');
 
 // Examples : https://github.com/sendgrid/sendgrid-nodejs/blob/master/test/typescript/mail.ts
+// NOTE: Please reflect any changes to variables on /EMAILS.md
 class Mailing {
   constructor(config) {
     if (!isEmpty(config.apiKey)) {
