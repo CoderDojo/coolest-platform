@@ -112,7 +112,7 @@ export default new Router({
         {
           path: '',
           name: 'Admin',
-          redirect: 'events/cp-2018',
+          redirect: `events/${process.env.EVENT_SLUG}`,
           beforeEnter: adminNavGuard,
         },
         {
