@@ -28,7 +28,9 @@ This document tries to inform our team about what is currently available as vari
  - eventDate[string]: Date of the event
  - eventContact[string]: Email of the event (usa@coolestprojects.org)
  - eventUrl[string]: Url to manage your projects, or create new ones (registerxxx.coolestprojects.org/events/cp-2018)
- - emailIteration[number]: Number of times the confirmation email has been sent
+ - firstTime[boolean]: Indicate if this is the first sending of confirmation email 
+ - secondTime[boolean]: Indicate if this is the second sending of confirmation email 
+ - lastTime[boolean]: Indicate if this is any number of time after 2 times of sending the confirmation email 
  - projectName[string]: Name of the project (Scratch goes to space 9000)
  - attendingUrl[string]: Url to confirm the project
  - notAttendingUrl[string]: Url to cancel the project 
