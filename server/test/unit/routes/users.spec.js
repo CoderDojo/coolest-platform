@@ -271,4 +271,99 @@ describe('router: user', () => {
       });
     });
   });
+  describe('postAdmin', () => {
+    let sandbox;
+    let handler;
+    const userController = class {};
+    const authController = class {};
+    const eventController = class {};
+    let statusStub;
+    let nextMock;
+    let errorHandler;
+    before(() => {
+      sandbox = sinon.createSandbox();
+      handlers = (proxy('../../../routes/handlers/users', {
+        '../../controllers/users': userController,
+        '../../controllers/auth': authController,
+        '../../controllers/events': eventController,
+      })).postAdmin;
+      errorHandler = sandbox.stub();
+      handler = (req, res, next) => {
+        return handlers[0](req, res, next)
+          .then(() => handlers[1](req, res, next))
+          .catch(err => errorHandler(err));
+      };
+    });
+
+    beforeEach(() => {
+      sandbox.reset();
+      statusStub = sandbox.stub();
+      nextMock = sandbox.stub().callsFake((err, data) => {
+        if (err) return Promise.reject(err);
+        return Promise.resolve(data);
+      });
+    });
+
+    it('should create the user and send an email', async () => {
+      const postController = sandbox.stub();
+      const mockUser = { email: 'text@example.com', password: 'bla' };
+      const mockAnswer = { user: mockUser, auth: {} };
+      const mockMailing = {
+        sendNewAdminEmail: sandbox.stub().resolves(),
+      };
+      const mockReq = {
+        body: mockUser,
+        app: {
+          locals: {
+            mailing: mockMailing,
+          },
+        },
+      };
+      const mockRes = {
+        sendStatus: statusStub,
+        locals: {},
+      };
+      userController.post = postController.resolves(mockAnswer);
+      await handler(mockReq, mockRes, nextMock);
+      expect(postController).to.have.been.calledOnce;
+      expect(postController).to.have.been.calledWith({ email: mockReq.body.email }, { role: 'admin', password: mockReq.body.password });
+      expect(mockMailing.sendNewAdminEmail).to.have.been.calledWith(
+        mockReq.body.email,
+        mockReq.body.password,
+      );
+      expect(statusStub).to.have.been.calledOnce;
+      expect(statusStub).to.have.been.calledWith(200);
+      expect(nextMock).to.have.callCount(1);
+    });
+    it('should return 500 on error', async () => {
+      const postController = sandbox.stub();
+      const mockUser = { email: 'text@example.com', password: 'bla' };
+      const mockMailing = {
+        sendNewAdminEmail: sandbox.stub().resolves(),
+      };
+      const mockReq = {
+        body: mockUser,
+        app: {
+          locals: {
+            mailing: mockMailing,
+          },
+        },
+      };
+      const mockRes = {
+        sendStatus: statusStub.resolves(),
+        locals: {},
+      };
+      userController.post = postController.rejects();
+      await handler(mockReq, mockRes, nextMock);
+      expect(postController).to.have.been.calledOnce;
+      expect(postController).to.have.been.calledWith({
+        email: mockReq.body.email,
+      }, {
+        role: 'admin',
+        password: mockReq.body.password,
+      });
+      expect(nextMock).to.have.callCount(0);
+      expect(mockMailing.sendNewAdminEmail).to.not.have.been.called;
+    });
+  });
 });

@@ -81,4 +81,23 @@ module.exports = {
         }));
     },
   ],
+  postAdmin: [
+    (req, res, next) => {
+      return userController
+        .post({ email: req.body.email }, { role: 'admin', password: req.body.password })
+        .then((user) => {
+          return next();
+        })
+        .catch((err) => {
+          res.locals.err.status = 500;
+          next(err);
+        });
+    },
+    (req, res, next) => {
+      return req.app.locals.mailing.sendNewAdminEmail(req.body.email, req.body.password)
+        .then(() => {
+          res.sendStatus(200);
+        });
+    },
+  ],
 };

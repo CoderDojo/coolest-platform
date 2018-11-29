@@ -10,6 +10,10 @@ const UserService = {
     }
     return res;
   },
+  createAdmin({ email, password }) {
+    return Vue.http.post('/api/v1/admin/users', { email, password });
+  },
+
 };
 
 export default UserService;

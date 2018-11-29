@@ -332,5 +332,46 @@ describe('mailing controllers', () => {
         });
       });
     });
+    describe('sendNewAdminEmail', () => {
+      it('should call the mailer instance', async () => {
+        // DATA
+        const apiKey = 'apiKey';
+        const configMock = { apiKey };
+        const email = 'dada@da';
+        const password = 'password';
+        // STUBS
+        const Mailing = proxy('../../../controllers/mailing', {
+          '@sendgrid/mail': {
+            setApiKey: setApiKeyStub,
+            setSubstitutionWrappers: setSubstitutionWrappersStub,
+            send: sendStub,
+          },
+        });
+        // ACT
+        const mailingController = new Mailing(configMock);
+        mailingController.sendNewAdminEmail(email, password);
+
+        // Build the request
+        expect(mailingController.mailer.send).to.have.been.calledOnce;
+        expect(mailingController.mailer.send).to.have.been.calledWith({
+          to: 'dada@da',
+          from: {
+            email: 'hello@coolestprojects.org',
+            name: 'Coolest Projects',
+          },
+          reply_to: {
+            email: 'hello@coolestprojects.org',
+            name: 'Coolest Projects Support',
+          },
+          subject: 'Welcome on CP',
+          dynamic_template_data: {
+            link: 'http://platform.local/admin',
+            password,
+          },
+          categories: ['coolest-projects', 'cp-new-admin'],
+          template_id: 'd-65f020be46f54bb8a369dfd356449a1e',
+        });
+      });
+    });
   });
 });
