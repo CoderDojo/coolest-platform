@@ -82,8 +82,7 @@
     </div>
     <div v-show="org && org !== 'coderdojo'" class="row">
       <div class="col">
-        <label v-if="org === 'other'">If you are not associated with one of the above, please tell us how you learned about Coolest Projects. If you were told about Coolest Projects from a coding club or at school please add the name of this organisation or of your school.</label>
-        <label v-else>Please tell us which Code Club or Raspberry Jam you attend.</label>
+        <label>Please tell us how you learned about Coolest Projects. If you were told about Coolest Projects from a coding club or at school please add the name of this organisation or of your school.</label>
         <div class="row row-no-margin">
           <div class="col">
             <input type="text"
