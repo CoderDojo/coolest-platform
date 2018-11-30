@@ -1,7 +1,7 @@
 const { setup, cleanup } = require('../../../setup-db');
 const request = require('supertest');
 
-describe.only('integration: users', () => {
+describe('integration: users', () => {
   let refToken;
   const payload = { email: 'conorishacking@coderdojo.org', password: 'batman' };
   before(async () => {
