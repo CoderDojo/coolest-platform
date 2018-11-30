@@ -83,8 +83,11 @@ class Mailing {
     for (let i = 0; i < projects.length; i += BATCH_SIZE) {
       emailPayloads.push({
         personalizations: projects.slice(i, i + BATCH_SIZE).map((project) => {
+          const cc = [];
+          if (project.supervisor.email !== project.owner.email) cc.push(project.supervisor.email);
           return {
             to: project.owner.email,
+            cc,
             // Bugfix for https://github.com/sendgrid/sendgrid-nodejs/issues/747
             substitutions: { },
             dynamic_template_data: {

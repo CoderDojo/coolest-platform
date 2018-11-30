@@ -174,12 +174,16 @@ describe('mailing controllers', () => {
     });
 
     describe('sendConfirmAttendanceEmail', () => {
-      function generateProjects(amount) {
+      function generateProjects(amount, supervisorDiffers = false) {
         const projects = [];
         for (let i = 0; i < amount; i += 1) {
+          const supervisorEmail = supervisorDiffers ? `supervisor${i}@example.com` : `owner${i}@example.com`;
           projects.push({
             owner: {
               email: `owner${i}@example.com`,
+            },
+            supervisor: {
+              email: supervisorEmail,
             },
             name: `Sample Project ${i}`,
             id: `${i}`,
@@ -193,6 +197,7 @@ describe('mailing controllers', () => {
         for (let i = offset; i < amount + offset; i += 1) {
           personalizations.push({
             to: `owner${i}@example.com`,
+            cc: [],
             substitutions: { },
             dynamic_template_data: {
               projectName: `Sample Project ${i}`,
@@ -315,6 +320,36 @@ describe('mailing controllers', () => {
           template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
         });
       });
+      it('should set the cc to the supervisor', () => {
+        const configMock = { apiKey: 'apiKey' };
+        const Mailing = proxy('../../../controllers/mailing', {
+          '@sendgrid/mail': {
+            setApiKey: setApiKeyStub,
+            setSubstitutionWrappers: setSubstitutionWrappersStub,
+            send: sendStub,
+          },
+        });
+        const event = {
+          name: 'International',
+          location: 'Over there',
+          date: 'Some time',
+          contact: 'hello@coolestprojects.org',
+          slug: 'intl',
+          timesConfirmationEmailSent: 1,
+          requiresApproval: false,
+        };
+        const projects = generateProjects(2, true);
+        const mailingController = new Mailing(configMock);
+
+        // ACT
+        mailingController.sendConfirmAttendanceEmail(projects, event);
+
+        // ASSERT
+        expect(sendStub).to.have.been.calledOnce;
+        expect(sendStub.getCall(0).args[0].personalizations[0].cc).to.eql(['supervisor0@example.com']);
+        expect(sendStub.getCall(0).args[0].personalizations[1].cc).to.eql(['supervisor1@example.com']);
+      });
+
       it('should set secondTime to true', () => {
         // ARRANGE
         const configMock = { apiKey: 'apiKey' };
@@ -420,6 +455,7 @@ describe('mailing controllers', () => {
         });
       });
     });
+
     describe('customisationValue', () => {
       it('should return values from the event config', () => {
         const Mailing = proxy('../../../controllers/mailing', {
