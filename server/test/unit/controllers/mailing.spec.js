@@ -252,7 +252,9 @@ describe('mailing controllers', () => {
             eventContact: 'hello@coolestprojects.org',
             eventUrl: `${process.env.HOSTNAME}/events/intl`,
             requiresApproval: false,
-            emailIteration: 1,
+            firstTime: true,
+            secondTime: false,
+            lastTime: false,
             intl: true,
           },
           categories: ['coolest-projects', 'cp-intl-1-confirm-attendance'],
@@ -277,7 +279,9 @@ describe('mailing controllers', () => {
             eventContact: 'hello@coolestprojects.org',
             eventUrl: `${process.env.HOSTNAME}/events/intl`,
             requiresApproval: false,
-            emailIteration: 1,
+            firstTime: true,
+            secondTime: false,
+            lastTime: false,
             intl: true,
           },
           categories: ['coolest-projects', 'cp-intl-1-confirm-attendance'],
@@ -302,10 +306,116 @@ describe('mailing controllers', () => {
             eventContact: 'hello@coolestprojects.org',
             eventUrl: `${process.env.HOSTNAME}/events/intl`,
             requiresApproval: false,
-            emailIteration: 1,
+            firstTime: true,
+            secondTime: false,
+            lastTime: false,
             intl: true,
           },
           categories: ['coolest-projects', 'cp-intl-1-confirm-attendance'],
+          template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
+        });
+      });
+      it('should set secondTime to true', () => {
+        // ARRANGE
+        const configMock = { apiKey: 'apiKey' };
+        const Mailing = proxy('../../../controllers/mailing', {
+          '@sendgrid/mail': {
+            setApiKey: setApiKeyStub,
+            setSubstitutionWrappers: setSubstitutionWrappersStub,
+            send: sendStub,
+          },
+        });
+        const event = {
+          name: 'International',
+          location: 'Over there',
+          date: 'Some time',
+          contact: 'hello@coolestprojects.org',
+          slug: 'intl',
+          timesConfirmationEmailSent: 2,
+          requiresApproval: false,
+        };
+        const projects = generateProjects(1);
+        const mailingController = new Mailing(configMock);
+
+        // ACT
+        mailingController.sendConfirmAttendanceEmail(projects, event);
+
+        // ASSERT
+        expect(sendStub).to.have.been.calledWith({
+          personalizations: generateEmailPersonalizations(1, 'intl'),
+          from: {
+            email: 'hello@coolestprojects.org',
+            name: 'Coolest Projects',
+          },
+          reply_to: {
+            email: 'hello@coolestprojects.org',
+            name: 'Coolest Projects Support',
+          },
+          dynamic_template_data: {
+            eventName: 'International',
+            eventLocation: 'Over there',
+            eventDate: 'Some time',
+            eventContact: 'hello@coolestprojects.org',
+            eventUrl: `${process.env.HOSTNAME}/events/intl`,
+            requiresApproval: false,
+            firstTime: false,
+            secondTime: true,
+            lastTime: false,
+            intl: true,
+          },
+          categories: ['coolest-projects', 'cp-intl-2-confirm-attendance'],
+          template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
+        });
+      });
+      it('should set lastTime to true', () => {
+        // ARRANGE
+        const configMock = { apiKey: 'apiKey' };
+        const Mailing = proxy('../../../controllers/mailing', {
+          '@sendgrid/mail': {
+            setApiKey: setApiKeyStub,
+            setSubstitutionWrappers: setSubstitutionWrappersStub,
+            send: sendStub,
+          },
+        });
+        const event = {
+          name: 'International',
+          location: 'Over there',
+          date: 'Some time',
+          contact: 'hello@coolestprojects.org',
+          slug: 'intl',
+          timesConfirmationEmailSent: 3,
+          requiresApproval: false,
+        };
+        const projects = generateProjects(1);
+        const mailingController = new Mailing(configMock);
+
+        // ACT
+        mailingController.sendConfirmAttendanceEmail(projects, event);
+
+        // ASSERT
+        expect(sendStub).to.have.been.calledWith({
+          personalizations: generateEmailPersonalizations(1, 'intl'),
+          from: {
+            email: 'hello@coolestprojects.org',
+            name: 'Coolest Projects',
+          },
+          reply_to: {
+            email: 'hello@coolestprojects.org',
+            name: 'Coolest Projects Support',
+          },
+          dynamic_template_data: {
+            eventName: 'International',
+            eventLocation: 'Over there',
+            eventDate: 'Some time',
+            eventContact: 'hello@coolestprojects.org',
+            eventUrl: `${process.env.HOSTNAME}/events/intl`,
+            requiresApproval: false,
+            firstTime: false,
+            secondTime: false,
+            lastTime: true,
+            intl: true,
+          },
+          categories: ['coolest-projects', 'cp-intl-3-confirm-attendance'],
           template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
         });
       });

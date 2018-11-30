@@ -74,6 +74,11 @@ class Mailing {
     const BATCH_SIZE = 1000;
     const emailPayloads = [];
     const customValues = Mailing.customisationValues(event);
+    const emailIteration = {
+      firstTime: event.timesConfirmationEmailSent === 1,
+      secondTime: event.timesConfirmationEmailSent === 2,
+      lastTime: event.timesConfirmationEmailSent > 2,
+    };
     for (let i = 0; i < projects.length; i += BATCH_SIZE) {
       emailPayloads.push({
         personalizations: projects.slice(i, i + BATCH_SIZE).map((project) => {
@@ -103,7 +108,7 @@ class Mailing {
           eventDate: event.date,
           eventContact: event.contact,
           eventUrl: `${process.env.HOSTNAME}/events/${event.slug}`,
-          emailIteration: event.timesConfirmationEmailSent,
+          ...emailIteration,
           ...customValues,
         },
         categories: this.categories.concat([`cp-${event.slug}-${event.timesConfirmationEmailSent}-confirm-attendance`]),
