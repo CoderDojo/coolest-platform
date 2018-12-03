@@ -52,7 +52,6 @@
     "express-https-redirect": "^1.0.0",
     "font-awesome": "^4.7.0",
     "helmet": "^3.9.0",
-    "html-entities": "^1.2.1",
     "js-cookie": "^2.2.0",
     "json-server": "^0.12.1",
     "json2csv": "^3.11.5",

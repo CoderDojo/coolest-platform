@@ -1,5 +1,4 @@
 const mailer = require('@sendgrid/mail');
-const htmlEntities = require('html-entities').AllHtmlEntities;
 const { isEmpty } = require('lodash');
 
 // Examples : https://github.com/sendgrid/sendgrid-nodejs/blob/master/test/typescript/mail.ts
@@ -41,7 +40,7 @@ class Mailing {
         eventLocation: event.location,
         eventWebsite: event.homepage,
         eventManageLink: process.env.HOSTNAME,
-        projectName: htmlEntities.encode(project.name),
+        projectName: project.name,
         ...Mailing.customisationValues(event),
       },
       categories: this.categories.concat([`cp-${event.slug}-registration`]),
@@ -62,7 +61,7 @@ class Mailing {
       },
       subject: 'Welcome back on CP',
       dynamic_template_data: {
-        link: `${process.env.HOSTNAME}/events/${htmlEntities.encode(event.slug)}/my-projects?token=${token}`,
+        link: `${process.env.HOSTNAME}/events/${event.slug}/my-projects?token=${token}`,
         contact: event.contact,
         ...Mailing.customisationValues(event),
       },
@@ -91,7 +90,7 @@ class Mailing {
             // Bugfix for https://github.com/sendgrid/sendgrid-nodejs/issues/747
             substitutions: { },
             dynamic_template_data: {
-              projectName: htmlEntities.encode(project.name),
+              projectName: project.name,
               attendingUrl: `${process.env.HOSTNAME}/events/${event.slug}/projects/${project.id}/status/confirmed`,
               notAttendingUrl: `${process.env.HOSTNAME}/events/${event.slug}/projects/${project.id}/status/canceled`,
               ...customValues,
