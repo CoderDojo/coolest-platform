@@ -290,7 +290,9 @@
     </div>
     <div class="row">
       <div class="col text-center">
-        <button type="submit" class="btn btn-primary" :disabled="submitted">{{ submitButtonText }}</button>
+        <button type="submit" class="btn btn-primary" :disabled="submitted">{{ submitButtonText }}
+          <i class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true" v-show="submitted"></i>
+        </button>
       </div>
     </div>
     <div class="row">

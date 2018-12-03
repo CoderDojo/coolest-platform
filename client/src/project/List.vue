@@ -19,7 +19,7 @@
     <div class="row row-no-margin" v-for="project in projects">
       <div class="col-1fr"></div>
       <div class="col-3fr" v-if="!isFrozen">
-        <router-link class="btn btn-primary full-width-block" :to="{ name: 'EditProject', params: { eventSlug: eventSlug, projectId: project.id, _event: event, _project: project } }">{{ project.name }}</router-link>
+        <router-link class="btn btn-primary full-width-block" :to="{ name: 'EditProject', params: { eventSlug: eventSlug, projectId: project.id, _event: event, _project: project } }">Edit "{{ project.name }}"</router-link>
       </div>
       <div class="col-1fr"></div>
     </div>
