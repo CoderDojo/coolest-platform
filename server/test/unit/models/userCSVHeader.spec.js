@@ -59,6 +59,14 @@ describe('User CSV header', () => {
       value: 'status',
     },
     {
+      label: 'Organisation',
+      value: 'org',
+    },
+    {
+      label: 'Reference of organisation',
+      value: 'orgRef',
+    },
+    {
       label: 'Created At',
       value: Function,
     },
