@@ -376,7 +376,7 @@ describe('router: project', () => {
       expect(spyProjectCSVHeader).to.have.been.calledOnce;
       expect(spyProjectCSVHeader).to.have.been.calledWith(['question_1', 'question_2'], 0);
       expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"Project ID","Project name","Description","Category","City","State","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
+      expect(send).to.have.been.calledWith('"Project ID","Project name","Description","Category","City","State","Organisation","Reference of organisation","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
     });
 
     it('should format data for csv', async () => {
@@ -453,8 +453,8 @@ describe('router: project', () => {
       expect(mockRes.setHeader).to.have.been.calledOnce;
       expect(mockRes.setHeader).to.have.been.calledWith('Content-Type', 'text/csv');
       expect(send).to.have.been.calledOnce;
-      const csvHeader = '"Project ID","Project name","Description","Category","City","State","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2","Participant 1 First Name","Participant 1 Last Name","Participant 1 Dob","Participant 1 Gender","Participant 1 Special requirements","Participant 2 First Name","Participant 2 Last Name","Participant 2 Dob","Participant 2 Gender","Participant 2 Special requirements"';
-      const csvContent = '"1","Desu","Blah blah blah","HTML","Cambridge","Cambridgeshire","test@test.com",,,"2018-1-19","2018-1-19","Sup first","Sup last","sup@sup.com","1234",true,false,"Foo 1","Bar 1","DOB 1","Gender 1","sr 1","Foo 2","Bar 2","DOB 2","Gender 2","sr 2"';
+      const csvHeader = '"Project ID","Project name","Description","Category","City","State","Organisation","Reference of organisation","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2","Participant 1 First Name","Participant 1 Last Name","Participant 1 Dob","Participant 1 Gender","Participant 1 Special requirements","Participant 2 First Name","Participant 2 Last Name","Participant 2 Dob","Participant 2 Gender","Participant 2 Special requirements"';
+      const csvContent = '"1","Desu","Blah blah blah","HTML","Cambridge","Cambridgeshire",,,"test@test.com",,,"2018-1-19","2018-1-19","Sup first","Sup last","sup@sup.com","1234",true,false,"Foo 1","Bar 1","DOB 1","Gender 1","sr 1","Foo 2","Bar 2","DOB 2","Gender 2","sr 2"';
       expect(send).to.have.been.calledWith(`${csvHeader}\n${csvContent}`);
     });
 
@@ -501,7 +501,7 @@ describe('router: project', () => {
       expect(spyUserCSVHeader).to.have.been.calledOnce;
       expect(spyUserCSVHeader).to.have.been.calledWith(['question_1', 'question_2']);
       expect(send).to.have.been.calledOnce;
-      expect(send).to.have.been.calledWith('"Project ID","First name","Last name","Dob","Gender","Special requirements","Project name","Description","Category","City","State","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
+      expect(send).to.have.been.calledWith('"Project ID","First name","Last name","Dob","Gender","Special requirements","Project name","Description","Category","City","State","Organisation","Reference of organisation","Owner Email","Seat","Status","Created At","Updated At","Supervisor First Name","Supervisor Last Name","Supervisor Email","Supervisor Phone","Question 1","Question 2"');
     });
   });
 

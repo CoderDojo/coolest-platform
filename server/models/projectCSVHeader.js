@@ -13,6 +13,8 @@ module.exports = class ProjectCSVHeader extends CSVHeader {
       { label: 'Category', value: 'category' },
       { label: 'City', value: 'city' },
       { label: 'State', value: 'state' },
+      { label: 'Organisation', value: 'org' },
+      { label: 'Reference of organisation', value: 'orgRef' },
       { label: 'Owner Email', value: 'owner.email' },
       { label: 'Seat', value: 'seat.seat' },
       { label: 'Status', value: 'status' },

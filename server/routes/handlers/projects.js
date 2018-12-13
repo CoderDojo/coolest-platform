@@ -165,6 +165,8 @@ module.exports = {
                 owner,
                 seat,
                 status,
+                org,
+                orgRef,
                 supervisor,
                 answers,
               } = project;
@@ -178,6 +180,8 @@ module.exports = {
                   owner,
                   seat,
                   status,
+                  org,
+                  orgRef,
                   supervisor,
                   answers,
                 });
