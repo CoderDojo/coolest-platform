@@ -82,11 +82,8 @@ class Mailing {
     for (let i = 0; i < projects.length; i += BATCH_SIZE) {
       emailPayloads.push({
         personalizations: projects.slice(i, i + BATCH_SIZE).map((project) => {
-          const cc = [];
-          if (project.supervisor.email !== project.owner.email) cc.push(project.supervisor.email);
-          return {
+          const payload = {
             to: project.owner.email,
-            cc,
             // Bugfix for https://github.com/sendgrid/sendgrid-nodejs/issues/747
             substitutions: { },
             dynamic_template_data: {
@@ -96,7 +93,22 @@ class Mailing {
               ...customValues,
             },
           };
-        }),
+          // We can't set it to an empty array, Sendgrid chokes on it
+          if (project.supervisor.email !== project.owner.email) {
+            payload.cc = [project.supervisor.email];
+          }
+          return payload;
+        })
+          // Bugfix for Sendgrid mixing up the headers
+          .sort((perso1, perso2) => {
+            if (perso2.cc) {
+              return -1;
+            }
+            if (perso1.cc) {
+              return 1;
+            }
+            return 0;
+          }),
         from: {
           email: event.contact,
           name: 'Coolest Projects',

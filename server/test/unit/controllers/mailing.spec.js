@@ -197,7 +197,6 @@ describe('mailing controllers', () => {
         for (let i = offset; i < amount + offset; i += 1) {
           personalizations.push({
             to: `owner${i}@example.com`,
-            cc: [],
             substitutions: { },
             dynamic_template_data: {
               projectName: `Sample Project ${i}`,
@@ -238,64 +237,19 @@ describe('mailing controllers', () => {
 
         // ASSERT
         expect(sendStub).to.have.been.calledThrice;
-        expect(sendStub.getCall(0).args[0].personalizations[0].to).to.equal('owner0@example.com');
+        // The array is unordered because of the nature of the sort
+        expect(sendStub.getCall(0).args[0].personalizations[0].to).to.equal('owner500@example.com');
         expect(sendStub.getCall(0).args[0].personalizations[999].to).to.equal('owner999@example.com');
-        expect(sendStub).to.have.been.calledWith({
-          personalizations: generateEmailPersonalizations(1000, 'intl'),
-          from: {
-            email: 'hello@coolestprojects.org',
-            name: 'Coolest Projects',
-          },
-          reply_to: {
-            email: 'hello@coolestprojects.org',
-            name: 'Coolest Projects Support',
-          },
-          dynamic_template_data: {
-            eventName: 'International',
-            eventLocation: 'Over there',
-            eventDate: 'Some time',
-            eventContact: 'hello@coolestprojects.org',
-            eventUrl: `${process.env.HOSTNAME}/events/intl`,
-            requiresApproval: false,
-            firstTime: true,
-            secondTime: false,
-            lastTime: false,
-            intl: true,
-          },
-          categories: ['coolest-projects', 'cp-intl-1-confirm-attendance'],
-          template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
-        });
-        expect(sendStub.getCall(1).args[0].personalizations[0].to).to.equal('owner1000@example.com');
+        expect(sendStub.getCall(1).args[0].personalizations[0].to).to.equal('owner1500@example.com');
         expect(sendStub.getCall(1).args[0].personalizations[999].to).to.equal('owner1999@example.com');
-        expect(sendStub).to.have.been.calledWith({
-          personalizations: generateEmailPersonalizations(1000, 'intl', 1000),
-          from: {
-            email: 'hello@coolestprojects.org',
-            name: 'Coolest Projects',
-          },
-          reply_to: {
-            email: 'hello@coolestprojects.org',
-            name: 'Coolest Projects Support',
-          },
-          dynamic_template_data: {
-            eventName: 'International',
-            eventLocation: 'Over there',
-            eventDate: 'Some time',
-            eventContact: 'hello@coolestprojects.org',
-            eventUrl: `${process.env.HOSTNAME}/events/intl`,
-            requiresApproval: false,
-            firstTime: true,
-            secondTime: false,
-            lastTime: false,
-            intl: true,
-          },
-          categories: ['coolest-projects', 'cp-intl-1-confirm-attendance'],
-          template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
-        });
-        expect(sendStub.getCall(2).args[0].personalizations[0].to).to.equal('owner2000@example.com');
+        expect(sendStub.getCall(2).args[0].personalizations[0].to).to.equal('owner2200@example.com');
         expect(sendStub.getCall(2).args[0].personalizations[399].to).to.equal('owner2399@example.com');
+        expect(sendStub.getCall(0).args[0].personalizations.length).to.eq(1000);
+        expect(sendStub.getCall(1).args[0].personalizations.length).to.eq(1000);
+        expect(sendStub.getCall(2).args[0].personalizations.length).to.eq(400);
+        expect(sendStub).to.have.been.calledThrice;
         expect(sendStub).to.have.been.calledWith({
-          personalizations: generateEmailPersonalizations(400, 'intl', 2000),
+          personalizations: sinon.match.array,
           from: {
             email: 'hello@coolestprojects.org',
             name: 'Coolest Projects',
@@ -338,7 +292,8 @@ describe('mailing controllers', () => {
           timesConfirmationEmailSent: 1,
           requiresApproval: false,
         };
-        const projects = generateProjects(2, true);
+        const projects = generateProjects(3, true);
+        projects[1].supervisor.email = projects[1].owner.email;
         const mailingController = new Mailing(configMock);
 
         // ACT
@@ -346,8 +301,9 @@ describe('mailing controllers', () => {
 
         // ASSERT
         expect(sendStub).to.have.been.calledOnce;
-        expect(sendStub.getCall(0).args[0].personalizations[0].cc).to.eql(['supervisor0@example.com']);
-        expect(sendStub.getCall(0).args[0].personalizations[1].cc).to.eql(['supervisor1@example.com']);
+        expect(sendStub.getCall(0).args[0].personalizations[0].cc).to.be.undefined;
+        expect(sendStub.getCall(0).args[0].personalizations[1].cc).to.eql(['supervisor0@example.com']);
+        expect(sendStub.getCall(0).args[0].personalizations[2].cc).to.eql(['supervisor2@example.com']);
       });
 
       it('should set secondTime to true', () => {
@@ -399,6 +355,117 @@ describe('mailing controllers', () => {
             intl: true,
           },
           categories: ['coolest-projects', 'cp-intl-2-confirm-attendance'],
+          template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
+        });
+      });
+      it('should order the emails so CCs are not mixed up together (Sendgrid)', () => {
+        // ARRANGE
+        const configMock = { apiKey: 'apiKey' };
+        const Mailing = proxy('../../../controllers/mailing', {
+          '@sendgrid/mail': {
+            setApiKey: setApiKeyStub,
+            setSubstitutionWrappers: setSubstitutionWrappersStub,
+            send: sendStub,
+          },
+        });
+        const event = {
+          name: 'International',
+          location: 'Over there',
+          date: 'Some time',
+          contact: 'hello@coolestprojects.org',
+          slug: 'intl',
+          timesConfirmationEmailSent: 1,
+          requiresApproval: false,
+        };
+        const projects = [{
+          id: 1,
+          owner: {
+            email: 'owner1@test.com',
+          },
+          name: 'Owner1',
+          supervisor: {
+            email: 'supervisor1@test.com',
+          },
+        }, {
+          id: 2,
+          owner: {
+            email: 'owner2@test.com',
+          },
+          name: 'Owner2',
+          supervisor: {
+            email: 'owner2@test.com',
+          },
+        }, {
+          id: 3,
+          owner: {
+            email: 'owner3@test.com',
+          },
+          name: 'Owner3',
+          supervisor: {
+            email: 'supervisor3@test.com',
+          },
+        }];
+        const mailingController = new Mailing(configMock);
+
+        // ACT
+        mailingController.sendConfirmAttendanceEmail(projects, event);
+
+        // ASSERT
+        expect(sendStub).to.have.been.calledWith({
+          personalizations: [{
+            to: 'owner2@test.com',
+            substitutions: {},
+            dynamic_template_data: {
+              projectName: 'Owner2',
+              attendingUrl: 'http://platform.local/events/intl/projects/2/status/confirmed',
+              notAttendingUrl: 'http://platform.local/events/intl/projects/2/status/canceled',
+              intl: true,
+              requiresApproval: false,
+            },
+          }, {
+            to: 'owner1@test.com',
+            substitutions: {},
+            dynamic_template_data: {
+              projectName: 'Owner1',
+              attendingUrl: 'http://platform.local/events/intl/projects/1/status/confirmed',
+              notAttendingUrl: 'http://platform.local/events/intl/projects/1/status/canceled',
+              intl: true,
+              requiresApproval: false,
+            },
+            cc: ['supervisor1@test.com'],
+          }, {
+            to: 'owner3@test.com',
+            substitutions: {},
+            dynamic_template_data: {
+              projectName: 'Owner3',
+              attendingUrl: 'http://platform.local/events/intl/projects/3/status/confirmed',
+              notAttendingUrl: 'http://platform.local/events/intl/projects/3/status/canceled',
+              intl: true,
+              requiresApproval: false,
+            },
+            cc: ['supervisor3@test.com'],
+          }],
+          from: {
+            email: 'hello@coolestprojects.org',
+            name: 'Coolest Projects',
+          },
+          reply_to: {
+            email: 'hello@coolestprojects.org',
+            name: 'Coolest Projects Support',
+          },
+          dynamic_template_data: {
+            eventName: 'International',
+            eventLocation: 'Over there',
+            eventDate: 'Some time',
+            eventContact: 'hello@coolestprojects.org',
+            eventUrl: `${process.env.HOSTNAME}/events/intl`,
+            requiresApproval: false,
+            firstTime: true,
+            secondTime: false,
+            lastTime: false,
+            intl: true,
+          },
+          categories: ['coolest-projects', 'cp-intl-1-confirm-attendance'],
           template_id: 'd-47688ce306734a92bf6211b0e9bfccc9',
         });
       });

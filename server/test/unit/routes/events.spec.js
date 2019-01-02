@@ -144,7 +144,7 @@ describe('router: events', () => {
       // ASSERT
       expect(getExtendedProjectController).to.have.been.calledWith({
         scopes: { event_id: 'foo' },
-        query: { status: 'pending' },
+        query: { status: 'pending', deletedAt: null },
       });
       expect(sendEmailStub).to.have.been.calledOnce;
       expect(sendEmailStub).to.have.been.calledWith('some jsons', { slug: 'bar', date: 'Some date', timesConfirmationEmailSent: 1 });
