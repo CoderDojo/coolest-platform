@@ -26,7 +26,7 @@ module.exports = {
         const event = res.locals.event;
         const projects = await projectController.getExtended({
           scopes: { event_id: event.id },
-          query: { status: 'pending' },
+          query: { status: 'pending', deletedAt: null },
         });
         event.attributes.timesConfirmationEmailSent += 1;
         await req.app.locals.mailing.sendConfirmAttendanceEmail(projects.toJSON(), {
