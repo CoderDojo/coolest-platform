@@ -32,7 +32,7 @@
     <div class="row">
       <div class="col">
         <label>Project category</label>
-        <p><small><a href="http://coolestprojects.org/registration-2018/project-categories/" target="_blank">You can read the category descriptions here</a></small></p>
+        <p><small><a href="http://coolestprojects.org/categories/" target="_blank">You can read the category descriptions here</a></small></p>
         <select
           v-model="projectDetails.category"
           v-validate="{ required: true }"
