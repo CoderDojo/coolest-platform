@@ -38,7 +38,7 @@
     "@newrelic/native-metrics": "^2.1.2",
     "@sendgrid/mail": "^6.1.4",
     "acl": "^0.4.11",
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^2.0.1",
     "body-parser": "~1.18.2",
     "bookshelf": "^0.13.3",
     "bookshelf-camelcase": "Wardormeur/bookshelf-camelcase",
