@@ -336,9 +336,25 @@
       return {
         dojos: [],
         numParticipants: 1,
-        projectDetails: {},
-        participants: [{ specialRequirementsProvided: false }],
-        supervisor: {},
+        projectDetails: {
+          name: '',
+          description: '',
+          orgRef: '',
+          state: '',
+          city: '',
+        },
+        participants: [{
+          firstName: '',
+          lastName: '',
+          specialRequirements: '',
+          specialRequirementsProvided: false,
+        }],
+        supervisor: {
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+        },
         org: undefined,
         submitted: false,
         error: null,
@@ -418,7 +434,12 @@
         const oldLength = this.participants.length;
         if (newLength > oldLength) {
           for (let i = 0; i < newLength - oldLength; i += 1) {
-            this.participants.push({ specialRequirementsProvided: false });
+            this.participants.push({
+              firstName: '',
+              lastName: '',
+              specialRequirements: '',
+              specialRequirementsProvided: false,
+            });
           }
         } else if (newLength < oldLength) {
           this.participants.splice(newLength, oldLength - newLength);
