@@ -229,8 +229,12 @@ describe('ProjectForm component', () => {
       it('should add to the participants array when number increases', () => {
         // ARRANGE
         vm.participants = [
-          { specialRequirementsProvided: false },
-          { specialRequirementsProvided: false },
+          {
+            firstName: '', lastName: '', specialRequirements: '', specialRequirementsProvided: false,
+          },
+          {
+            firstName: '', lastName: '', specialRequirements: '', specialRequirementsProvided: false,
+          },
         ];
 
         // ACT
@@ -238,9 +242,15 @@ describe('ProjectForm component', () => {
 
         // ASSERT
         expect(vm.participants).to.deep.equal([
-          { specialRequirementsProvided: false },
-          { specialRequirementsProvided: false },
-          { specialRequirementsProvided: false },
+          {
+            firstName: '', lastName: '', specialRequirements: '', specialRequirementsProvided: false,
+          },
+          {
+            firstName: '', lastName: '', specialRequirements: '', specialRequirementsProvided: false,
+          },
+          {
+            firstName: '', lastName: '', specialRequirements: '', specialRequirementsProvided: false,
+          },
         ]);
       });
 
