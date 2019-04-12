@@ -20,7 +20,7 @@ describe('user model', () => {
         },
       };
       const user = await new User();
-      user.trigger('saving', modelStub);
+      await user.triggerThen('saving', modelStub);
       expect(modelStub.set).to.have.been.calledOnce;
       expect(modelStub.set).to.have.been.calledWith('email', 'lovver@case.me');
     });
@@ -33,7 +33,7 @@ describe('user model', () => {
         },
       };
       const user = await new User();
-      user.trigger('saving', modelStub);
+      await user.triggerThen('saving', modelStub);
       expect(modelStub.set).to.have.been.calledOnce;
       expect(modelStub.set).to.have.been.calledWith('email', 'lovver@case.me');
     });
@@ -46,7 +46,7 @@ describe('user model', () => {
         },
       };
       const user = await new User();
-      user.trigger('saving', modelStub);
+      await user.triggerThen('saving', modelStub);
       expect(modelStub.set).not.to.have.been.called;
     });
   });
@@ -68,7 +68,7 @@ describe('user model', () => {
         },
       };
       const user = await new User();
-      user.trigger('fetching', {}, {}, optsStub);
+      await user.triggerThen('fetching', {}, {}, optsStub);
       expect(optsStub).to.deep.equal({
         query: {
           _statements: [
@@ -103,7 +103,7 @@ describe('user model', () => {
         },
       };
       const user = await new User();
-      user.trigger('fetching:collection', {}, {}, optsStub);
+      await user.triggerThen('fetching:collection', {}, {}, optsStub);
       expect(optsStub).to.deep.equal({
         query: {
           _statements: [
