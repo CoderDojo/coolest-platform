@@ -107,28 +107,38 @@ class Project {
   }
 
   static async setSeatingPerCategory(cat) {
-    if (cat === 'SC') {
-      const projects = await this.setSeating(cat, ['age', '<=', 11], 100);
-      const index = projects.length;
-      return this.setSeating(cat, ['age', '>', 11], index + 100);
+    let offset = 100;
+    const isSplitted = cat.filters.length > 1;
+    // eslint-disable-next-line no-restricted-syntax, guard-for-in
+    for (const [index, filter] of cat.filters.entries()) {
+      const categorySuffix = isSplitted ? index + 1 : '';
+      // eslint-disable-next-line no-await-in-loop
+      const projects = await this.setSeating(cat.name, filter, offset, categorySuffix);
+      offset += projects.length;
     }
-    return this.setSeating(cat, null, 100);
   }
 
-  static setSeating(cat, filter, index) {
+  static setSeating(cat, filter, offset, index) {
     const query = new ProjectModel()
       .ageGroup()
       .where('deleted_at', null)
       .where('status', '!=', 'canceled')
       .where('category', cat);
     if (filter) {
-      query.where(...filter);
+      // Lower bound, high bound
+      if (Array.isArray(filter[0])) {
+        query.where(...filter[0])
+          .where(...filter[1]);
+      } else {
+        // Lower bound only
+        query.where(...filter);
+      }
     }
     return query.orderBy('org_ref', 'DESC')
       .fetchAll({ withRelated: ['seat'] })
       .then((projects) => {
         return Promise.all(projects.models.map((p, i) => {
-          return new ProjectSeat({ project_id: p.attributes.id, seat: `${cat}-${i + index}` }).save();
+          return new ProjectSeat({ project_id: p.attributes.id, seat: `${cat}${index}-${i + offset}` }).save();
         }));
       });
   }
