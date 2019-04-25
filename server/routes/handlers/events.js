@@ -1,5 +1,6 @@
 const eventController = require('../../controllers/events');
 const projectController = require('../../controllers/projects');
+const Category = require('../../models/category');
 
 module.exports = {
   get: [
@@ -64,13 +65,12 @@ module.exports = {
       return next();
     },
     (req, res, next) => {
-      let categories = res.app.locals.event.attributes.categories;
-      // Technically, the following line is useless on pg, but required for tests (sqlite)
-      if (typeof categories === 'string') {
-        categories = JSON.parse(categories);
-      }
+      const categories = res.app.locals.event.attributes.categories;
+      const categoriesAges = res.app.locals.event.attributes.categoriesAges;
       return Promise.all(Object.keys(categories)
-        .map(cat => projectController.setSeatingPerCategory(cat)))
+        .map(catName => projectController.setSeatingPerCategory(
+          new Category(catName, categoriesAges[catName]),
+        )))
         .then(() => next())
         .catch((err) => {
           req.app.locals.logger.error(err);

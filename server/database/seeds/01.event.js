@@ -16,6 +16,7 @@ exports.seed = (knex, Promise) =>
       homepage: 'coolestprojects.org',
       slug: 'cp-2018',
       categories: { SC: 'Scratch', WEB: 'Websites & Web Games', EVO: 'Evolution' },
+      categories_ages: { SC: [11], WEB: [10, 12], EVO: [] },
       registration_start: eventDate.clone().subtract(3, 'days'),
       registration_end: eventDate.clone().subtract(1, 'days'),
       freeze_date: eventDate.clone().subtract(1, 'days').toDate(),

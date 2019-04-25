@@ -36,7 +36,15 @@ describe('router: event', () => {
     });
     it('should set the seating for each categories', async () => {
       const refresh = sandbox.stub();
-      const event = { attributes: { id: 1, seatingPrepared: false, categories: { SC: 'scratch' } }, refresh };
+      const event = {
+        attributes: {
+          id: 1,
+          seatingPrepared: false,
+          categories: { SC: 'scratch' },
+          categoriesAges: { SC: [] },
+        },
+        refresh,
+      };
       const req = { params: { eventId: 1 } };
       const res = {
         app: { locals: {} },
@@ -53,7 +61,7 @@ describe('router: event', () => {
 
       expect(eventController.get).to.have.calledOnce;
       expect(projectController.setSeatingPerCategory).to.have.calledOnce;
-      expect(projectController.setSeatingPerCategory).to.have.calledWith('SC');
+      expect(projectController.setSeatingPerCategory).to.have.calledWith({ ages: [], name: 'SC' });
       expect(eventController.update).to.have.calledOnce;
       expect(eventController.update).to.have.calledWith(event, { seatingPrepared: true });
       expect(event.refresh).to.have.been.calledOnce;
@@ -62,7 +70,14 @@ describe('router: event', () => {
       expect(next).to.have.been.callCount(4);
     });
     it('should not set the seating when it\'s already set', async () => {
-      const event = { attributes: { id: 1, seatingPrepared: true, categories: { SC: 'scratch' } } };
+      const event = {
+        attributes: {
+          id: 1,
+          seatingPrepared: true,
+          categories: { SC: 'scratch' },
+          categoriesAges: { SC: [] },
+        },
+      };
       const req = { params: { eventId: 1 } };
       const res = {
         app: { locals: {} },
@@ -115,7 +130,14 @@ describe('router: event', () => {
       const logger = {
         error: sandbox.stub(),
       };
-      const event = { attributes: { id: 1, seatingPrepared: false, categories: { SC: 'scratch' } } };
+      const event = {
+        attributes: {
+          id: 1,
+          seatingPrepared: false,
+          categories: { SC: 'scratch' },
+          categoriesAges: { SC: [] },
+        },
+      };
       const req = { params: { eventId: 1 }, app: { locals: { logger } } };
       const res = {
         app: { locals: {} },
@@ -139,7 +161,15 @@ describe('router: event', () => {
     });
     it('should throw if saving the event failed', async () => {
       const refresh = sandbox.stub();
-      const event = { attributes: { id: 1, seatingPrepared: false, categories: { SC: 'scratch' } }, refresh };
+      const event = {
+        attributes: {
+          id: 1,
+          seatingPrepared: false,
+          categories: { SC: 'scratch' },
+          categoriesAges: { SC: [] },
+        },
+        refresh,
+      };
       const req = { params: { eventId: 1 } };
       const res = {
         app: { locals: {} },
@@ -156,7 +186,7 @@ describe('router: event', () => {
 
       expect(eventController.get).to.have.calledOnce;
       expect(projectController.setSeatingPerCategory).to.have.calledOnce;
-      expect(projectController.setSeatingPerCategory).to.have.calledWith('SC');
+      expect(projectController.setSeatingPerCategory).to.have.calledWith({ ages: [], name: 'SC' });
       expect(eventController.update).to.have.calledOnce;
       expect(eventController.update).to.have.calledWith(event, { seatingPrepared: true });
       expect(event.refresh).to.have.been.calledOnce;
