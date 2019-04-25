@@ -44,13 +44,13 @@ describe('projects controllers: setSeatingPerCategory', () => {
   });
   it('should assign seats with a single filter', async () => {
     projectModel.fetchAll.resolves({ models: new Array(10).fill({ attributes: { id: 1 } }) });
-    await controllers.setSeating('BANANA', ['age', '<', 10], 10, '');
+    await controllers.setSeating('BANANA', ['age', '<=', 10], 10, '');
     expect(projectModel.ageGroup).to.have.been.calledOnce;
     expect(projectModel.where).to.have.been.callCount(4);
     expect(projectModel.where.getCall(0)).to.have.been.calledWith('deleted_at', null);
     expect(projectModel.where.getCall(1)).to.have.been.calledWith('status', '!=', 'canceled');
     expect(projectModel.where.getCall(2)).to.have.been.calledWith('category', 'BANANA');
-    expect(projectModel.where.getCall(3)).to.have.been.calledWith('age', '<', 10);
+    expect(projectModel.where.getCall(3)).to.have.been.calledWith('age', '<=', 10);
     expect(projectModel.orderBy).to.have.been.calledOnce;
     expect(projectModel.orderBy).to.have.been.calledWith('org_ref', 'DESC');
     expect(projectModel.fetchAll).to.have.been.calledOnce;
@@ -62,13 +62,13 @@ describe('projects controllers: setSeatingPerCategory', () => {
   });
   it('should assign seats with multiple filters', async () => {
     projectModel.fetchAll.resolves({ models: new Array(10).fill({ attributes: { id: 1 } }) });
-    await controllers.setSeating('BANANA', [['age', '<', 10], ['age', '>', 8]], 10, '');
+    await controllers.setSeating('BANANA', [['age', '<=', 10], ['age', '>', 8]], 10, '');
     expect(projectModel.ageGroup).to.have.been.calledOnce;
     expect(projectModel.where).to.have.been.callCount(5);
     expect(projectModel.where.getCall(0)).to.have.been.calledWith('deleted_at', null);
     expect(projectModel.where.getCall(1)).to.have.been.calledWith('status', '!=', 'canceled');
     expect(projectModel.where.getCall(2)).to.have.been.calledWith('category', 'BANANA');
-    expect(projectModel.where.getCall(3)).to.have.been.calledWith('age', '<', 10);
+    expect(projectModel.where.getCall(3)).to.have.been.calledWith('age', '<=', 10);
     expect(projectModel.where.getCall(4)).to.have.been.calledWith('age', '>', 8);
     expect(projectModel.orderBy).to.have.been.calledOnce;
     expect(projectModel.orderBy).to.have.been.calledWith('org_ref', 'DESC');

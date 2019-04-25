@@ -15,11 +15,11 @@ describe('Category', () => {
     });
     it('should return the filter when there is a single age split', () => {
       const cat = new Category('HW', [2]);
-      expect(cat.filters).to.eql([['age', '<', 2], ['age', '>', 2]]);
+      expect(cat.filters).to.eql([['age', '<=', 2], ['age', '>', 2]]);
     });
     it('should return the filter when there is multiple age split', () => {
       const cat = new Category('HW', [4, 2]);
-      expect(cat.filters).to.eql([['age', '<', 2], [['age', '<', 4], ['age', '>', 2]], ['age', '>', 4]]);
+      expect(cat.filters).to.eql([['age', '<=', 2], [['age', '<=', 4], ['age', '>', 2]], ['age', '>', 4]]);
     });
   });
 });

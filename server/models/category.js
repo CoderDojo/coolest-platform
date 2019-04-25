@@ -5,7 +5,7 @@ module.exports = class Category {
   }
   // eslint-disable-next-line class-methods-use-this 
   lowBoundFilter(age) {
-    return ['age', '<', age];
+    return ['age', '<=', age];
   }
   // eslint-disable-next-line class-methods-use-this 
   highBoundFilter(age) {
