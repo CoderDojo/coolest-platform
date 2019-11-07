@@ -242,3 +242,11 @@ Remember to allow for daylight savings as necessary.
 ---
 
 Once the event is populated with the correct information you should be able to navigate to the new site with the event slug, and register a project.
+
+---
+
+## Update Event Slug
+
+In [.circleci/kube.sh](.com/CoderDojo/coolest-platform/blob/master/.circleci/kube.sh), update the `EVENT_SLUG` build arg for each `docker build` command.
+This should match the slug set in the database for each of the international, UK and USA events.
+Once merged to master and deployed (automatically via CircleCI), this will result in the registration app redirecting to this slug and loading the correct event.
