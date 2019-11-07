@@ -30,7 +30,9 @@ Go into the relevant folder for the site you are setting up e.g. `coolest-namesp
 
 Open the `secrets/coolest-secret.yaml` file and copy the base64 encoded value for `db.json`
 
-Decode this by running: `echo '**encoded value**' | base64 -d` in a terminal
+Decode this by running: `echo '**encoded value**' | base64 -D` in a terminal
+
+(If you are running on linux or using Gnu tools the decode flag will be `-d` instead of `-D`)
 
 This should output the json which provides all the database configuration.
 It will look something like:
@@ -219,7 +221,7 @@ WHERE  id = '**id of new event**';
 
 ##### Formatting Data Input
 
-It's probably easiest to input dates in the ISO format and UTC `'2020-12-25 09:30:00Z`
+It's probably easiest to input dates in the ISO format and UTC `'2020-12-25T09:30:00Z'`
 
 Remember to allow for daylight savings as necessary.
 
@@ -229,20 +231,14 @@ Remember to allow for daylight savings as necessary.
 '{"HW": "Hardware", "GAM": "Games"}'
 ```
 
-**Questions** is an array of string keys the front end uses to show the correct question to the users. The keys and their related questions are in `client/src/project/CustomQuestions.js` e.g.
+**Questions** is an array of string keys the front end uses to show the correct question to the users. The keys and their related questions are in [client/src/project/CustomQuestions.js](https://github.com/CoderDojo/coolest-platform/blob/master/client/src/project/CustomQuestions.js) e.g.
 
 ```
 '["travel_bursary", "attendance_prev_year"]'
 ```
 
-**tx** is the timezone, the frontend displays this so it needs to be correct. For UK it will be `'Europe/London'`, for the international event in Dublin it will be `'Europe/Dublin'`. The timezone for the US event will need to be provided or found.
+**tz** is the timezone, the frontend displays this so it needs to be correct. For UK it will be `'Europe/London'`, for the international event in Dublin it will be `'Europe/Dublin'`. The timezone for the US event will need to be provided or found.
 
 ---
 
-Update script to just create empty event with id,
-
-Then create update script to set values correctly
-
-script in readme, add variables from google doc
-
-update kube.sh to fix event_slugs
+Once the event is populated with the correct information you should be able to navigate to the new site with the event slug, and register a project.
