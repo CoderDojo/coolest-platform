@@ -1,6 +1,12 @@
 # Setting Up Coolest Platform Events
 
-## Kubectl
+## Prerequisites
+
+- Kubernetes CLI (instructions below)
+- A local clone of [k8s config](https://github.com/CoderDojo/k8s-config/)
+- Access to the CoderDojo foundation AWS Management Console
+
+## Kubernetes CLI
 
 You will need the kubernetes cli to deploy each site.
 
@@ -16,10 +22,8 @@ If it doesn't already exist we need to create the database in RDS in AWS console
 
 ## Get Database Details
 
-A lot of the work for this needs to be done in the [k8s config project](https://github.com/CoderDojo/k8s-config/) and you need a local clone of that repo.
-
 In k8s config there is a separate folder for each event.
-Go into the relevant folder for the site you are setting up e.g. `coolest-namespace` and there will be 4/5 folders:
+Go into the relevant folder for the site you are setting up e.g. `coolest-namespace` for the international event and there will be 4/5 folders:
 
 - deployments
 - horizontalpodautoscalers
@@ -209,17 +213,20 @@ SET    name = '',
        location = '',
        date = '',
        registration_start = '',
-       registratin_end = '',
+       registration_end = '',
        categories = '',
        homepage = '',
        contact = '',
        questions = '',
        freeze_date = '',
        tz = '',
+       external_ticketing_uri = ''
 WHERE  id = '**id of new event**';
 ```
 
 ##### Formatting Data Input
+
+**Slug** will be in the format `'{event}-{year}'` where event is `int`, `uk` or `us` e.g. `int-2020`
 
 It's probably easiest to input dates in the ISO format and UTC `'2020-12-25T09:30:00Z'`
 
@@ -236,6 +243,8 @@ Remember to allow for daylight savings as necessary.
 ```
 '["travel_bursary", "attendance_prev_year"]'
 ```
+
+**freeze_date** refers to the last date people can edit their projects
 
 **tz** is the timezone, the frontend displays this so it needs to be correct. For UK it will be `'Europe/London'`, for the international event in Dublin it will be `'Europe/Dublin'`. The timezone for the US event will need to be provided or found.
 
