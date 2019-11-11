@@ -57,7 +57,7 @@
     "json2csv": "^3.11.5",
     "jsonwebtoken": "^8.1.0",
     "karma-nyan-reporter": "^0.2.5",
-    "knex": "^0.15",
+    "knex": "^0.19",
     "le_node": "^1.7.1",
     "lodash": "^4.17.4",
     "moment": "^2.19.3",
