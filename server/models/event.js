@@ -13,7 +13,9 @@ const Event = bookshelf.Model.extend({
     return moment.utc(this.attributes.freezeDate) < moment.utc();
   },
   formattedDate() {
-    return moment(this.attributes.date).tz(this.attributes.tz).format('dddd [the] Do [of] MMMM');
+    return moment(this.attributes.date)
+      .tz(this.attributes.tz)
+      .format('dddd D MMMM, YYYY');
   },
   constructor,
 });

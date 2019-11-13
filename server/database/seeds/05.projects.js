@@ -29,10 +29,8 @@ exports.seed = (knex, Promise) =>
               first_name: 'Test',
               last_name: `Member ${i + 1}`,
               email: `testmember${i + 1}@sink.sendgrid.net`,
-              dob: new Date(
-                new Date().setFullYear(
-                  new Date().getFullYear() - Math.floor(Math.random() * 18)),
-              ).toISOString(),
+              dob: new Date(new Date().setFullYear(new Date()
+                .getFullYear() - Math.floor(Math.random() * 18))).toISOString(),
               gender: genders[Math.floor(Math.random() * 3)],
             },
             {

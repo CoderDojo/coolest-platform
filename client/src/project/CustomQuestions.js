@@ -16,7 +16,7 @@ export default [
   {
     key: 'travel_stipend',
     sentence:
-      'Please indicate if you are interested in applying for a travel stipend. If you choose yes, please complete the application here: <a target="blank" href="https://www.tfaforms.com/4771317">here</a>.',
+      'Please indicate if you are interested in applying for a travel stipend. If you choose yes, please complete the application <a target="blank" href="https://www.tfaforms.com/4771317">here</a>.',
   },
 
   {
