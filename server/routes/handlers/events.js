@@ -68,9 +68,8 @@ module.exports = {
       const categories = res.app.locals.event.attributes.categories;
       const categoriesAges = res.app.locals.event.attributes.categoriesAges;
       return Promise.all(Object.keys(categories)
-        .map(catName => projectController.setSeatingPerCategory(
-          new Category(catName, categoriesAges[catName]),
-        )))
+        .map(catName => projectController
+          .setSeatingPerCategory(new Category(catName, categoriesAges[catName]))))
         .then(() => next())
         .catch((err) => {
           req.app.locals.logger.error(err);
