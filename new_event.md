@@ -238,6 +238,8 @@ Remember to allow for daylight savings as necessary.
 '{"HW": "Hardware", "GAM": "Games"}'
 ```
 
+**Homepage** is the URL for the relevant Coolest Projects site. Do not include the `http://` or `https://` protocol part of the URL as the form adds that and the links will be broken otherwise.
+
 **Questions** is an array of string keys the front end uses to show the correct question to the users. The keys and their related questions are in [client/src/project/CustomQuestions.js](https://github.com/CoderDojo/coolest-platform/blob/master/client/src/project/CustomQuestions.js) e.g.
 
 ```
