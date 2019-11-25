@@ -13,6 +13,7 @@
     "start-with-mocks": "concurrently --kill-others --success first \"yarn mock-server\" \"yarn client-start\" ",
     "test": "yarn client-unit && yarn server-unit && yarn server-int",
     "lint": "eslint --ext .js,.vue .",
+    "lint-fix": "eslint --ext .js,.vue . --fix",
     "precommit": "lint-staged",
     "client-start": "node client/build/dev-server.js",
     "client-unit": "cross-env BABEL_ENV=test karma start client/test/unit/karma.conf.js --single-run",

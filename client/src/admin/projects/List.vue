@@ -16,12 +16,7 @@
         <a :href="userCSVUrl" :download="`${eventSlug}-members-export.csv`" class="nav-link">Export Members CSV</a>
       </li>
       <li class="nav-item">
-        <a v-show="confirmationEmailSendState === 'visible'" href="#" @click.prevent="sendConfirmAttendanceEmails" class="nav-link">Send Confirmation Emails</a>
-        <a v-show="confirmationEmailSendState === 'sending'" class="nav-link"><i class="fa fa-spinner fa-pulse fa-fw"></i> Sending</a>
-        <a v-show="confirmationEmailSendState === 'sent'" class="nav-link">Confirmation emails sent!</a>
-      </li>
-      <li class="nav-item">
-        <button @click="generateSeating()" :disabled="event.seatingPrepared" :class="{'nav-link__btn--stroke' : event.seatingPrepared}" class="nav-link nav-link__btn"><i class="fa fa-map-o"></i> Generate seating</button>
+        <router-link :to="{ name: 'AdminProjectsAdvanced' }" class="nav-link">Advanced</router-link>
       </li>
     </navigation>
     <div class="container-fluid">
@@ -43,9 +38,8 @@
 <script>
   import Navigation from '@/admin/Navigation';
   import FetchEventMixin from '@/event/FetchEventMixin';
-  import AdminEventsService from '@/admin/events/service';
-  import eventService from '@/event/service';
   import Organisations from '@/project/Organisations';
+
 
   export default {
     name: 'AdminProjects',
@@ -189,24 +183,6 @@
       requestAdapter(data) {
         this.tableState = data;
         return data;
-      },
-      async sendConfirmAttendanceEmails() {
-        let confirmString = 'Clicking OK will send emails to all pending projects.';
-        if (this.event.lastConfirmationEmailDate) {
-          confirmString += ` The last emails were sent on ${this.event.lastConfirmationEmailDate}`;
-        }
-        // eslint-disable-next-line no-alert
-        if (confirm(confirmString)) {
-          this.confirmationEmailSendState = 'sending';
-          await AdminEventsService.sendConfirmAttendanceEmails(this.event.id);
-          this.confirmationEmailSendState = 'sent';
-        }
-      },
-      async generateSeating() {
-        const message = 'This should only be done once. So make sure you have closed all applications before doing this as once the seating order is set it stays set!';
-        if (confirm(message)) { // eslint-disable-line no-alert
-          this.event = (await eventService.seats.post(this.event.id)).body;
-        }
       },
     },
   };
