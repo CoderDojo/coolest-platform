@@ -21,7 +21,6 @@
         <li>Name: {{ event.name }}</li>
         <li>Location: {{ event.location }}</li>
         <li>Event date: {{ formattedEventDate }}</li>
-        <li>Registration open: {{ formattedRegistrationStart }}</li>
         <li>Registration closed: {{ formattedRegistrationClosed }}</li>
         <li>Projects Frozen: {{ formattedEventFrozen }}</li>
         <li>Categories: {{ event.categories }}</li>
@@ -57,9 +56,6 @@
     computed: {
       formattedEventDate() {
         return this.formatDate(this.event.date, this.event.tz);
-      },
-      formattedRegistrationStart() {
-        return this.formatDate(this.event.registrationStart, this.event.tz);
       },
       formattedRegistrationClosed() {
         return this.formatDate(this.event.registrationEnd, this.event.tz);
