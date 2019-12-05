@@ -25,7 +25,7 @@
         <li>Projects Frozen: {{ formattedEventFrozen }}</li>
         <li>Categories: {{ event.categories }}</li>
         <li>Homepage: {{ event.homepage }}</li>
-        <li>Contact: {{ event.contacthomepage }}</li>
+        <li>Contact: {{ event.contact }}</li>
         <li>Ticketing URL: {{ event.external_ticketing_uri }}</li>
       </ul>
     </div>
