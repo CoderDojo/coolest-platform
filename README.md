@@ -50,3 +50,7 @@ docker-compose run --rm yarn server-int
 ## Production setup
 
 Setting up new events is documented in the [New Event documentation](new_event.md)
+
+## Admin
+
+Event administration is documented in the [Event Admin documentation](event_admin.md)
