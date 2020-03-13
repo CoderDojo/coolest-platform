@@ -1,67 +1,10 @@
 <template>
   <div>
-    <h2>{{ titleActionCopy }} for {{ event.name }}</h2>
-    <div v-if="error && error.status === 409">
-      <p>It looks like you've already registered a project with us. We've just sent an email to {{ email }} with a unique link. Click the link in your email to edit your project or create an additional one!</p>
+    <div>
+      <p>We have made the tough decision to cancel {{ event.name }} due to growing concerns related to coronavirus. </p>
+      <p>We’re sorry to have to do this, but there is just too much uncertainty for us to continue to ask young people, parents, mentors, and volunteers to make travel and other arrangements.</p>
+    <p><a href="https://www.raspberrypi.org/blog/update-about-our-events">Here is our CEO Philip Colligan’s message about this.</a></p>
     </div>
-    <form v-else-if="event" @submit.prevent="onSubmit">
-      <div class="row">
-        <div class="col">
-          <div v-if="isOpen">
-            <p>
-              Register or edit a project for {{ event.name }} which will be held on {{ formattedDate }} at the {{ event.location }}.
-            </p>
-            <p v-if="event.requiresApproval">
-              You will be contacted by the Coolest Projects team if your project is accepted.
-            </p>
-            <p>
-              <ul class="list">
-                <li>Only one person should register per project.</li>
-                <li>If you have already registered a project please fill in your email below to receive a unique link to edit or add a new project.</li>
-              </ul>
-            </p>
-          </div>
-          <label v-if="!isOpen && !isFrozen">You can now only edit already registered projects for {{ event.name }}. Enter your email and you will get a link to edit your project.</label>
-          <label v-else-if="isFrozen">The registration for {{ event.name }} has now closed. Please contact {{ event.contact }} if you have any questions.</label>
-        </div>
-      </div>
-      <div class="row" v-if="!isFrozen">
-        <div class="col">
-          <input type="email" v-model="email" class="full-width-block" placeholder="you@email.com" required />
-        </div>
-      </div>
-      <div v-if="!isFrozen">
-        <label class="row row-no-margin">
-          <div class="col text-center">
-            <input type="checkbox"
-              v-model="approval"
-              data-vv-name="approval"
-              v-validate="'required'"
-              :class="{ error: errors.has('approval') }"
-              name="approval"/>
-          </div>
-          <div class="col-6fr">
-            <p for="approval">By selecting this you are agreeing that you are 16 or over, and are happy to be contacted about this project, Coolest Projects information and related news.</br>Read more about our <a target="blank" href="https://www.raspberrypi.org/privacy/">Privacy Policy here</a>.</p>
-            <span class="error-message" v-show="errors.has('approval:required')">* We need your permission to contact you. Please accept the terms and conditions.</span>
-          </div>
-        </label>
-      </div>
-      <div class="row row-double-margin" v-if="!isFrozen">
-        <div class="col text-center">
-          <button type="submit" class="btn btn-primary" :class="{ disabled: !approval }">Next step – project details</button>
-        </div>
-      </div>
-      <div v-if="error" class="row error-message">
-        <div class="col">
-          <p v-if="$route.query.authFailed">
-            Sorry! That link you clicked was out of date. If you just re-enter your email here you'll get a new link to edit your projects or add a new project.
-          </p>
-          <p v-else-if="error && error.status !== 409">
-            Sorry. There was an problem registering your email, please contact <a :href="`mailto:${event.contact}`">{{ event.contact }}</a> so we can help you.
-          </p>
-        </div>
-      </div>
-    </form>
   </div>
 </template>
 
