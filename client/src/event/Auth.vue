@@ -3,7 +3,7 @@
     <div>
       <p>We have made the tough decision to cancel {{ event.name }} due to growing concerns related to coronavirus. </p>
       <p>We’re sorry to have to do this, but there is just too much uncertainty for us to continue to ask young people, parents, mentors, and volunteers to make travel and other arrangements.</p>
-    <p><a href="https://www.raspberrypi.org/blog/update-about-our-events">Here is our CEO Philip Colligan’s message about this</a></p>
+    <p><a href="https://www.raspberrypi.org/blog/update-about-our-events">Here is our CEO Philip Colligan’s message about this.</a></p>
     </div>
   </div>
 </template>
