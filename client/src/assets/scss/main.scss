@@ -1,3 +1,5 @@
+@import 'colors';
+
 * {
   margin: 0;
   padding: 0;
@@ -5,7 +7,7 @@
 }
 
 body {
-  background: #f3f3f3;
+  background: $coolest-background;
   font-family: Helvetica, Arial, sans-serif;
 }
 
@@ -40,9 +42,9 @@ body {
 }
 
 h2 {
-  color: #4a4a4a;
+  color: $coolest-light-black;
   font-size: 16px;
-  border-bottom: 1px solid #4a4a4a;
+  border-bottom: 1px solid $coolest-light-black;
   padding: 10px 0;
   margin: 30px 0;
 }
@@ -50,23 +52,25 @@ h2 {
 input, select, textarea {
   font-size: 16px;
   border-radius: 3px;
-  background-color: #fff;
-  border: solid 1px rgba(34, 36, 38, 0.15);
+  background-color: $coolest-white;
+  border: solid 1px $coolest-border;
   padding: 10px;
   height: 42px;
   box-sizing: border-box;
 
   &::placeholder {
-    color: #9b9b9b;
+    color: $coolest-dark-grey;
   }
 
   &.error {
-    border: 1px solid #d0021b;
+    border: 1px solid $coolest-error-red;
   }
 }
 
-select.placeholder {
-  color: #9b9b9b;
+select {
+  .placeholder {
+    color: $coolest-dark-grey;
+  }
 }
 
 textarea {
@@ -83,7 +87,7 @@ textarea {
 .btn {
   border: none;
   border-radius: 3px;
-  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 3px 0 $coolest-shadow;
   cursor: pointer;
   text-align: center;
   font-size: 18px;
@@ -92,20 +96,21 @@ textarea {
   text-decoration: none;
 
   &:hover {
-    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 6px 0 $coolest-shadow-dark;
   }
 
   &.disabled, &.disabled:hover {
-    background-color: #eee;
-    color: #000;
+    background-color: $coolest-grey;
+    border: solid 1px $coolest-border;
     box-shadow: none;
+    color: $coolest-black;
     cursor: default;
   }
 }
 
 .btn-primary {
-  background-color: #00ce71;
-  color: #ffffff;
+  background-color: $coolest-green;
+  color: $coolest-white;
 }
 
 .btn-primary-outline {
@@ -166,12 +171,12 @@ textarea {
 }
 
 .error-message {
-  color: #d0021b;
+  color: $coolest-error-red;
   font-size: 14px;
 }
 
 .warning-message {
-  color: #F5A544;
+  color: $coolest-warning-yellow;
   font-size: 14px;
 }
 
