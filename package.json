@@ -137,7 +137,7 @@
     "rimraf": "^2.6.2",
     "sass-loader": "^6.0.6",
     "semver": "^5.4.1",
-    "shelljs": "^0.7.8",
+    "shelljs": "^0.8.5",
     "sinon": "^7.1.1",
     "sinon-chai": "^2.14.0",
     "sqlite3": "^3.1.13",
