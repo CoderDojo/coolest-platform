@@ -119,7 +119,7 @@
     "http-proxy-middleware": "^0.17.4",
     "husky": "^0.14.3",
     "inject-loader": "^3.0.1",
-    "karma": "^1.7.1",
+    "karma": "^6.3.16",
     "karma-chrome-launcher": "^2.1.1",
     "karma-coverage": "^1.1.1",
     "karma-mocha": "^1.3.0",
